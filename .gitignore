@@ -1,0 +1,11 @@
+Quizes-PPL/src/external/.DS_Store
+Quizes-PPL/src/.DS_Store
+Quizes-PPL/src/lib/.DS_Store
+Quizes-PPL/src/lib/*.class
+Quizes-PPL/src/main/.DS_Store
+Quizes-PPL/src/main/bkool/*/__pycache__/
+Quizes-PPL/src/main/bkool/*/.DS_Store
+Quizes-PPL/src/main/bkool/*/.antlr/
+Quizes-PPL/src/test/__pycache__/
+Quizes-PPL/src/test/.DS_Store
+Quizes-PPL/target/*
