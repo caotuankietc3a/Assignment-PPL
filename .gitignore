@@ -8,4 +8,6 @@ Quizes-PPL/src/main/bkool/*/.DS_Store
 Quizes-PPL/src/main/bkool/*/.antlr/
 Quizes-PPL/src/test/__pycache__/
 Quizes-PPL/src/test/.DS_Store
+Quizes-PPL/src/test/*/500/
+Quizes-PPL/src/test/*/501/
 Quizes-PPL/target/*

@@ -102,42 +102,65 @@ class LexerSuite(unittest.TestCase):
     #     self.assertTrue(TestLexer.test("2.1687.0.2",
     #                     "Error Token 2", 505))
 
-    def test_29(self):
-        self.assertTrue(TestLexer.test("1_234_567",
-                        "1234567,<EOF>", 601))
+    # def test_29(self):
+    #     self.assertTrue(TestLexer.test("1_234_567",
+    #                     "1234567,<EOF>", 601))
+    #
+    # def test_30(self):
+    #     self.assertTrue(TestLexer.test("1234",
+    #                     "1234,<EOF>", 602))
+    #
+    # def test_31(self):
+    #     self.assertTrue(TestLexer.test("123_4",
+    #                     "1234,<EOF>", 603))
+    #
+    # def test_32(self):
+    #     self.assertTrue(TestLexer.test("76890_1",
+    #                     "768901,<EOF>", 604))
+    #
+    # def test_33(self):
+    #     self.assertTrue(TestLexer.test("2.01",
+    #                     "2,Error Token .", 605))
+    #
+    # def test_34(self):
+    #     self.assertTrue(TestLexer.test("'001'",
+    #                     "Error Token '", 606))
+    #
+    # def test_35(self):
+    #     self.assertTrue(TestLexer.test("1.0e",
+    #                     "1,Error Token .", 607))
+    #
+    # def test_36(self):
+    #     self.assertTrue(TestLexer.test("0_123",
+    #                     "0,Error Token _", 608))
+    #
+    # def test_37(self):
+    #     self.assertTrue(TestLexer.test(".e123",
+    #                     "Error Token .", 609))
+    #
+    # def test_38(self):
+    #     self.assertTrue(TestLexer.test("0",
+    #                     "0,<EOF>", 610))
+    def test_39(self):
+        self.assertTrue(TestLexer.test("12", "12,<EOF>", 701))
 
-    def test_30(self):
-        self.assertTrue(TestLexer.test("1234",
-                        "1234,<EOF>", 602))
+    def test_40(self):
+        self.assertTrue(TestLexer.test("3dC", "3dC,<EOF>", 702))
 
-    def test_31(self):
-        self.assertTrue(TestLexer.test("123_4",
-                        "1234,<EOF>", 603))
+    def test_41(self):
+        self.assertTrue(TestLexer.test("21A", "21A,<EOF>", 703))
 
-    def test_32(self):
-        self.assertTrue(TestLexer.test("76890_1",
-                        "768901,<EOF>", 604))
+    def test_42(self):
+        self.assertTrue(TestLexer.test("A12", "Error Token A", 704))
 
-    def test_33(self):
-        self.assertTrue(TestLexer.test("2.01",
-                        "2,Error Token .", 605))
+    def test_43(self):
+        self.assertTrue(TestLexer.test("1B", "Error Token 1", 705))
 
-    def test_34(self):
-        self.assertTrue(TestLexer.test("'001'",
-                        "Error Token '", 606))
+    def test_44(self):
+        self.assertTrue(TestLexer.test("1", "Error Token 1", 706))
 
-    def test_35(self):
-        self.assertTrue(TestLexer.test("1.0e",
-                        "1,Error Token .", 607))
+    def test_45(self):
+        self.assertTrue(TestLexer.test("11B", "Error Token 1", 707))
 
-    def test_36(self):
-        self.assertTrue(TestLexer.test("0_123",
-                        "0,Error Token _", 608))
-
-    def test_37(self):
-        self.assertTrue(TestLexer.test(".e123",
-                        "Error Token .", 609))
-
-    def test_38(self):
-        self.assertTrue(TestLexer.test("0",
-                        "0,<EOF>", 610))
+    def test_46(self):
+        self.assertTrue(TestLexer.test("11A", "11A,<EOF>", 708))
