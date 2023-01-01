@@ -10,7 +10,7 @@ options{
 
 program: EOF;
 
-LexerInit: [a-z] [a-z0-9]*;
+LexerInit: FIRST_CHARACTER OTHER_CHARACTER*;
 
 WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
 
@@ -24,4 +24,12 @@ ERROR_OTHER_CHARACTER: ~[a-z0-9]
   {
     raise ErrorToken(self.text)
   }
+  ;
+
+fragment FIRST_CHARACTER
+  :[a-z]
+  ;
+
+fragment OTHER_CHARACTER
+  :[a-z0-9]
   ;
