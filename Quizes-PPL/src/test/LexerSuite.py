@@ -46,22 +46,38 @@ class LexerSuite(unittest.TestCase):
     # def test_14(self):
     #     self.assertTrue(TestLexer.test("e123", "Error Token e", 209))
 
-    def test_15(self):
-        self.assertTrue(TestLexer.test("'Yanxi Palace - 2018'",
-                        "'Yanxi Palace - 2018',<EOF>", 301))
+    # def test_15(self):
+    #     self.assertTrue(TestLexer.test("'Yanxi Palace - 2018'",
+    #                     "'Yanxi Palace - 2018',<EOF>", 301))
+    #
+    # def test_16(self):
+    #     self.assertTrue(TestLexer.test("'abc?svn'",
+    #                     "'abc?svn',<EOF>", 302))
+    #
+    # def test_17(self):
+    #     self.assertTrue(TestLexer.test("'1.0e-12'",
+    #                                    "'1.0e-12',<EOF>", 303))
+    #
+    # def test_18(self):
+    #     self.assertTrue(TestLexer.test("'0.001''",
+    #                     "'0.001',Error Token '", 304))
+    #
+    # def test_19(self):
+    #     self.assertTrue(TestLexer.test("'0.001'''",
+    #                     "'0.001''',<EOF>", 305))
 
-    def test_16(self):
-        self.assertTrue(TestLexer.test("'abc?svn'",
-                        "'abc?svn',<EOF>", 302))
+    def test_20(self):
+        self.assertTrue(TestLexer.test("duy.tran2903",
+                        "duy.tran2903,<EOF>", 401))
 
-    def test_17(self):
-        self.assertTrue(TestLexer.test("'1.0e-12'",
-                                       "'1.0e-12',<EOF>", 303))
+    def test_21(self):
+        self.assertTrue(TestLexer.test("duy.tran.3_12",
+                        "duy.tran.3_12,<EOF>", 402))
 
-    def test_18(self):
-        self.assertTrue(TestLexer.test("'0.001''",
-                        "'0.001',Error Token '", 304))
+    def test_22(self):
+        self.assertTrue(TestLexer.test("duy.tran2903.",
+                        "duy.tran2903,Error Token .", 403))
 
-    def test_19(self):
-        self.assertTrue(TestLexer.test("'0.001'''",
-                        "'0.001''',<EOF>", 305))
+    def test_23(self):
+        self.assertTrue(TestLexer.test("duy2.tran2903",
+                        "Error Token d", 404))
