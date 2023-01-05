@@ -17,15 +17,34 @@ declare
   | (funcdecl | vardecl)
   ; 
 
-vardecl
-  : type variables SEMICOLON
-  ;
-
 funcdecl
   : type function_name LB function_params? RB body
   ;
 
-body: 'body';
+body
+  : LCB (vardecl | call_statement | assign_statement | return_statement)* RCB
+  ;
+
+assign_statement
+  : ID EQUAL expr SEMICOLON
+  ;
+
+call_statement
+  : function_name LB expr RB SEMICOLON
+  ;
+
+return_statement
+  : RETURN expr SEMICOLON
+  ;
+
+expr
+  : 'expr' COMMA expr
+  | 'expr'
+  ;
+
+vardecl
+  : type variables SEMICOLON
+  ;
 
 variables
   : ID COMMA variables
@@ -54,6 +73,12 @@ FLOAT_TYPE
   : 'float' 
   ;
 
+RETURN
+  : 'return'
+  ;
+
+ID: [a-zA-Z_] [a-zA-Z0-9_]*;
+
 SEMICOLON
   : ';' 
   ;
@@ -62,11 +87,18 @@ COMMA
   : ',' 
   ;
 
-ID: [a-zA-Z_] [a-zA-Z0-9_]*;
+EQUAL
+  : '='
+  ;
 
 LB: '(';
 
 RB: ')';
+
+LCB: '{';
+
+RCB: '}';
+
 
 WS: [ \t\r\n] -> skip;
 
