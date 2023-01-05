@@ -8,37 +8,66 @@ options{
 	language=Python3;
 }
 
-program  : mptype 'main' LB RB LP body? RP EOF ;
+program
+  : declare 
+  ;
 
-mptype: INTTYPE | VOIDTYPE ;
+declare
+  : (funcdecl | vardecl) declare 
+  | (funcdecl | vardecl)
+  ; 
 
-body: funcall SEMI;
+vardecl
+  : type variables SEMICOLON
+  ;
 
-exp: funcall | INTLIT ;
+funcdecl
+  : type function_name LB function_params? RB body
+  ;
 
-funcall: ID LB exp? RB ;
+body: 'body';
 
-INTTYPE: 'int' ;
+variables
+  : ID COMMA variables
+  | ID
+  ;
 
-VOIDTYPE: 'void'  ;
+function_params
+  : vardecl function_params
+  | type variables
+  ;
 
-ID: [a-zA-Z]+ ;
+type
+  : INT_TYPE 
+  | FLOAT_TYPE
+  ;
 
-INTLIT: [0-9]+;
+function_name
+  : ID
+  ;
 
-LB: '(' ;
+INT_TYPE
+  : 'int' 
+  ;
 
-RB: ')' ;
+FLOAT_TYPE
+  : 'float' 
+  ;
 
-LP: '{';
+SEMICOLON
+  : ';' 
+  ;
 
-RP: '}';
+COMMA
+  : ',' 
+  ;
 
-SEMI: ';' ;
+ID: [a-zA-Z_] [a-zA-Z0-9_]*;
 
-WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
+LB: '(';
 
+RB: ')';
 
-ERROR_CHAR: .;
-UNCLOSE_STRING: .;
-ILLEGAL_ESCAPE: .;
+WS: [ \t\r\n] -> skip;
+
+ERROR_CHAR: . {raise ErrorToken(self.text)};
