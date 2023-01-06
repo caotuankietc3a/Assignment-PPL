@@ -36,31 +36,43 @@ assign_statement
   : ID EQUAL expr SEMICOLON
   ;
 
-call_statement
-  : function_name LB expr RB SEMICOLON
-  ;
-
 return_statement
   : RETURN expr SEMICOLON
   ;
 
+call_statement
+  : function_name LB call_params RB SEMICOLON?
+  ;
+
+call_params
+  : expr COMMA call_params
+  | expr
+  ;
+
 expr
-  : 'expr' COMMA expr
-  | 'expr'
+  : LB expr RB
+  | <assoc=right> expr ADD expr
+  | expr MINUS expr
+  | <assoc=left> expr MULTIPLY expr
+  | <assoc=left> expr DIVIDE expr
+  | ID
+  | FLOAT
+  | INTEGER
+  | call_statement
   ;
 
 vardecl
   : type variables SEMICOLON
   ;
 
-variables
-  : ID COMMA variables
-  | ID
-  ;
-
 function_params
   : vardecl function_params
   | type variables
+  ;
+
+variables
+  : ID COMMA variables
+  | ID
   ;
 
 type
@@ -94,7 +106,7 @@ RCB: '}';
 
 MINUS: '-';
 
-PLUS: '+';
+ADD: '+';
 
 MULTIPLY: '*';
 
@@ -104,7 +116,7 @@ ID: [a-zA-Z_] [a-zA-Z0-9_]*;
 
 INTEGER
   : NON_ZERO_DIGIT DIGIT*
-  | '0'*
+  | '0'+
   ;
 
 FLOAT
