@@ -126,17 +126,95 @@ class ParserSuite(unittest.TestCase):
     #         expect = "successful"
     #         self.assertTrue(TestParser.test(input, expect, 910))
 
-    def test_18(self):
-        input = """int a, b,c;
-float foo(int a; float c, d) {
-   int e ;
-   e = expr ;
-   c = expr ;
-   foo(expr);
-   return expr;
-}
-float goo (float a, b) {
+    #     def test_18(self):
+    #         input = """int a, b,c;
+    #     float foo(int a; float c, d) {
+    #        int e ;
+    #        e = expr ;
+    #        c = expr ;
+    #        foo(expr);
+    #        return expr;
+    #     }
+    #     float goo (float a, b) {
+    #        return expr;
+    #     }"""
+    #         expect = "successful"
+    #         self.assertTrue(TestParser.test(input, expect, 1000))
+    #
+    #     def test_19(self):
+    #         input = """int a, b,;"""
+    #         expect = "Error on line 1 col 9: ;"
+    #         self.assertTrue(TestParser.test(input, expect, 1001))
+    #
+    #     def test_20(self):
+    #         input = """float foo(int a, float c, d) {}"""
+    #         expect = "Error on line 1 col 17: float"
+    #         self.assertTrue(TestParser.test(input, expect, 1002))
+    #
+    #     def test_21(self):
+    #         input = """float foo(int a; float c, d;) {}"""
+    #         expect = "Error on line 1 col 28: )"
+    #         self.assertTrue(TestParser.test(input, expect, 1003))
+    #
+    #     def test_22(self):
+    #         input = """int c;
+    # c = expr;"""
+    #         expect = "Error on line 2 col 0: c"
+    #         self.assertTrue(TestParser.test(input, expect, 1004))
+    #
+    #     def test_23(self):
+    #         input = """int a, b,c;
+    # float foo(int a; float c, d) {
+    #    int e = expr;
+    #    e = expr ;
+    #    c = expr ;
+    #    return expr;
+    # }
+    # float goo(float a, b) {
+    #    return expr;
+    # }"""
+    #         expect = "Error on line 3 col 9: ="
+    #         self.assertTrue(TestParser.test(input, expect, 1005))
+    #
+    #     def test_24(self):
+    #         input = """int a, b,c;
+    # float foo(int a; float c, d) {
+    #    int e ;
+    #    e = expr ;
+    #    c = expr ;
+    #    return expr
+    # }
+    # """
+    #         expect = "Error on line 7 col 0: }"
+    #         self.assertTrue(TestParser.test(input, expect, 1006))
+    #
+    #     def test_25(self):
+    #         input = """float goo (float a, b) {
+    #     foo(expr, expr, expr);
+    #     return expr;
+    # }
+    #
+    # c = expr;"""
+    #         expect = "Error on line 6 col 0: c"
+    #         self.assertTrue(TestParser.test(input, expect, 1007))
+    #
+    #     def test_26(self):
+    #         input = """float goo (float a, b) {
+    #    return expr;
+    # }"""
+    #         expect = "successful"
+    #         self.assertTrue(TestParser.test(input, expect, 1008))
+    #
+    #     def test_27(self):
+    #         input = """float goo (float a, b) {
+    #    return expr;
+    # }"""
+    #         expect = "successful"
+    #         self.assertTrue(TestParser.test(input, expect, 1009))
+
+    def test_27(self):
+        input = """float goo (float a, b) {
    return expr;
 }"""
         expect = "successful"
-        self.assertTrue(TestParser.test(input, expect, 1000))
+        self.assertTrue(TestParser.test(input, expect, 1009))

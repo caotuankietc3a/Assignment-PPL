@@ -9,7 +9,7 @@ options{
 }
 
 program
-  : declare 
+  : declare EOF
   ;
 
 declare
@@ -18,11 +18,18 @@ declare
   ; 
 
 funcdecl
-  : type function_name LB function_params? RB body
+  : type function_name LB function_params? RB LCB body RCB
   ;
 
 body
-  : LCB (vardecl | call_statement | assign_statement | return_statement)* RCB
+  : (vardecl | statement) body
+  |
+  ;
+
+statement
+  : call_statement 
+  | assign_statement 
+  | return_statement
   ;
 
 assign_statement
@@ -65,31 +72,17 @@ function_name
   : ID
   ;
 
-INT_TYPE
-  : 'int' 
-  ;
+INT_TYPE: 'int';
 
-FLOAT_TYPE
-  : 'float' 
-  ;
+FLOAT_TYPE: 'float';
 
-RETURN
-  : 'return'
-  ;
+RETURN: 'return';
 
-ID: [a-zA-Z_] [a-zA-Z0-9_]*;
+EQUAL: '=';
 
-SEMICOLON
-  : ';' 
-  ;
+SEMICOLON: ';';
 
-COMMA
-  : ',' 
-  ;
-
-EQUAL
-  : '='
-  ;
+COMMA: ',';
 
 LB: '(';
 
@@ -99,6 +92,54 @@ LCB: '{';
 
 RCB: '}';
 
+MINUS: '-';
+
+PLUS: '+';
+
+MULTIPLY: '*';
+
+DIVIDE: '/';
+
+ID: [a-zA-Z_] [a-zA-Z0-9_]*;
+
+INTEGER
+  : NON_ZERO_DIGIT DIGIT*
+  | '0'*
+  ;
+
+FLOAT
+ : POINT_FLOAT
+ | EXPONENT_FLOAT
+ ;
+
+fragment NON_ZERO_DIGIT
+  : [1-9]
+  ;
+
+fragment DIGIT
+  : [0-9]
+  ;
+
+fragment POINT_FLOAT
+ : INT_PART? FRACTION
+ | INT_PART '.'
+ ;
+
+fragment EXPONENT_FLOAT
+ : ( INT_PART | POINT_FLOAT ) EXPONENT
+ ;
+
+fragment INT_PART
+ : DIGIT+
+ ;
+
+fragment FRACTION
+ : '.' DIGIT+
+ ;
+
+fragment EXPONENT
+ : [eE] [+-]? DIGIT+
+ ;
 
 WS: [ \t\r\n] -> skip;
 
