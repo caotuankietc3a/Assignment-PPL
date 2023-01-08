@@ -11,3 +11,17 @@ Quizes-PPL/src/test/.DS_Store
 Quizes-PPL/src/test/*/500/
 Quizes-PPL/src/test/*/501/
 Quizes-PPL/target/*
+
+assignment1-ppl/src/external/.DS_Store
+assignment1-ppl/src/.DS_Store
+assignment1-ppl/src/lib/.DS_Store
+assignment1-ppl/src/lib/*.class
+assignment1-ppl/src/main/.DS_Store
+assignment1-ppl/src/main/mt22/*/__pycache__/
+assignment1-ppl/src/main/mt22/*/.DS_Store
+assignment1-ppl/src/main/mt22/*/.antlr/
+assignment1-ppl/src/test/__pycache__/
+assignment1-ppl/src/test/.DS_Store
+assignment1-ppl/src/test/*/500/
+assignment1-ppl/src/test/*/501/
+assignment1-ppl/target/*

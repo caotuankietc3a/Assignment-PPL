@@ -1,19 +1,34 @@
 /* 2053166 */
 grammar MT22;
 
-@lexer::header {
-from lexererr import *
-}
-
 options{
 	language=Python3;
 }
 
+@lexer::header {
+from lexererr import *
+}
+
+@lexer::members {
+@property
+def ids_size(self):
+  try:
+    return self._ids_size
+  except AttributeError: 
+    self._ids_size = 0
+    return self._ids_size
+
+@property
+def exprs_size(self):
+  try:
+    return self._exprs_size
+  except AttributeError:
+    self._exprs_size = 0
+    return self._exprs_size
+}
+
 program: EOF ;
 
-/* LEXICAL STRUCTURE */
-
-// ====================== Expressions ========================
 
 
 // ====================== Operators ========================
@@ -82,7 +97,7 @@ STRING_LIT
   ;
 
 fragment STR_CHAR
-  : ~[\\\n]
+  : ~[\\\n"]
   ;
 
 fragment ESC_SEQ
@@ -93,17 +108,20 @@ fragment ESC_SEQ
   | '\\\\'
   | '\\\''
   | '\\t'
+  | '\\"'
+  | '\'"'
+  ;
+
+fragment ESC_ERR
+  : '\\' ~[bfrnt\\']
+  | '\'' ~'"'
   ;
 
 // Should Check
-/* ARRAY_LIT */
-/*   : LEFT_BRACE expr RIGHT_BRACE */
-/*   ; */
-/**/
-/* expr */
-/*   : (STRING_LIT | BOOLEAN_LIT | INTEGER_LIT) COMMA expr */
-/*   | (STRING_LIT | BOOLEAN_LIT | INTEGER_LIT) */
-/*   ; */
+array_lit
+  : LEFT_BRACE exprs RIGHT_BRACE
+  ;
+
 
 fragment POINT_FLOAT
  : INTEGER_LIT? DECIMAL
@@ -130,6 +148,58 @@ fragment DIGIT
   : [0-9]
   ;
 
+// ====================== Expressions ========================
+exprs
+  : 'exprs' COMMA exprs {self.exprs_size += 1}
+  | 'exprs' {self.exprs_size += 1}
+  ;
+
+// ====================== Declarations ========================
+///////////////////////////////////// Start test //////////////////////////
+
+/* Variable declarations */
+variable_decl
+  : identifiers_list COLON (((atomic_type | array_type) ASSIGN exprs?) | (auto_type ASSIGN exprs)) SEMI_COLON
+  {
+    if self.exprs_size != self.ids_size:
+      self.skip()
+  }
+  ;
+
+identifiers_list
+  : ID COMMA {self.ids_size += 1}
+  | ID {self.ids_size += 1}
+  ;
+
+/* Function declaratinons */
+parameter_decl
+  : OUT? ID COLON (atomic_type | array_type | auto_type)
+  ;
+
+///////////////////////////////////// End test //////////////////////////
+
+
+// ====================== Type system and values ========================
+///////////////////////////////////// Start test //////////////////////////
+
+/* Atomic types */
+boolean_type: BOOLEAN; 
+int_type: INT;
+float_type: FLOAT;
+string_type: STRING;
+void_type: VOID;
+auto_type: AUTO;
+array_type: ARRAY dimensions OF atomic_type;
+dimensions: LEFT_BRACK INTEGER_LIT (COMMA INTEGER_LIT)* RIGHT_BRACK;
+atomic_type
+  : boolean_type
+  | int_type
+  | float_type
+  | string_type
+  ;
+
+///////////////////////////////////// End test //////////////////////////
+
 // ====================== Keywords ========================
 AUTO: 'auto';
 BREAK: 'break';
@@ -142,9 +212,11 @@ FOR: 'for';
 FUNCTION: 'function';
 IF: 'if';
 INTEGER: 'integer';
+INT: 'int';
 RETURN: 'return';
 STRING: 'string';
 TRUE: 'true';
+ARRAY: 'array';
 VOID: 'void';
 WHILE: 'while';
 OUT: 'out';
@@ -189,4 +261,10 @@ UNCLOSE_STRING
       raise UncloseString(content[1:])
   }
   ;
-ILLEGAL_ESCAPE: .;
+
+ILLEGAL_ESCAPE
+  : '"' (STR_CHAR | ESC_SEQ)* ESC_ERR
+  {
+    raise IllegalEscape(str(self.text[1:]))
+  }
+  ;

@@ -101,3 +101,59 @@ class LexerSuite(unittest.TestCase):
                 120,
             )
         )
+
+    def test_boolean_lit(self):
+        self.assertTrue(TestLexer.test(
+            r"""true false""", "true,false,<EOF>", 121,))
+
+    def test_string_lit_1(self):
+        self.assertTrue(TestLexer.test(
+            """\"This is \\t a string containing tab \t\"""", "This is \\t a string containing tab 	,<EOF>", 122,))
+
+    def test_string_lit_2(self):
+        self.assertTrue(TestLexer.test(
+            """\"He asked me: \\\"Where is John?\\\"\"""", "He asked me: \\\"Where is John?\\\",<EOF>", 123,))
+
+    def test_string_lit_3(self):
+        self.assertTrue(TestLexer.test("\"He asked me: \'\"Where is John?\'\"\"",
+                                       "He asked me: \'\"Where is John?\'\",<EOF>", 124))
+
+    def test_string_lit_4(self):
+        self.assertTrue(TestLexer.test(
+            "\"\\b \\' He is my ex's man\"", "\\b \\' He is my ex's man,<EOF>", 125))
+
+    def test_string_lit_5(self):
+        self.assertTrue(TestLexer.test(
+            "\"She is Tam\'s girlfriend.\"", "She is Tam\'s girlfriend.,<EOF>", 126))
+
+    def test_string_unclose_1(self):
+        self.assertTrue(TestLexer.test("\"He is a man",
+                        "Unclosed String: He is a man", 127))
+
+    def test_string_unclose_2(self):
+        self.assertTrue(TestLexer.test("\"abc \\n \\f 's def",
+                        "Unclosed String: abc \\n \\f 's def", 128))
+
+    def test_string_unclose_3(self):
+        self.assertTrue(TestLexer.test("\"He is \\b a man",
+                        "Unclosed String: He is \\b a man", 129))
+
+    def test_string_unclose_4(self):
+        self.assertTrue(TestLexer.test("\"It is a unclosed \\n string",
+                        "Unclosed String: It is a unclosed \\n string", 130))
+
+    def test_string_unclose_5(self):
+        self.assertTrue(TestLexer.test("\"This is a \\t string \\n containing tab \" \"He asked \\n me: '\"Where '\"is'\" John?'\"\" \"I am not closed",
+                        "This is a \\t string \\n containing tab ,He asked \\n me: '\"Where '\"is'\" John?'\",Unclosed String: I am not closed", 131))
+
+    def test_string_illegal_esc_1(self):
+        self.assertTrue(TestLexer.test("\"I have an escape sequence \'\"Here it is \\k\'\"\"",
+                        "Illegal Escape In String: I have an escape sequence \'\"Here it is \\k", 132))
+
+    def test_string_illegal_esc_2(self):
+        self.assertTrue(TestLexer.test("\"\\a He is a man\"",
+                        "Illegal Escape In String: \\a", 133))
+
+    def test_string_illegal_esc_3(self):
+        self.assertTrue(TestLexer.test("\"\\\\ He is a \\\\ \\\' 19-year-old man \\a\"",
+                        "Illegal Escape In String: \\\\ He is a \\\\ \\\' 19-year-old man \\a", 134))
