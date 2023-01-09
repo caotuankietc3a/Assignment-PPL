@@ -9,26 +9,38 @@ options{
 from lexererr import *
 }
 
-@lexer::members {
+@parser::members {
 @property
 def ids_size(self):
-  try:
-    return self._ids_size
-  except AttributeError: 
-    self._ids_size = 0
-    return self._ids_size
+    try:
+        return self._ids_size
+    except AttributeError: 
+        self._ids_size = -1
+        return self._ids_size
 
 @property
 def exprs_size(self):
-  try:
-    return self._exprs_size
-  except AttributeError:
-    self._exprs_size = 0
-    return self._exprs_size
+    try:
+        return self._exprs_size
+    except AttributeError:
+        self._exprs_size = -1
+        return self._exprs_size
+
+@ids_size.setter
+def ids_size(self, value):
+    self._ids_size = value
+
+@exprs_size.setter
+def exprs_size(self, value):
+    self._exprs_size = value
 }
 
-program: EOF ;
+program: decl EOF ;
 
+decl
+  : (variable_decl | function_decl) decl
+  | (variable_decl | function_decl)
+  ;
 
 
 // ====================== Operators ========================
@@ -117,9 +129,8 @@ fragment ESC_ERR
   | '\'' ~'"'
   ;
 
-// Should Check
 array_lit
-  : LEFT_BRACE exprs RIGHT_BRACE
+  : LEFT_BRACE exprs_list RIGHT_BRACE
   ;
 
 
@@ -148,33 +159,170 @@ fragment DIGIT
   : [0-9]
   ;
 
+// ====================== Statements ========================
+
+statements_list
+  : statement statements_list
+  | statement
+  ;
+
+statement
+  : assign_stmt
+  | if_stmt
+  | for_stmt
+  | while_stmt
+  | do_while_stmt
+  | break_stmt
+  | continue_stmt
+  | return_stmt
+  | call_stmt
+  | block_stmt
+  ;
+
+assign_stmt
+  : assign_stmt_lhs ASSIGN assign_stmt_rhs SEMI_COLON
+  ;
+
+assign_stmt_lhs
+  : (scalar_var | index_expr) ASSIGN assign_stmt_lhs
+  | (scalar_var | index_expr)
+  ;
+
+assign_stmt_rhs: expr;
+
+if_stmt
+  : IF LEFT_PAREN expr RIGHT_PAREN statement (ELSE statement)?
+  ;
+
+for_stmt
+  : FOR LEFT_PAREN init_expr COMMA condition_expr COMMA update_expr RIGHT_PAREN statement
+  ;
+
+init_expr: scalar_var ASSIGN expr;
+
+condition_expr: expr;
+
+update_expr: expr;
+
+while_stmt
+  : WHILE LEFT_PAREN expr RIGHT_PAREN statement
+  ;
+
+do_while_stmt: DO block_stmt WHILE LEFT_PAREN expr RIGHT_PAREN SEMI_COLON;
+
+break_stmt: BREAK;
+
+continue_stmt: CONTINUE;
+
+return_stmt: RETURN expr? SEMI_COLON;
+
+call_stmt: func_call SEMI_COLON;
+
+block_stmt: LEFT_BRACE statements_list RIGHT_BRACE;
+
+scalar_var: ID;
+
 // ====================== Expressions ========================
-exprs
-  : 'exprs' COMMA exprs {self.exprs_size += 1}
-  | 'exprs' {self.exprs_size += 1}
+expr
+  : string_expr
+  ;
+
+string_expr
+  : string_expr SR relational_expr 
+  | relational_expr
+  ;
+
+relational_expr
+  : logical_expr_1 (EQ | NOT_EQ | GT | LT | LT_EQ | GT_EQ) logical_expr_1
+  | logical_expr_1
+  ;
+
+logical_expr_1
+  : logical_expr_1 (AND | OR) adding_expr
+  | adding_expr
+  ;
+
+adding_expr
+  : adding_expr (ADD | MINUS) multiplying_expr
+  | multiplying_expr
+  ;
+
+multiplying_expr
+  : multiplying_expr (MUL | DIV | MOD) logical_expr_2
+  | logical_expr_2
+  ;
+
+logical_expr_2
+  : NOT logical_expr_2
+  | sign_expr
+  ;
+
+sign_expr
+  : MINUS sign_expr
+  | index_expr
+  ;
+
+index_expr
+  : index_expr LEFT_BRACK exprs_list RIGHT_BRACK
+  | operand_expr
+  ;
+
+operand_expr
+  : operand
+  | LEFT_PAREN expr RIGHT_PAREN
+  ;
+
+operand
+  : literal
+  | func_call
+  | ID
+  ;
+
+func_call: ID LEFT_PAREN exprs_list? RIGHT_PAREN;
+
+literal
+  : INTEGER_LIT
+  | FLOAT_LIT
+  | BOOLEAN_LIT
+  | STRING_LIT
+  | array_lit
+  ;
+
+exprs_list
+  : expr {self.exprs_size += 2} (COMMA exprs_list{self.exprs_size += 1})*
   ;
 
 // ====================== Declarations ========================
 ///////////////////////////////////// Start test //////////////////////////
 
-/* Variable declarations */
+// Don't make spaces with python codes
 variable_decl
-  : identifiers_list COLON (((atomic_type | array_type) ASSIGN exprs?) | (auto_type ASSIGN exprs)) SEMI_COLON
+  : identifiers_list COLON (((atomic_type | array_type) (ASSIGN exprs_list)?) | (auto_type ASSIGN exprs_list)) SEMI_COLON
   {
-    if self.exprs_size != self.ids_size:
-      self.skip()
+if self.exprs_size != -1 and self.exprs_size != self.ids_size: 
+    print("SOMETHING WENT WRONG!!!")
+
+self.ids_size = -1
+self.exprs_size = -1
   }
   ;
 
-identifiers_list
-  : ID COMMA {self.ids_size += 1}
-  | ID {self.ids_size += 1}
+identifiers_list: ID {self.ids_size += 2} (COMMA ID{self.ids_size += 1})*;
+
+function_decl
+  : ID COLON FUNCTION (atomic_type | void_type | auto_type) LEFT_PAREN params_list? RIGHT_PAREN (INHERIT ID)? body
   ;
 
-/* Function declaratinons */
+params_list
+  : parameter_decl COMMA params_list
+  | parameter_decl
+  ;
+
 parameter_decl
   : OUT? ID COLON (atomic_type | array_type | auto_type)
   ;
+
+body: block_stmt;
 
 ///////////////////////////////////// End test //////////////////////////
 
@@ -243,13 +391,6 @@ ID
 
 WS : [ \b\f\t\r\n]+ -> skip ; // skip spaces, tabs, newlines
 
-ERROR_CHAR
-  : .
-  {
-    raise ErrorToken(self.text)
-  }
-  ;
-
 UNCLOSE_STRING
   : '"' (STR_CHAR | ESC_SEQ)* (EOF | '\n')
   {
@@ -266,5 +407,12 @@ ILLEGAL_ESCAPE
   : '"' (STR_CHAR | ESC_SEQ)* ESC_ERR
   {
     raise IllegalEscape(str(self.text[1:]))
+  }
+  ;
+
+ERROR_CHAR
+  : .
+  {
+    raise ErrorToken(self.text)
   }
   ;
