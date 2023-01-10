@@ -92,9 +92,11 @@ INTEGER_LIT
   ;
 
 FLOAT_LIT
- : POINT_FLOAT
- | EXPONENT_FLOAT
- ;
+  : (POINT_FLOAT | EXPONENT_FLOAT)
+  {
+  self.text = self.text.replace('_', '')
+  }
+  ;
 
 BOOLEAN_LIT
   : TRUE 
@@ -177,6 +179,7 @@ statement
   | return_stmt
   | call_stmt
   | block_stmt
+  | variable_decl
   ;
 
 assign_stmt
