@@ -35,11 +35,12 @@ def exprs_size(self, value):
     self._exprs_size = value
 }
 
+/* program: array_lit* EOF ; */
 program: decl EOF ;
 
 decl
-  : (variable_decl | function_decl) decl
-  | (variable_decl | function_decl)
+  : (variable_decl | function_decl | statement) decl
+  | (variable_decl | function_decl | statement)
   ;
 
 
@@ -94,7 +95,7 @@ INTEGER_LIT
 FLOAT_LIT
   : (POINT_FLOAT | EXPONENT_FLOAT)
   {
-  self.text = self.text.replace('_', '')
+    self.text = self.text.replace('_', '')
   }
   ;
 
@@ -132,7 +133,7 @@ fragment ESC_ERR
   ;
 
 array_lit
-  : LEFT_BRACE exprs_list RIGHT_BRACE
+  : LEFT_BRACE exprs_list? RIGHT_BRACE
   ;
 
 
@@ -198,7 +199,7 @@ if_stmt
   ;
 
 for_stmt
-  : FOR LEFT_PAREN init_expr COMMA condition_expr COMMA update_expr RIGHT_PAREN statement
+  : FOR LEFT_PAREN init_expr? COMMA condition_expr? COMMA update_expr? RIGHT_PAREN statement
   ;
 
 init_expr: scalar_var ASSIGN expr;
@@ -213,15 +214,15 @@ while_stmt
 
 do_while_stmt: DO block_stmt WHILE LEFT_PAREN expr RIGHT_PAREN SEMI_COLON;
 
-break_stmt: BREAK;
+break_stmt: BREAK SEMI_COLON;
 
-continue_stmt: CONTINUE;
+continue_stmt: CONTINUE SEMI_COLON;
 
 return_stmt: RETURN expr? SEMI_COLON;
 
 call_stmt: func_call SEMI_COLON;
 
-block_stmt: LEFT_BRACE statements_list RIGHT_BRACE;
+block_stmt: LEFT_BRACE statements_list? RIGHT_BRACE;
 
 scalar_var: ID;
 
@@ -340,8 +341,8 @@ float_type: FLOAT;
 string_type: STRING;
 void_type: VOID;
 auto_type: AUTO;
-array_type: ARRAY dimensions OF atomic_type;
-dimensions: LEFT_BRACK INTEGER_LIT (COMMA INTEGER_LIT)* RIGHT_BRACK;
+array_type: ARRAY LEFT_BRACK dimensions? RIGHT_BRACK OF atomic_type;
+dimensions: INTEGER_LIT (COMMA INTEGER_LIT)* ;
 atomic_type
   : boolean_type
   | int_type
