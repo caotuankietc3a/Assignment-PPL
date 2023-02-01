@@ -1,2 +1,2 @@
 
-int a = a|b;
+integer a = a|b;

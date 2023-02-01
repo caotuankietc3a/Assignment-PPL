@@ -1,1 +1,1 @@
-int,return,string,true,void,<EOF>
+integer,return,string,true,void,<EOF>

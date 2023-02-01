@@ -1,4 +1,4 @@
 
 float a, b, c;
 boolean x, y, z;
-int g, h, y;
+integer g, h, y;

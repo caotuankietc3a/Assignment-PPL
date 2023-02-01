@@ -1,1 +1,1 @@
-TESTFUNCTION,:,function,int,(,out,num,:,array,[,5,],of,int,),{,return,0,;,},<EOF>
+TESTFUNCTION,:,function,integer,(,out,num,:,array,[,5,],of,integer,),{,return,0,;,},<EOF>

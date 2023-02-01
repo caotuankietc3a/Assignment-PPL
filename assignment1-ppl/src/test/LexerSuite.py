@@ -327,7 +327,7 @@ class LexerSuite(unittest.TestCase):
 
     def test_keywords_3(self):
         self.assertTrue(TestLexer.test(
-            "int return string true void", "int,return,string,true,void,<EOF>", 159))
+            "integer return string true void", "integer,return,string,true,void,<EOF>", 159))
 
     def test_keywords_4(self):
         self.assertTrue(TestLexer.test(
@@ -357,10 +357,10 @@ e-12 e+12 . 1e 12e 12.05e .05e ee e01 .12 143e
 
     def test_others_3(self):
         self.assertTrue(TestLexer.test("""
-int[5] a;
+integer[5] a;
 {1, 2, 3}
 {2.3, 4.2, 102e3}
-        """, "int,[,5,],a,;,{,1,,,2,,,3,},{,2.3,,,4.2,,,102e3,},<EOF>", 164))
+        """, "integer,[,5,],a,;,{,1,,,2,,,3,},{,2.3,,,4.2,,,102e3,},<EOF>", 164))
 
     def test_others_4(self):
         self.assertTrue(TestLexer.test("""
@@ -397,8 +397,8 @@ a := a && 1
 
     def test_others_10(self):
         self.assertTrue(TestLexer.test(r"""
-int a = a|b;
-""", r"""int,a,=,a,Error Token |""", 171))
+integer a = a|b;
+""", r"""integer,a,=,a,Error Token |""", 171))
 
     def test_others_11(self):
         self.assertTrue(TestLexer.test(r"""
@@ -453,8 +453,8 @@ g = 9
         self.assertTrue(TestLexer.test(r"""
 float a, b, c;
 boolean x, y, z;
-int g, h, y;
-""", r"""float,a,,,b,,,c,;,boolean,x,,,y,,,z,;,int,g,,,h,,,y,;,<EOF>""", 180))
+integer g, h, y;
+""", r"""float,a,,,b,,,c,;,boolean,x,,,y,,,z,;,integer,g,,,h,,,y,;,<EOF>""", 180))
 
     def test_others_20(self):
         self.assertTrue(TestLexer.test(r"""
@@ -474,17 +474,17 @@ void nty() {
 
     def test_others_22(self):
         self.assertTrue(TestLexer.test(r"""
-int foo(){};
-""", r"""int,foo,(,),{,},;,<EOF>""", 183))
+integer foo(){};
+""", r"""integer,foo,(,),{,},;,<EOF>""", 183))
 
     def test_others_23(self):
         self.assertTrue(TestLexer.test(r"""
-int foo();
+integer foo();
 	while false{
 		hard_work();
 			if true then break;
 		}
-""", r"""int,foo,(,),;,while,false,{,hard_work,(,),;,if,true,then,break,;,},<EOF>""", 184))
+""", r"""integer,foo,(,),;,while,false,{,hard_work,(,),;,if,true,then,break,;,},<EOF>""", 184))
 
     def test_others_24(self):
         self.assertTrue(TestLexer.test(r"""
@@ -527,15 +527,15 @@ a = "xyz"
 
     def test_others_31(self):
         input = """
- powerFunc : function int (base : int, power : int) {
+ powerFunc : function integer (base : integer, power : integer) {
   if (power == 0)
     return 1;
   else
     return (base * powerFunc(base, power - 1));
 }
 
-mod: function int (num: array [5] of int , a: int) {
-  res, i : int  = 0, -1;
+mod: function integer (num: array [5] of integer , a: integer) {
+  res, i : integer  = 0, -1;
 
   for (i = 0; i < 5; i+1)
     res = (res * 10 + num[i] - "0") % a;
@@ -543,13 +543,13 @@ mod: function int (num: array [5] of int , a: int) {
   return res;
 }
 """
-        expect = "powerFunc,:,function,int,(,base,:,int,,,power,:,int,),{,if,(,power,==,0,),return,1,;,else,return,(,base,*,powerFunc,(,base,,,power,-,1,),),;,},mod,:,function,int,(,num,:,array,[,5,],of,int,,,a,:,int,),{,res,,,i,:,int,=,0,,,-,1,;,for,(,i,=,0,;,i,<,5,;,i,+,1,),res,=,(,res,*,10,+,num,[,i,],-,0,),%,a,;,return,res,;,},<EOF>"
+        expect = "powerFunc,:,function,integer,(,base,:,integer,,,power,:,integer,),{,if,(,power,==,0,),return,1,;,else,return,(,base,*,powerFunc,(,base,,,power,-,1,),),;,},mod,:,function,integer,(,num,:,array,[,5,],of,integer,,,a,:,integer,),{,res,,,i,:,integer,=,0,,,-,1,;,for,(,i,=,0,;,i,<,5,;,i,+,1,),res,=,(,res,*,10,+,num,[,i,],-,0,),%,a,;,return,res,;,},<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 192))
 
     def test_others_32(self):
         input = """
-mod: function int (num: array [5] of int , a: int) {
-  res, i : int  = 0, -1;
+mod: function integer (num: array [5] of integer , a: integer) {
+  res, i : integer  = 0, -1;
 
   for (i = 0; i < 5; i+1)
     res = (res * 10 + num[i] - "0") % a;
@@ -557,26 +557,26 @@ mod: function int (num: array [5] of int , a: int) {
   return res;
 }
 """
-        expect = "mod,:,function,int,(,num,:,array,[,5,],of,int,,,a,:,int,),{,res,,,i,:,int,=,0,,,-,1,;,for,(,i,=,0,;,i,<,5,;,i,+,1,),res,=,(,res,*,10,+,num,[,i,],-,0,),%,a,;,return,res,;,},<EOF>"
+        expect = "mod,:,function,integer,(,num,:,array,[,5,],of,integer,,,a,:,integer,),{,res,,,i,:,integer,=,0,,,-,1,;,for,(,i,=,0,;,i,<,5,;,i,+,1,),res,=,(,res,*,10,+,num,[,i,],-,0,),%,a,;,return,res,;,},<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 193))
 
     def test_others_33(self):
         input = """
-mod: function int (num: array [5] of int , a: int) {
-  res, i : int  = 0, -1;
+mod: function integer (num: array [5] of integer , a: integer) {
+  res, i : integer  = 0, -1;
   return res;
 }
 """
-        expect = "mod,:,function,int,(,num,:,array,[,5,],of,int,,,a,:,int,),{,res,,,i,:,int,=,0,,,-,1,;,return,res,;,},<EOF>"
+        expect = "mod,:,function,integer,(,num,:,array,[,5,],of,integer,,,a,:,integer,),{,res,,,i,:,integer,=,0,,,-,1,;,return,res,;,},<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 194))
 
     def test_others_34(self):
         input = """
-TESTFUNCTION: function int (out num: array [5] of int) {
+TESTFUNCTION: function integer (out num: array [5] of integer) {
   return 0;
 }
 """
-        expect = "TESTFUNCTION,:,function,int,(,out,num,:,array,[,5,],of,int,),{,return,0,;,},<EOF>"
+        expect = "TESTFUNCTION,:,function,integer,(,out,num,:,array,[,5,],of,integer,),{,return,0,;,},<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 195))
 
     def test_others_35(self):

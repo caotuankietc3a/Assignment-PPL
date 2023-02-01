@@ -1,1 +1,1 @@
-int,foo,(,),{,},;,<EOF>
+integer,foo,(,),{,},;,<EOF>
