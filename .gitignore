@@ -25,3 +25,17 @@ assignment1-ppl/src/test/.DS_Store
 assignment1-ppl/src/test/*/500/
 assignment1-ppl/src/test/*/501/
 assignment1-ppl/target/*
+
+assignment2-ppl/src/external/.DS_Store
+assignment2-ppl/src/.DS_Store
+assignment2-ppl/src/lib/.DS_Store
+assignment2-ppl/src/lib/*.class
+assignment2-ppl/src/main/.DS_Store
+assignment2-ppl/src/main/mt22/*/__pycache__/
+assignment2-ppl/src/main/mt22/*/.DS_Store
+assignment2-ppl/src/main/mt22/*/.antlr/
+assignment2-ppl/src/test/__pycache__/
+assignment2-ppl/src/test/.DS_Store
+assignment2-ppl/src/test/*/500/
+assignment2-ppl/src/test/*/501/
+assignment2-ppl/target/*

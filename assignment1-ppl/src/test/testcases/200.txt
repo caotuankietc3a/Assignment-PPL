@@ -1,2 +1,2 @@
 
-for(,,) statements
+a, b, c : boolean;
