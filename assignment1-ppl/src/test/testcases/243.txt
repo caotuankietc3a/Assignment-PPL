@@ -1,0 +1,8 @@
+
+findGCD: function int (a: int, b: int)
+{
+    if(b){
+        return findGCD(b, a % b);
+    }
+    return a;
+}

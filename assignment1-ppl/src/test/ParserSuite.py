@@ -82,113 +82,130 @@ a,   b,   c   : array [2, 3] of int = {{1, 2, 3}, {0, 5, 6}}, {{}, {}}, {{2, 3},
 
     def test_variable_decl_12(self):
         input = """
-found : boolean = true;
-is_Num, is_String: string = "", "";
-is_String = "TEST";
+main : function void () {
+    found : boolean = true;
+    is_Num, is_String: string = "", "";
+    is_String = "TEST";
+}
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 211))
 
-    def test_stmts_1(self):
+    def test_function_1(self):
         input = """
-nE : int = 0;
-for (i = 0, i < nE, i + 1) {
-    if (nE == 10 + 5) {
-        return nE;
+main : function void () {
+    nE : int = 0;
+    for (i = 0, i < nE, i + 1) {
+        if (nE == 10 + 5) {
+            return nE;
+        }
     }
 }
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 212))
 
-    def test_stmts_2(self):
+    def test_function_2(self):
         input = """
-nE : int = 0;
-for (i = 0, i < nE, i + 1) 
-    if (nE == 10 + 5) 
-        return nE;
-    
+main : function void () {
+    nE : int = 0;
+    for (i = 0, i < nE, i + 1) 
+        if (nE == 10 + 5) 
+            return nE;
+}
 
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 213))
 
-    def test_stmts_3(self):
+    def test_function_3(self):
         input = """
-nE : int = 0;
-for (i = 0, i < nE,) 
-    if (nE == 10 + 5) 
-        return nE;
-    else i = i + 1;
+main : function void () {
+    nE : int = 0;
+    for (i = 0, i < nE,) 
+        if (nE == 10 + 5) 
+            return nE;
+        else i = i + 1;
+}
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 214))
 
-    def test_stmts_4(self):
+    def test_function_4(self):
         input = """
-nE : int = 0;
-for (i = 0,,) 
-    if (nE == 10 + 5) 
-        return nE;
-    else i = i + 1;
+main : function void () {
+    nE : int = 0;
+    for (i = 0,,) 
+        if (nE == 10 + 5) 
+            return nE;
+        else i = i + 1;
+}
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 215))
 
-    def test_stmts_5(self):
+    def test_function_5(self):
         input = """
-nE : int = 0;
-for (,,) 
-    if (nE == 10 + 5) 
-        return nE;
-    else nE = nE + 1;
+main : function void () {
+    nE : int = 0;
+    for (,,) 
+        if (nE == 10 + 5) 
+            return nE;
+        else nE = nE + 1;
+}
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 216))
 
-    def test_stmts_6(self):
+    def test_function_6(self):
         input = """
-nE : int = 0;
-while (true){
-    if (nE == 10) 
-        break;
-    else {
-        nE = nE + 1;
-        continue;
+main : function void () {
+    nE : int = 0;
+    while (true){
+        if (nE == 10) 
+            break;
+        else {
+            nE = nE + 1;
+            continue;
+        }
     }
 }
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 217))
 
-    def test_stmts_7(self):
+    def test_function_7(self):
         input = """
-nE : int = 0;
-do {
-    if (nE == 10) 
-        break;
-    else {
-        nE = nE + 1;
-        continue;
-    }
-} while(true);
+main : function void () {
+    nE : int = 0;
+    do {
+        if (nE == 10) 
+            break;
+        else {
+            nE = nE + 1;
+            continue;
+        }
+    } while(true);
+}
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 218))
 
-    def test_stmts_8(self):
+    def test_function_8(self):
         input = """
-nE : int = 0;
-do 
-    if (nE == 10) 
-        break;
-    else {
-        nE = nE + 1;
-        continue;
-    }
- while(true);
+main : function void () {
+    nE : int = 0;
+    do 
+        if (nE == 10) 
+            break;
+        else {
+            nE = nE + 1;
+            continue;
+        }
+     while(true);
+}
 """
-        expect = "Error on line 4 col 4: if"
+        expect = "Error on line 5 col 8: if"
         self.assertTrue(TestParser.test(input, expect, 219))
 
     def test_functions_1(self):

@@ -1,0 +1,8 @@
+
+long int digitExtraction(seed: int, extractDigits: array[100] of int, size: int) {
+  s, strSeed: string = "", to_string(seed);
+  for (int i = 0; i < size; i++) {
+    s += strSeed[extractDigits[i]];
+  }
+  return stoi(s);
+}

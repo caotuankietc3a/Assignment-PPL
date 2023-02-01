@@ -1,0 +1,11 @@
+
+n: int = 10;
+reverseFactorial: function int (out n: int, i: int) {
+    if(n == 1){
+        return i - 1;
+    }
+    if(n % i){
+        return -1;
+    }
+    return reverseFactorial(n / i, i + 1);
+}

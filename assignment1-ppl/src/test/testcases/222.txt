@@ -1,0 +1,19 @@
+
+x : int = 65;
+main : function void () {
+    arr : array [2, 3] of int;
+    if(check_prime(7)){
+        arr[1][2] = 10;
+    }
+}
+check_prime: function boolean (n : int) {
+  if (n < 2)
+    return false;
+
+  for (i = 2, i <= sqrt(n), i+1) {
+    if (n % i == 0)
+      return false;
+  }
+  return true;
+}
+    

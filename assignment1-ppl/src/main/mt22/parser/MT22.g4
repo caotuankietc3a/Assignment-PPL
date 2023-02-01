@@ -39,8 +39,8 @@ def exprs_size(self, value):
 program: decl EOF ;
 
 decl
-  : (variable_decl | function_decl | statement) decl
-  | (variable_decl | function_decl | statement)
+  : (variable_decl | function_decl) decl
+  | (variable_decl | function_decl)
   ;
 
 

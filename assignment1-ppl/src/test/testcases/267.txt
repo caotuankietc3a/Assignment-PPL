@@ -1,0 +1,15 @@
+
+removeDuplicates: function string (S: string, length: int){
+  ans: string;
+  push_back(ans, S[0]);
+  for (i = 1, i < length; i+1) {
+
+    if (S[i] == back(ans)) {
+      pop_back(ans);
+    } else {
+      push_back(ans, S[i]);
+    }
+  }
+
+  return ans;
+}

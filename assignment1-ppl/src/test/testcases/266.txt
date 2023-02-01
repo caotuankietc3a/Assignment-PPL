@@ -1,0 +1,7 @@
+
+reverse: function void(s: string, from: int, to: int) {
+  temp: string = s;
+  for (i = 0, i < to - from, i+1) {
+    s[from + i] = temp[to - 1 - i];
+  }
+}

@@ -4,7 +4,7 @@ import subprocess
 import unittest
 from antlr4 import *
 
-for path in ['./test/', './main/bkool/parser/', './main/bkool/utils/', './main/bkool/astgen/', './main/bkool/checker/', './main/bkool/codegen/']:
+for path in ['./test/', './main/bkool/parser/', './main/bkool/utils/', './main/bkool/astgen/']:
     sys.path.append(path)
 # ANTLR_JAR = os.environ.get('ANTLR_JAR')
 # ANTLR_JAR = "./lib/antlr-4.9.2-complete.jar"
@@ -41,12 +41,6 @@ def main(argv):
         elif argv[1] == 'ASTGenSuite':
             from test.ASTGenSuite import ASTGenSuite
             getAndTest(ASTGenSuite)
-        elif argv[1] == 'CheckerSuite':
-            from test.CheckerSuite import CheckerSuite
-            getAndTest(CheckerSuite)
-        elif argv[1] == 'CodeGenSuite':
-            from test.CodeGenSuite import CheckCodeGenSuite
-            getAndTest(CheckCodeGenSuite)
         else:
             printUsage()
     else:
@@ -76,8 +70,6 @@ def printUsage():
     print("python3 run.py test LexerSuite")
     print("python3 run.py test ParserSuite")
     print("python3 run.py test ASTGenSuite")
-    print("python3 run.py test CheckerSuite")
-    print("python3 run.py test CodeGenSuite")
 
 
 if __name__ == "__main__":

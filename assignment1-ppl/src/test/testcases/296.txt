@@ -1,0 +1,17 @@
+
+heapify: function void(arr: array[100] of int, numOfEl: int, i: int) {
+    left, right, largest: int = 2 * i + 1, 2 * i + 2, i;
+    if ((left < numOfEl) && (arr[left] > arr[largest]))
+      largest = left;
+
+    if ((right < numOfEl) && (arr[right] > arr[largest]))
+      largest = right;
+
+    // Swap and continue heapifying if root is not largest
+    if (largest != i) {
+      temp: int = arr[i];
+      arr[i] = arr[largest]
+      arr[largest] = temp;
+      heapify(arr, numOfEl, largest);
+    }
+  }

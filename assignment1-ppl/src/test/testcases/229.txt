@@ -1,0 +1,12 @@
+
+check_str_code: function boolean (code : string, size: int) {
+    if (code == "")
+    return false;
+    for (i = 0, i < size, i+ 1) {
+        if (!(((code[i] >= "a") && (code[i] <= "z")) ||
+              ((code[i] >= "A") && (code[i] <= "Z"))) {
+            return false;
+        }
+    }
+    return true;
+}

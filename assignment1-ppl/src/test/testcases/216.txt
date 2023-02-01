@@ -1,0 +1,8 @@
+
+main : function void () {
+    nE : int = 0;
+    for (,,) 
+        if (nE == 10 + 5) 
+            return nE;
+        else nE = nE + 1;
+}

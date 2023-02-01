@@ -1,0 +1,15 @@
+
+findGCD: function int (a: int, b: int) {
+  if(b){
+    return findGCD(b, a % b);
+  }
+  return a;
+}
+
+findLCM: function int (a: int, b: int){
+  return (a*b)/findGCD(a, b);
+}
+
+main : function void () {
+    findLCM(144, 12);
+}

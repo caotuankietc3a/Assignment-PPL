@@ -1,0 +1,10 @@
+
+reverse_string: function string(str: string, size: int) {
+    for (,,) {
+        x : string = str[i];
+        str[i] = str[size - i - 1];
+        str[size - i - 1] = x;
+        break
+    }
+    return str;
+}

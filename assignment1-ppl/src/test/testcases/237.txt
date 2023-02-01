@@ -1,0 +1,10 @@
+
+lookUp: function boolean (name: string, scopeFounded: int) { 
+    // Undeclared
+    for (, scopeFounded >= 0, scopeFounded-1) {
+        if (isExist(name, scopeFounded)) {
+            return true; 
+        }
+    }
+    return false;
+} 

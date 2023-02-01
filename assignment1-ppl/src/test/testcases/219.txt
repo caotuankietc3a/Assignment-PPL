@@ -1,0 +1,12 @@
+
+main : function void () {
+    nE : int = 0;
+    do 
+        if (nE == 10) 
+            break;
+        else {
+            nE = nE + 1;
+            continue;
+        }
+     while(true);
+}

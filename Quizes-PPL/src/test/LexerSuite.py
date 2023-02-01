@@ -141,26 +141,30 @@ class LexerSuite(unittest.TestCase):
     # def test_38(self):
     #     self.assertTrue(TestLexer.test("0",
     #                     "0,<EOF>", 610))
-    def test_39(self):
-        self.assertTrue(TestLexer.test("12", "12,<EOF>", 701))
+    # def test_39(self):
+    #     self.assertTrue(TestLexer.test("12", "12,<EOF>", 701))
+    #
+    # def test_40(self):
+    #     self.assertTrue(TestLexer.test("3dC", "3dC,<EOF>", 702))
+    #
+    # def test_41(self):
+    #     self.assertTrue(TestLexer.test("21A", "21A,<EOF>", 703))
+    #
+    # def test_42(self):
+    #     self.assertTrue(TestLexer.test("A12", "Error Token A", 704))
+    #
+    # def test_43(self):
+    #     self.assertTrue(TestLexer.test("1B", "Error Token 1", 705))
+    #
+    # def test_44(self):
+    #     self.assertTrue(TestLexer.test("1", "Error Token 1", 706))
+    #
+    # def test_45(self):
+    #     self.assertTrue(TestLexer.test("11B", "Error Token 1", 707))
+    #
+    # def test_46(self):
+    #     self.assertTrue(TestLexer.test("11A", "11A,<EOF>", 708))
 
-    def test_40(self):
-        self.assertTrue(TestLexer.test("3dC", "3dC,<EOF>", 702))
-
-    def test_41(self):
-        self.assertTrue(TestLexer.test("21A", "21A,<EOF>", 703))
-
-    def test_42(self):
-        self.assertTrue(TestLexer.test("A12", "Error Token A", 704))
-
-    def test_43(self):
-        self.assertTrue(TestLexer.test("1B", "Error Token 1", 705))
-
-    def test_44(self):
-        self.assertTrue(TestLexer.test("1", "Error Token 1", 706))
-
-    def test_45(self):
-        self.assertTrue(TestLexer.test("11B", "Error Token 1", 707))
-
-    def test_46(self):
-        self.assertTrue(TestLexer.test("11A", "11A,<EOF>", 708))
+    def test_47(self):
+        self.assertTrue(TestLexer.test(
+            "\"11111111 222222 3333333\b 44444\t 55\"55555\f 66666666\r 7777777\"\"", "", 113))

@@ -1,0 +1,26 @@
+
+x : int = 65;
+fact : function int (n : int) {
+    if (n == 0) return 1;
+    else return n*fact(n-1);
+}
+main : function void () {
+    delta : int = fact(3);
+    inc (x, delta);
+    printint(x);
+
+    arr : array [2, 3] of int;
+    arr[1][2] = 10
+}
+inc : function void (out n: int, delta : int) {
+    nE : int = 0;
+    do {
+        for (i = 0, i < nE, i + 1) 
+            if (nE == 10 + 5) 
+                return nE;
+            else 
+                nE = nE + 1;
+            continue;
+    } while(true);
+}
+    

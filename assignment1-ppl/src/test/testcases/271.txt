@@ -1,0 +1,7 @@
+
+midSquare: function int (seed: int) {
+  newSeed: int = pow(seed, 2);
+  s: string = to_string(newSeed);
+  erase(s, begin() + (int)s.size() - 2, end(s));
+  return stoi(substr(s, size(s) - 4));
+}

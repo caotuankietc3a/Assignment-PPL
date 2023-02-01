@@ -1,0 +1,9 @@
+
+left: function int (i: int) { return (2 * i + 1); }
+right: function int (i: int) { return (2 * i + 2); }
+parent: function int (i: int) { return (i - 1) / 2; }
+swap: function void(x: int,y: int) {
+  k: int = x;
+  x = y;
+  y = k;
+}

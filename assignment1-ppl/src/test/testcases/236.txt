@@ -1,0 +1,12 @@
+
+Recursive: function void (nums: array[100] of int, size: int, index: int , count: int, sum: int , minjump: int) {
+    if (sum >= size) {
+        nums[10] = sum;
+    } else {
+        Recursive(nums, index + i, count + 1, sum + i, minjump);
+    }
+}
+main : function void () {
+    nums: array[100] of int;
+    Recursive(nums, 1 + 2, 1 / 2, 1 % 31, 1, -1);
+}

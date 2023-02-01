@@ -1,0 +1,2 @@
+
+a,b,c,d: string = "12345", "test", "0000000", "Hello World\n";

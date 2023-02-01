@@ -1,0 +1,27 @@
+
+left: function int (i: int) { return (2 * i + 1); }
+right: function int (i: int) { return (2 * i + 2); }
+parent: function int (i: int) { return (i - 1) / 2; }
+swap: function void(x: int,y: int) {
+  k: int = x;
+  x = y;
+  y = k;
+}
+reheapDown: function void (maxHeap: array[100] of int, numberOfElements: int , index: int ) {
+    if (index < numberOfElements) {
+          l, r, largest: int = left(index)right(index), index;
+          if ((l < numberOfElements) && (maxHeap[l] > maxHeap[index])) {
+            largest = l;
+          }
+        
+          if ((r < numberOfElements) && (maxHeap[r] > maxHeap[largest])) {
+            largest = r;
+          }
+        
+          if (largest != index) {
+            swap(maxHeap[index], maxHeap[largest]);
+            reheapDown(maxHeap, numberOfElements, largest);
+          }
+    }
+  
+}
