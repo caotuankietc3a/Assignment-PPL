@@ -336,7 +336,7 @@ body: block_stmt;
 
 /* Atomic types */
 boolean_type: BOOLEAN; 
-int_type: INT;
+int_type: INTEGER;
 float_type: FLOAT;
 string_type: STRING;
 void_type: VOID;
@@ -364,7 +364,6 @@ FOR: 'for';
 FUNCTION: 'function';
 IF: 'if';
 INTEGER: 'integer';
-INT: 'int';
 RETURN: 'return';
 STRING: 'string';
 TRUE: 'true';

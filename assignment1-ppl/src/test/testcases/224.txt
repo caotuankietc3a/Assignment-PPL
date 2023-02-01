@@ -1,5 +1,5 @@
 
-Fibonacci: function int(n: int) {
+Fibonacci: function integer(n: integer) {
     f0,   f1,   fn: auto = 0, 1, 1;
     if (n < 0) {
         return -1

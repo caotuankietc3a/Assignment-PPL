@@ -1,2 +1,2 @@
 
-moduloDivision function int (seed: int, mod: int) { return seed % mod; }
+moduloDivision function integer (seed: integer, mod: integer) { return seed % mod; }

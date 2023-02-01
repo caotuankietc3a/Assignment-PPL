@@ -1,15 +1,15 @@
 
-x : int = 65;
-fact : function int (n : int) {
+x : integer = 65;
+fact : function integer (n : integer) {
     if (n == 0) return 1;
     else return n*fact(n-1);
 }
 main : function void () {
-    delta : int = fact(3);
+    delta : integer = fact(3);
     inc (x, delta);
-    printint(x);
+    printegerinteger(x);
 }
-inc : function void (out n: int, delta : int) {
+inc : function void (out n: integer, delta : integer) {
 n = n + delta;
     }
     

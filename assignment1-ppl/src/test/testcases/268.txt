@@ -1,5 +1,5 @@
 
-removeDuplicates: function string (S: string, length: int){
+removeDuplicates: function string (S: string, length: integer){
   ans: string;
   push_back(ans, S[0]);
   for (i = 1, i < length, i+1) {

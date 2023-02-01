@@ -1,2 +1,2 @@
 
-a,   b,   c   : array[2] of int = {1, 2}, {8, 9};
+a,   b,   c   : array[2] of integer = {1, 2}, {8, 9};

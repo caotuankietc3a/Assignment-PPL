@@ -1,5 +1,5 @@
 
-consecutiveOnes: function boolean(nums : array [200] of int, size: int) {
+consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) {
     found: boolean = false;
     for (i = 0; i < size;) {
         if (nums[i] == 1) {

@@ -1,6 +1,6 @@
 
-heapify: function void(arr: array[100] of int, numOfEl: int, i: int) {
-    left, right, largest: int = 2 * i + 1, 2 * i + 2, i;
+heapify: function void(arr: array[100] of integer, numOfEl: integer, i: integer) {
+    left, right, largest: integer = 2 * i + 1, 2 * i + 2, i;
     if ((left < numOfEl) && (arr[left] > arr[largest]))
       largest = left;
 
@@ -9,7 +9,7 @@ heapify: function void(arr: array[100] of int, numOfEl: int, i: int) {
 
     // Swap and continue heapifying if root is not largest
     if (largest != i) {
-      temp: int = arr[i];
+      temp: integer = arr[i];
       arr[i] = arr[largest];
       arr[largest] = temp;
       heapify(arr, numOfEl, largest);

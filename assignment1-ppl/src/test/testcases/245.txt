@@ -1,6 +1,6 @@
 
-n: int = 10;
-reverseFactorial: function int (out n: int, i: int) {
+n: integer = 10;
+reverseFactorial: function integer (out n: integer, i: integer) {
     if(n == 1){
         return i - 1;
     }

@@ -1,5 +1,5 @@
 
-lookUp: function boolean (name: string, scopeFounded: int) { 
+lookUp: function boolean (name: string, scopeFounded: integer) { 
     // Undeclared
     for (, scopeFounded >= 0, scopeFounded-1) {
         if (isExist(name, scopeFounded)) {

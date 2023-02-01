@@ -40,42 +40,42 @@ a,   b,   c   : auto;
 
     def test_variable_decl_6(self):
         input = """
-a,   b,   c   : array [2, 3] of int;
+a,   b,   c   : array [2, 3] of integer;
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 205))
 
     def test_variable_decl_7(self):
         input = """
-a, b, c : int;
+a, b, c : integer;
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 206))
 
     def test_variable_decl_8(self):
         input = """
-a,   b,   c   : array [2, 3] of int;
+a,   b,   c   : array [2, 3] of integer;
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 207))
 
     def test_variable_decl_9(self):
         input = """
-a,   b,   c   : array[2] of int = {1, 2}, {8, 9};
+a,   b,   c   : array[2] of integer = {1, 2}, {8, 9};
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 208))
 
     def test_variable_decl_10(self):
         input = """
-a,   b,   c   : array [2] of int = {1, 3}, {9}, {};
+a,   b,   c   : array [2] of integer = {1, 3}, {9}, {};
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 209))
 
     def test_variable_decl_11(self):
         input = """
-a,   b,   c   : array [2, 3] of int = {{1, 2, 3}, {0, 5, 6}}, {{}, {}}, {{2, 3}, {}};
+a,   b,   c   : array [2, 3] of integer = {{1, 2, 3}, {0, 5, 6}}, {{}, {}}, {{2, 3}, {}};
     """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 210))
@@ -94,7 +94,7 @@ main : function void () {
     def test_function_1(self):
         input = """
 main : function void () {
-    nE : int = 0;
+    nE : integer = 0;
     for (i = 0, i < nE, i + 1) {
         if (nE == 10 + 5) {
             return nE;
@@ -108,7 +108,7 @@ main : function void () {
     def test_function_2(self):
         input = """
 main : function void () {
-    nE : int = 0;
+    nE : integer = 0;
     for (i = 0, i < nE, i + 1) 
         if (nE == 10 + 5) 
             return nE;
@@ -121,7 +121,7 @@ main : function void () {
     def test_function_3(self):
         input = """
 main : function void () {
-    nE : int = 0;
+    nE : integer = 0;
     for (i = 0, i < nE,) 
         if (nE == 10 + 5) 
             return nE;
@@ -134,7 +134,7 @@ main : function void () {
     def test_function_4(self):
         input = """
 main : function void () {
-    nE : int = 0;
+    nE : integer = 0;
     for (i = 0,,) 
         if (nE == 10 + 5) 
             return nE;
@@ -147,7 +147,7 @@ main : function void () {
     def test_function_5(self):
         input = """
 main : function void () {
-    nE : int = 0;
+    nE : integer = 0;
     for (,,) 
         if (nE == 10 + 5) 
             return nE;
@@ -160,7 +160,7 @@ main : function void () {
     def test_function_6(self):
         input = """
 main : function void () {
-    nE : int = 0;
+    nE : integer = 0;
     while (true){
         if (nE == 10) 
             break;
@@ -177,7 +177,7 @@ main : function void () {
     def test_function_7(self):
         input = """
 main : function void () {
-    nE : int = 0;
+    nE : integer = 0;
     do {
         if (nE == 10) 
             break;
@@ -194,7 +194,7 @@ main : function void () {
     def test_function_8(self):
         input = """
 main : function void () {
-    nE : int = 0;
+    nE : integer = 0;
     do 
         if (nE == 10) 
             break;
@@ -210,17 +210,17 @@ main : function void () {
 
     def test_functions_1(self):
         input = """
-x : int = 65;
-fact : function int (n : int) {
+x : integer = 65;
+fact : function integer (n : integer) {
     if (n == 0) return 1;
     else return n*fact(n-1);
 }
 main : function void () {
-    delta : int = fact(3);
+    delta : integer = fact(3);
     inc (x, delta);
-    printint(x);
+    printegerinteger(x);
 }
-inc : function void (out n: int, delta : int) {
+inc : function void (out n: integer, delta : integer) {
 n = n + delta;
     }
     """
@@ -229,21 +229,21 @@ n = n + delta;
 
     def test_functions_2(self):
         input = """
-x : int = 65;
-fact : function int (n : int) {
+x : integer = 65;
+fact : function integer (n : integer) {
     if (n == 0) return 1;
     else return n*fact(n-1);
 }
 main : function void () {
-    delta : int = fact(3);
+    delta : integer = fact(3);
     inc (x, delta);
-    printint(x);
+    printegerinteger(x);
 
-    arr : array [2, 3] of int;
+    arr : array [2, 3] of integer;
     arr[1][2] = 10
 }
-inc : function void (out n: int, delta : int) {
-    nE : int = 0;
+inc : function void (out n: integer, delta : integer) {
+    nE : integer = 0;
     do {
         for (i = 0, i < nE, i + 1) 
             if (nE == 10 + 5) 
@@ -259,14 +259,14 @@ inc : function void (out n: int, delta : int) {
 
     def test_functions_3(self):
         input = """
-x : int = 65;
+x : integer = 65;
 main : function void () {
-    arr : array [2, 3] of int;
+    arr : array [2, 3] of integer;
     if(check_prime(7)){
         arr[1][2] = 10;
     }
 }
-check_prime: function boolean (n : int) {
+check_prime: function boolean (n : integer) {
   if (n < 2)
     return false;
 
@@ -282,15 +282,15 @@ check_prime: function boolean (n : int) {
 
     def test_functions_4(self):
         input = """
-x : int = 65;
+x : integer = 65;
 main : function void () {
-    arr : array [2, 3] of int;
+    arr : array [2, 3] of integer;
     if(check_prime(7)){
         arr[1][2] = Fibonacci(10);
     }
 
 }
-Fibonacci: function int(n: int) {
+Fibonacci: function integer(n: integer) {
     f0,   f1,   fn: auto = 0, 1, 1;
     if (n < 0) {
         return -1;
@@ -306,7 +306,7 @@ Fibonacci: function int(n: int) {
     }
     return fn;
 }
-check_prime: function boolean (n : int) {
+check_prime: function boolean (n : integer) {
   if (n < 2)
     return false;
 
@@ -322,7 +322,7 @@ check_prime: function boolean (n : int) {
 
     def test_functions_5(self):
         input = """
-Fibonacci: function int(n: int) {
+Fibonacci: function integer(n: integer) {
     f0,   f1,   fn: auto = 0, 1, 1;
     if (n < 0) {
         return -1
@@ -344,7 +344,7 @@ Fibonacci: function int(n: int) {
 
     def test_functions_6(self):
         input = """
-Fibonacci: function int(n: int) {
+Fibonacci: function integer(n: integer) {
     f0,   f1,   fn: auto = 0, 1, 1;
     if (n < 0) {
         return -1;
@@ -366,7 +366,7 @@ Fibonacci: function int(n: int) {
 
     def test_functions_7(self):
         input = """
-Fibonacci: function int(n: int) {
+Fibonacci: function integer(n: integer) {
     f0,   f1,   fn: auto = 0, 1, 1;
     if (n < 0) {
         return -1;
@@ -388,7 +388,7 @@ Fibonacci: function int(n: int) {
 
     def test_functions_8(self):
         input = """
-Fibonacci: function int(n: int) {
+Fibonacci: function integer(n: integer) {
     f0,   f1,   fn: auto = 0, 1, 1;
     if (n < 0) {
         return -1;
@@ -410,7 +410,7 @@ Fibonacci: function int(n: int) {
 
     def test_functions_9(self):
         input = """
-check_str_code: function boolean (code : string, size: int) {
+check_str_code: function boolean (code : string, size: integer) {
     if (code == "")
     return false;
     for (i = 0, i < size, i+ 1) {
@@ -427,7 +427,7 @@ check_str_code: function boolean (code : string, size: int) {
 
     def test_functions_10(self):
         input = """
-check_str_code: function boolean (code : string, size: int) {
+check_str_code: function boolean (code : string, size: integer) {
     if (code == "")
     return false;
     for (i = 0, i < size, i+ 1) {
@@ -444,7 +444,7 @@ check_str_code: function boolean (code : string, size: int) {
 
     def test_functions_11(self):
         input = """
-check_str_code: function boolean (code : string, size: int) {
+check_str_code: function boolean (code : string, size: integer) {
     if (code == "")
     return false;
     for (i = 0, i < size, i + 6 - 3) {
@@ -461,7 +461,7 @@ check_str_code: function boolean (code : string, size: int) {
 
     def test_functions_12(self):
         input = """
-reverse_string: function string(str: string, size: int) {
+reverse_string: function string(str: string, size: integer) {
     for (i = 0, i < size / 2, i+1) {
         x : string = str[i];
         str[i] = str[size - i - 1];
@@ -475,7 +475,7 @@ reverse_string: function string(str: string, size: int) {
 
     def test_functions_13(self):
         input = """
-reverse_string: function string(str: string, size: int) {
+reverse_string: function string(str: string, size: integer) {
     for (i = 0, i < size / 2, i+1) {
         x : string = str[i];
         str[i] = str[size - i - 1];
@@ -492,7 +492,7 @@ main : function void () {
 
     def test_functions_14(self):
         input = """
-Recursive: function void (nums: array[100] of int, size: int, index: int , count: int, sum: int , minjump: int) {
+Recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {
     if (sum >= size) {
         if (minjump > count)
             minjump = count;
@@ -508,7 +508,7 @@ Recursive: function void (nums: array[100] of int, size: int, index: int , count
 
     def test_functions_15(self):
         input = """
-Recursive: function void (nums: array[100] of int, size: int, index: int , count: int, sum: int , minjump: int) {
+Recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {
     if (sum >= size) {
         if (minjump > count)
             minjump = count;
@@ -519,7 +519,7 @@ Recursive: function void (nums: array[100] of int, size: int, index: int , count
     }
 }
 main : function void () {
-    nums: array[100] of int;
+    nums: array[100] of integer;
     Recursive(nums, 1 + 2, 1 / 2, 1 % 31, 1, -1);
 }
 """
@@ -528,7 +528,7 @@ main : function void () {
 
     def test_functions_16(self):
         input = """
-Recursive: function void (nums: array[100] of int, size: int, index: int , count: int, sum: int , minjump: int) {
+Recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {
     if (sum >= size) {
         if (minjump > count)
             minjump = count;
@@ -539,7 +539,7 @@ Recursive: function void (nums: array[100] of int, size: int, index: int , count
     }
 }
 main : function void () {
-    nums: array[100] of int;
+    nums: array[100] of integer;
     Recursive(nums, 1 + 2, 1 / 2, 1 % 31, 1, -1);
 }
 """
@@ -548,7 +548,7 @@ main : function void () {
 
     def test_functions_17(self):
         input = """
-Recursive: function void (nums: array[100] of int, size: int, index: int , count: int, sum: int , minjump: int) {
+Recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {
     if (sum >= size) {
         nums[10] = sum;
     } else {
@@ -556,7 +556,7 @@ Recursive: function void (nums: array[100] of int, size: int, index: int , count
     }
 }
 main : function void () {
-    nums: array[100] of int;
+    nums: array[100] of integer;
     Recursive(nums, 1 + 2, 1 / 2, 1 % 31, 1, -1);
 }
 """
@@ -565,7 +565,7 @@ main : function void () {
 
     def test_functions_18(self):
         input = """
-lookUp: function boolean (name: string, scopeFounded: int) { 
+lookUp: function boolean (name: string, scopeFounded: integer) { 
     // Undeclared
     for (, scopeFounded >= 0, scopeFounded-1) {
         if (isExist(name, scopeFounded)) {
@@ -580,7 +580,7 @@ lookUp: function boolean (name: string, scopeFounded: int) {
 
     def test_functions_19(self):
         input = """
-lookUp: function boolean (name: string, scopeFounded: int) { 
+lookUp: function boolean (name: string, scopeFounded: integer) { 
     // Undeclared
     for (, scopeFounded >= 0, scopeFounded-1) {
         if (isExist(name, scopeFounded)) {
@@ -598,12 +598,12 @@ main : function void () {
 
     def test_functions_20(self):
         input = """
-longestSublist: function int (words: array[100] of string, size: int) {
+longestSublist: function integer (words: array[100] of string, size: integer) {
     if(!size) return 0;
-    result : int = 1;
+    result : integer = 1;
     for (i = 0, i < size - 1, i + 1) {
         if (words[i][0] == words[i + 1][0]) {
-          pre_result, j: int  = 2 , i + 1;
+          pre_result, j: integer  = 2 , i + 1;
           while (j < size - 1) {
             if (words[j][0] == words[j + 1][0]) {
               pre_result = pre_result + 1;
@@ -623,12 +623,12 @@ longestSublist: function int (words: array[100] of string, size: int) {
 
     def test_functions_21(self):
         input = """
-longestSublist: function int (words: array[100] of string, size: int) {
+longestSublist: function integer (words: array[100] of string, size: integer) {
     if(!size) return 0;
-    result : int = 1;
+    result : integer = 1;
     for (i = 0, i < size - 1, i + 1) {
         if (words[i][0] == words[i + 1][0]) {
-          pre_result, j: int  = 2 , i + 1
+          pre_result, j: integer  = 2 , i + 1
           while (j < size - 1) {
             if (words[j][0] == words[j + 1][0]) {
               pre_result = pre_result + 1;
@@ -648,12 +648,12 @@ longestSublist: function int (words: array[100] of string, size: int) {
 
     def test_functions_22(self):
         input = """
-longestSublist: function int (words: array[100] of string, size: int) {
+longestSublist: function integer (words: array[100] of string, size: integer) {
     if(!size) return 0;
-    result : int = 1;
+    result : integer = 1;
     for (i = 0, i < size - 1, i + 1) {
         if (!(words[i][0] == words[i + 1][0])) {
-          pre_result, j: int  = 2 , i + 1;
+          pre_result, j: integer  = 2 , i + 1;
           while (true) {
             if (words[j][0] != words[j + 1][0]) {
               pre_result = pre_result + 1;
@@ -673,11 +673,11 @@ longestSublist: function int (words: array[100] of string, size: int) {
 
     def test_functions_23(self):
         input = """
-equalSumIndex: function int (words: array[100] of string, size: int) {
+equalSumIndex: function integer (words: array[100] of string, size: integer) {
     if(!size) return 0;
-    result : int = 1;
+    result : integer = 1;
     if(size == 1) return 0;
-    sumRight, sumLeft, j: int = 0, 0, 1;
+    sumRight, sumLeft, j: integer = 0, 0, 1;
 
     for (i = 1, i < size, i * 2) {
         sumRight = sumRight + nums[i];
@@ -697,7 +697,7 @@ equalSumIndex: function int (words: array[100] of string, size: int) {
 
     def test_functions_24(self):
         input = """
-findGCD: function int (a: int, b: int)
+findGCD: function integer (a: integer, b: integer)
 {
     if(b){
         return findGCD(b, a % b);
@@ -710,8 +710,8 @@ findGCD: function int (a: int, b: int)
 
     def test_functions_25(self):
         input = """
-n: int = 10;
-reverseFactorial: function int (out n: int, i: int) {
+n: integer = 10;
+reverseFactorial: function integer (out n: integer, i: integer) {
     if(n == 1){
         return i - 1;
     }
@@ -726,8 +726,8 @@ reverseFactorial: function int (out n: int, i: int) {
 
     def test_functions_26(self):
         input = """
-n: int = 10;
-reverseFactorial: function int (out n: int, i: int) {
+n: integer = 10;
+reverseFactorial: function integer (out n: integer, i: integer) {
     if(n == 1){
         return i - 1;
     }
@@ -745,14 +745,14 @@ main : function void () {
 
     def test_functions_27(self):
         input = """
-findGCD: function int (a: int, b: int) {
+findGCD: function integer (a: integer, b: integer) {
   if(b){
     return findGCD(b, a % b);
   }
   return a;
 }
 
-findLCM: function int (a: int, b: int){
+findLCM: function integer (a: integer, b: integer){
   return (a*b)/findGCD(a, b);
 }
 
@@ -767,7 +767,7 @@ main : function void () {
         input = """
 isZero, no_count : boolean = 0, 0;
 
-printPattern: function void (n: int) {
+printegerPattern: function void (n: integer) {
   if (n <= 0)
     isZero = 1;
   if (isZero) {
@@ -775,28 +775,28 @@ printPattern: function void (n: int) {
     if (no_count == -1)
       return;
     else {
-      print(" ");
+      printeger(" ");
     }
-    printPattern(n + 5);
+    printegerPattern(n + 5);
   } else {
-    print(" ");
+    printeger(" ");
     no_count = no_count + 1;
-    printPattern(n - 5);
+    printegerPattern(n - 5);
   }
 }
 
 main : function void () {
-    printPattern(10);
+    printegerPattern(10);
 }
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 247))
 
-    def test_functions_29(self):
+    def test_functions_29_1(self):
         input = """
 isZero, no_count : boolean = 0, 0;
 
-printPattern: function void (n: int) {
+printegerPattern: function void (n: integer) {
   if (n <= 0)
     isZero = 1;
   if (isZero) {
@@ -804,28 +804,28 @@ printPattern: function void (n: int) {
     if (no_count == -1)
       return;
     else {
-      print(" ");
+      printeger(" ");
     }
-    printPattern(n + 5);
+    printegerPattern(n + 5);
   } else {
-    print(" ");
+    printeger(" ");
     no_count = no_count + 1;
-    printPattern(n - 5);
+    printegerPattern(n - 5);
   }
 }
 
 main : function void () {
-    printPattern(10);
+    printegerPattern(10);
 }
 """
         expect = "Error on line 8 col 15: ;"
         self.assertTrue(TestParser.test(input, expect, 248))
 
-    def test_functions_29(self):
+    def test_functions_29_2(self):
         input = """
 isZero, no_count : boolean = 0, 0;
 
-printPattern: function void (n: int) {
+printegerPattern: function void (n: integer) {
   if (n <= 0)
     isZero = 1;
   if (isZero) {
@@ -833,18 +833,18 @@ printPattern: function void (n: int) {
     if (no_count = -1)
       return;
     else {
-      print(" ");
+      printeger(" ");
     }
-    printPattern(n + 5);
+    printegerPattern(n + 5);
   } else {
-    print(" ");
+    printeger(" ");
     no_count = no_count + 1;
-    printPattern(n - 5);
+    printegerPattern(n - 5);
   }
 }
 
 main : function void () {
-    printPattern(10);
+    printegerPattern(10);
 }
 """
         expect = "Error on line 9 col 17: ="
@@ -852,10 +852,10 @@ main : function void () {
 
     def test_functions_30(self):
         input = """
-countWaysUtil: function int (x: int, n: int, num: int)
+countWaysUtil: function integer (x: integer, n: integer, num: integer)
 {
     // Base cases
-    val: int = (x - pow(num, n));
+    val: integer = (x - pow(num, n));
     if (val == 0)
         return 1;
     if (val < 0)
@@ -865,7 +865,7 @@ countWaysUtil: function int (x: int, n: int, num: int)
            countWaysUtil(x, n, num + 1);
 }
 
-countWaySumOfSquare: function int (x: int)
+countWaySumOfSquare: function integer (x: integer)
 {
     return countWaysUtil(x, 2, 1);
 }
@@ -875,10 +875,10 @@ countWaySumOfSquare: function int (x: int)
 
     def test_functions_31(self):
         input = """
-countWaysUtil: function int (x: int, n: int, num: int)
+countWaysUtil: function integer (x: integer, n: integer, num: integer)
 {
     // Base cases
-    val: int = (x - pow(num, n));
+    val: integer = (x - pow(num, n));
     if (val == 0)
         return 1;
     if (val < 0)
@@ -888,13 +888,13 @@ countWaysUtil: function int (x: int, n: int, num: int)
            countWaysUtil(x, n, num + 1);
 }
 
-countWaySumOfSquare: function int (x: int)
+countWaySumOfSquare: function integer (x: integer)
 {
     return countWaysUtil(x, 2, 1);
 }
 
 main: function void(){
-    print(countWaySumOfSquare(100));
+    printeger(countWaySumOfSquare(100));
 }
 """
         expect = "successful"
@@ -902,10 +902,10 @@ main: function void(){
 
     def test_functions_32(self):
         input = """
-countWaysUtil: function int (x: int, n: int, num: int)
+countWaysUtil: function integer (x: integer, n: integer, num: integer)
 {
     // Base cases
-    val: int = (x - pow(num, n));
+    val: integer = (x - pow(num, n));
     if (val == 0)
         return 1;
     if (val < 0)
@@ -915,13 +915,13 @@ countWaysUtil: function int (x: int, n: int, num: int)
            countWaysUtil(x, n, num + 1);
 }
 
-countWaySumOfSquare: function int (x: int)
+countWaySumOfSquare: function integer (x: integer)
 {
     return countWaysUtil(x, 2, 1);
 }
 
 main: function void(){
-    print(countWaySumOfSquare(100));
+    printeger(countWaySumOfSquare(100));
 }
 """
         expect = "successful"
@@ -929,10 +929,10 @@ main: function void(){
 
     def test_functions_33(self):
         input = """
-countWaysUtil: function int (x: int, n: int, num: int)
+countWaysUtil: function integer (x: integer, n: integer, num: integer)
 {
     // Base cases
-    val: int = (x - pow(num, n));
+    val: integer = (x - pow(num, n));
     if (val == 0);
         return 1;
     if (val < 0)
@@ -942,13 +942,13 @@ countWaysUtil: function int (x: int, n: int, num: int)
            countWaysUtil(x, n, num + 1);
 }
 
-countWaySumOfSquare: function int (x: int)
+countWaySumOfSquare: function integer (x: integer)
 {
     return countWaysUtil(x, 2, 1);
 }
 
 main: function void(){
-    print(countWaySumOfSquare(100));
+    printeger(countWaySumOfSquare(100));
 }
 """
         expect = "Error on line 6 col 17: ;"
@@ -956,9 +956,9 @@ main: function void(){
 
     def test_functions_34(self):
         input = """
-buyCar: function int (nums : array [200] of int, length: int, k: int) {
+buyCar: function integer (nums : array [200] of integer, length: integer, k: integer) {
   sort(nums, nums + length);
-  result, i: int = 0, 0;
+  result, i: integer = 0, 0;
   while ((k > 0) && (k - nums[i] >= 0)) {
     result = result + 1;
     k = k - nums[i];
@@ -972,9 +972,9 @@ buyCar: function int (nums : array [200] of int, length: int, k: int) {
 
     def test_functions_35(self):
         input = """
-buyCar: function int (nums : array [200] of int, length: int, k: int) {
+buyCar: function integer (nums : array [200] of integer, length: integer, k: integer) {
   sort(nums, nums + length);
-  result, i: int = 0, 0;
+  result, i: integer = 0, 0;
   while ((k > 0) && (k - nums[i] >= 0)) {
     result = result + 1;
     k = k - nums[i];
@@ -983,9 +983,9 @@ buyCar: function int (nums : array [200] of int, length: int, k: int) {
   return result;
 }
 main: function void(){
-    nums: array [] of int = {90,30,40,90,20};
-    length : int = sizeof(nums)/sizeof(nums[0]);
-    print(buyCar(nums, length, 90));
+    nums: array [] of integer = {90,30,40,90,20};
+    length : integer = sizeof(nums)/sizeof(nums[0]);
+    printeger(buyCar(nums, length, 90));
 }
 """
         expect = "successful"
@@ -993,9 +993,9 @@ main: function void(){
 
     def test_functions_36(self):
         input = """
-buyCar: function int (nums : array [200] of int, length: int, k: int) {
+buyCar: function integer (nums : array [200] of integer, length: integer, k: integer) {
   sort(nums, nums + length);
-  result, i: int = 0, 0;
+  result, i: integer = 0, 0;
   while ((k > 0) | (k - nums[i] >= 0)) {
     result = result + 1;
     k = k - nums[i];
@@ -1004,9 +1004,9 @@ buyCar: function int (nums : array [200] of int, length: int, k: int) {
   return result;
 }
 main: function void(){
-    nums: array [5] of int = {90,30,40,90,20};
-    length : int = sizeof(nums)/sizeof(nums[0]);
-    print(buyCar(nums, length, 90));
+    nums: array [5] of integer = {90,30,40,90,20};
+    length : integer = sizeof(nums)/sizeof(nums[0]);
+    printeger(buyCar(nums, length, 90));
 }
 """
         expect = "|"
@@ -1014,7 +1014,7 @@ main: function void(){
 
     def test_functions_37(self):
         input = """
-consecutiveOnes: function boolean(nums : array [200] of int, size: int) {
+consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) {
     found: boolean = false;
     for (i = 0, i < size,) {
         if (nums[i] == 1) {
@@ -1038,7 +1038,7 @@ consecutiveOnes: function boolean(nums : array [200] of int, size: int) {
 
     def test_functions_38(self):
         input = """
-consecutiveOnes: function boolean(nums : array [200] of int, size: int) {
+consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) {
     found: boolean = false;
     for (i = 0; i < size;) {
         if (nums[i] == 1) {
@@ -1062,7 +1062,7 @@ consecutiveOnes: function boolean(nums : array [200] of int, size: int) {
 
     def test_functions_39(self):
         input = """
-consecutiveOnes: function boolean(nums : array [200] of int, size: int) {
+consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) {
     found: boolean = false;
     for (i = 0, i < size,) {
         if (nums[i] == 1) {
@@ -1086,7 +1086,7 @@ consecutiveOnes: function boolean(nums : array [200] of int, size: int) {
 
     def test_functions_40(self):
         input = """
-consecutiveOnes: function boolean(nums : array [200] of int, size: int) {
+consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) {
     found: boolean = false;
     for (i = 0, i < size,) {
         if (nums[i] == 1) {
@@ -1110,7 +1110,7 @@ consecutiveOnes: function boolean(nums : array [200] of int, size: int) {
 
     def test_functions_41(self):
         input = """
-check_str_code: function boolean (code : string, size: int) {
+check_str_code: function boolean (code : string, size: integer) {
     if (code == "")
         return false;
     for (i = 0, i < size, i+ 1) {
@@ -1127,7 +1127,7 @@ check_str_code: function boolean (code : string, size: int) {
 
     def test_functions_42(self):
         input = """
-check_str_code: function boolean (code : string, size: int) {
+check_str_code: function boolean (code : string, size: integer) {
     if (code == "")
         return false;
     for (i = 0, i < size, i+ 1) {
@@ -1144,7 +1144,7 @@ check_str_code: function boolean (code : string, size: int) {
 
     def test_functions_43(self):
         input = """
-reverse_string: function string(str: string, size: int) {
+reverse_string: function string(str: string, size: integer) {
     for (i = 0, i < size / 2, i+1) {
         x : string = str[i];
         str[i] = str[size - i - 1];
@@ -1158,7 +1158,7 @@ reverse_string: function string(str: string, size: int) {
 
     def test_functions_44(self):
         input = """
-reverse_string: function string(str: string, size: int) {
+reverse_string: function string(str: string, size: integer) {
     for (,,) {
         x : string = str[i];
         str[i] = str[size - i - 1];
@@ -1173,7 +1173,7 @@ reverse_string: function string(str: string, size: int) {
 
     def test_functions_45(self):
         input = """
-void reverse(s: string, from: int, to: int) {
+void reverse(s: string, from: integer, to: integer) {
   temp: string = s;
   for (i = 0, i < to - from, i++) {
     s[from + i] = temp[to - 1 - i];
@@ -1185,7 +1185,7 @@ void reverse(s: string, from: int, to: int) {
 
     def test_functions_46(self):
         input = """
-reverse: function void(s: string, from: int, to: int) {
+reverse: function void(s: string, from: integer, to: integer) {
   temp: string = s;
   for (i = 0, i < to - from, i++) {
     s[from + i] = temp[to - 1 - i];
@@ -1197,7 +1197,7 @@ reverse: function void(s: string, from: int, to: int) {
 
     def test_functions_47(self):
         input = """
-reverse: function void(s: string, from: int, to: int) {
+reverse: function void(s: string, from: integer, to: integer) {
   temp: string = s;
   for (i = 0, i < to - from, i+1) {
     s[from + i] = temp[to - 1 - i];
@@ -1209,7 +1209,7 @@ reverse: function void(s: string, from: int, to: int) {
 
     def test_functions_48(self):
         input = """
-removeDuplicates: function string (S: string, length: int){
+removeDuplicates: function string (S: string, length: integer){
   ans: string;
   push_back(ans, S[0]);
   for (i = 1, i < length; i+1) {
@@ -1229,7 +1229,7 @@ removeDuplicates: function string (S: string, length: int){
 
     def test_functions_49(self):
         input = """
-removeDuplicates: function string (S: string, length: int){
+removeDuplicates: function string (S: string, length: integer){
   ans: string;
   push_back(ans, S[0]);
   for (i = 1, i < length, i+1) {
@@ -1249,7 +1249,7 @@ removeDuplicates: function string (S: string, length: int){
 
     def test_functions_50(self):
         input = """
-removeDuplicates: function string (S: string, length: int){
+removeDuplicates: function string (S: string, length: integer){
   // ans: string;
   push_back(ans, S[0]);
   for (i = 1, i < length, i+1)
@@ -1265,8 +1265,8 @@ removeDuplicates: function string (S: string, length: int){
 
     def test_functions_51(self):
         input = """
-midSquare: function int (seed: int) {
-  newSeed: int = pow(seed, 2);
+midSquare: function integer (seed: integer) {
+  newSeed: integer = pow(seed, 2);
   s: string = to_string(newSeed);
   erase(s, begin() + size(s) - 2, end(s));
   return stoi(substr(s, size(s) - 4));
@@ -1277,46 +1277,46 @@ midSquare: function int (seed: int) {
 
     def test_functions_52(self):
         input = """
-midSquare: function int (seed: int) {
-  newSeed: int = pow(seed, 2);
+midSquare: function integer (seed: integer) {
+  newSeed: integer = pow(seed, 2);
   s: string = to_string(newSeed);
-  erase(s, begin() + (int)s.size() - 2, end(s));
+  erase(s, begin() + (integer)s.size() - 2, end(s));
   return stoi(substr(s, size(s) - 4));
 }
 """
-        expect = "Error on line 5 col 22: int"
+        expect = "Error on line 5 col 22: integer"
         self.assertTrue(TestParser.test(input, expect, 271))
 
     def test_functions_53(self):
         input = """
-moduloDivision: function int (seed: int, mod: int) { return seed % mod; }
+moduloDivision: function integer (seed: integer, mod: integer) { return seed % mod; }
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 272))
 
     def test_functions_54(self):
         input = """
-moduloDivision function int (seed: int, mod: int) { return seed % mod; }
+moduloDivision function integer (seed: integer, mod: integer) { return seed % mod; }
 """
         expect = "Error on line 2 col 15: function"
         self.assertTrue(TestParser.test(input, expect, 273))
 
     def test_functions_55(self):
         input = """
-long int digitExtraction(seed: int, extractDigits: array[100] of int, size: int) {
+long integer digitExtraction(seed: integer, extractDigits: array[100] of integer, size: integer) {
   s, strSeed: string = "", to_string(seed);
-  for (int i = 0; i < size; i++) {
+  for (integer i = 0; i < size; i++) {
     s += strSeed[extractDigits[i]];
   }
   return stoi(s);
 }
 """
-        expect = "Error on line 2 col 5: int"
+        expect = "Error on line 2 col 5: integer"
         self.assertTrue(TestParser.test(input, expect, 274))
 
     def test_functions_56(self):
         input = """
-digitExtraction: function int (seed: int, extractDigits: array[100] of int, size: int) {
+digitExtraction: function integer (seed: integer, extractDigits: array[100] of integer, size: integer) {
   s, strSeed: string = "", to_string(seed);
   for (i = 0, i < size, i+1) {
     s += strSeed[extractDigits[i]];
@@ -1329,7 +1329,7 @@ digitExtraction: function int (seed: int, extractDigits: array[100] of int, size
 
     def test_functions_57(self):
         input = """
-digitExtraction: function int (seed: int, extractDigits: array[100] of int, size: int) {
+digitExtraction: function integer (seed: integer, extractDigits: array[100] of integer, size: integer) {
   s, strSeed: string = "", to_string(seed);
   for (i = 0, i < size, i+1) {
     s = s + strSeed[extractDigits[i]];
@@ -1342,16 +1342,16 @@ digitExtraction: function int (seed: int, extractDigits: array[100] of int, size
 
     def test_functions_58(self):
         input = """
-foldShift: function int (key: int, addressSize: int)
+foldShift: function integer (key: integer, addressSize: integer)
 {
     x: string = to_string(key);
-    sum: int = 0;
+    sum: integer = 0;
   for (i = 0, i < length(x),) {
     s: string = substr(x, i, addressSize);
     i = i + addressSize;
     sum = sum + stoi(s);
   }
-  test : int = pow(10, addressSize);
+  test : integer = pow(10, addressSize);
   return sum % (test);
 }
 """
@@ -1360,16 +1360,16 @@ foldShift: function int (key: int, addressSize: int)
 
     def test_functions_59(self):
         input = """
-foldShift: function int (key: int, addressSize: int)
+foldShift: function integer (key: integer, addressSize: integer)
 {
     x: string = to_string(key)
-    sum: int = 0;
+    sum: integer = 0;
   for (i = 0, i < length(x),) {
     s: string = substr(x, i, addressSize);
     i = i + addressSize;
     sum = sum + stoi(s);
   }
-  test : int = pow(10, addressSize);
+  test : integer = pow(10, addressSize);
   return sum % (test);
 }
 """
@@ -1378,16 +1378,16 @@ foldShift: function int (key: int, addressSize: int)
 
     def test_functions_60(self):
         input = """
-foldShift: function int (key: int, addressSize: int)
+foldShift: function integer (key: integer, addressSize: integer)
 {
     x: string = to_string(key);
-    sum: int = 0;
+    sum: integer = 0;
   for (i = 0, i < length(x)) {
     s: string = substr(x, i, addressSize);
     i = i + addressSize;
     sum = sum + stoi(s);
   }
-  test : int = pow(10, addressSize);
+  test : integer = pow(10, addressSize);
   return sum % (test);
 }
 """
@@ -1396,29 +1396,29 @@ foldShift: function int (key: int, addressSize: int)
 
     def test_functions_61(self):
         input = """
-foldShift: function int (key: int, addressSize: int)
+foldShift: function integer (key: integer, addressSize: integer)
 {
     x: string = to_string(key);
-    sum: int = 0;
+    sum: integer = 0;
   for (i = 0, i < length(x),) {
     s: string = substr(x, i, addressSize);
     i = i + addressSize;
     sum = sum + stoi(s);
   }
-  int test = pow(10, addressSize);
+  integer test = pow(10, addressSize);
   return sum % (test);
 }
 """
-        expect = "Error on line 11 col 2: int"
+        expect = "Error on line 11 col 2: integer"
         self.assertTrue(TestParser.test(input, expect, 280))
 
     def test_functions_62(self):
         input = """
-rotation: function int (key: int, addressSize: int)
+rotation: function integer (key: integer, addressSize: integer)
 {
   x: string = to_string(key);
   temp: string = x[x.length() - 1];
-  for (int i = (int)x.length() - 1; i > 0; i--) {
+  for (integer i = (integer)x.length() - 1; i > 0; i--) {
     x[i] = x[i - 1];
   }
   x[0] = temp;
@@ -1430,7 +1430,7 @@ rotation: function int (key: int, addressSize: int)
 
     def test_functions_63(self):
         input = """
-rotation: function int (key: int, addressSize: int)
+rotation: function integer (key: integer, addressSize: integer)
 {
   x: string = to_string(key);
   temp: string = x[length(x) - 1];
@@ -1446,11 +1446,11 @@ rotation: function int (key: int, addressSize: int)
 
     def test_functions_64(self):
         input = """
-left: function int (i: int) { return (2 * i + 1); }
-right: function int (i: int) { return (2 * i + 2); }
-parent: function int (i: int) { return (i - 1) / 2; }
-swap: function void(x: int,y: int) {
-  k: int = x;
+left: function integer (i: integer) { return (2 * i + 1); }
+right: function integer (i: integer) { return (2 * i + 2); }
+parent: function integer (i: integer) { return (i - 1) / 2; }
+swap: function void(x: integer,y: integer) {
+  k: integer = x;
   x = y
   y = k;
 }
@@ -1460,11 +1460,11 @@ swap: function void(x: int,y: int) {
 
     def test_functions_65(self):
         input = """
-left: function int (i: int) { return (2 * i + 1); }
-right: function int (i: int) { return (2 * i + 2); }
-parent: function int (i: int) { return (i - 1) / 2; }
-swap: function void(x: int,y: int) {
-  k: int = x;
+left: function integer (i: integer) { return (2 * i + 1); }
+right: function integer (i: integer) { return (2 * i + 2); }
+parent: function integer (i: integer) { return (i - 1) / 2; }
+swap: function void(x: integer,y: integer) {
+  k: integer = x;
   x = y;
   y = k;
 }
@@ -1474,15 +1474,15 @@ swap: function void(x: int,y: int) {
 
     def test_functions_66(self):
         input = """
-left: function int (i: int) { return (2 * i + 1); }
-right: function int (i: int) { return (2 * i + 2); }
-parent: function int (i: int) { return (i - 1) / 2; }
-swap: function void(x: int,y: int) {
-  k: int = x;
+left: function integer (i: integer) { return (2 * i + 1); }
+right: function integer (i: integer) { return (2 * i + 2); }
+parent: function integer (i: integer) { return (i - 1) / 2; }
+swap: function void(x: integer,y: integer) {
+  k: integer = x;
   x = y;
   y = k;
 }
-reheapUp: function void(maxHeap: array[100] of int, numberOfElements: int , index: int ) {
+reheapUp: function void(maxHeap: array[100] of integer, numberOfElements: integer , index: integer ) {
   if (index < numberOfElements) {
     if (index && maxHeap[parent(index)] < maxHeap[index]) {
       swap(maxHeap[index], maxHeap[parent(index)]);
@@ -1497,15 +1497,15 @@ reheapUp: function void(maxHeap: array[100] of int, numberOfElements: int , inde
 
     def test_functions_67(self):
         input = """
-left: function int (i: int) { return (2 * i + 1); }
-right: function int (i: int) { return (2 * i + 2); }
-parent: function int (i: int) { return (i - 1) / 2; }
-swap: function void(x: int,y: int) {
-  k: int = x;
+left: function integer (i: integer) { return (2 * i + 1); }
+right: function integer (i: integer) { return (2 * i + 2); }
+parent: function integer (i: integer) { return (i - 1) / 2; }
+swap: function void(x: integer,y: integer) {
+  k: integer = x;
   x = y;
   y = k;
 }
-reheapUp: function void(maxHeap: array[100] of int, numberOfElements: int , index: int ) {
+reheapUp: function void(maxHeap: array[100] of integer, numberOfElements: integer , index: integer ) {
   if (index < numberOfElements) {
     if (index && maxHeap[parent(index)] < maxHeap[index]) {
       swap(maxHeap[index], maxHeap[parent(index)]);
@@ -1520,17 +1520,17 @@ reheapUp: function void(maxHeap: array[100] of int, numberOfElements: int , inde
 
     def test_functions_68(self):
         input = """
-left: function int (i: int) { return (2 * i + 1); }
-right: function int (i: int) { return (2 * i + 2); }
-parent: function int (i: int) { return (i - 1) / 2; }
-swap: function void(x: int,y: int) {
-  k: int = x;
+left: function integer (i: integer) { return (2 * i + 1); }
+right: function integer (i: integer) { return (2 * i + 2); }
+parent: function integer (i: integer) { return (i - 1) / 2; }
+swap: function void(x: integer,y: integer) {
+  k: integer = x;
   x = y;
   y = k;
 }
-reheapDown: function void (maxHeap: array[100] of int, numberOfElements: int , index: int ) {
+reheapDown: function void (maxHeap: array[100] of integer, numberOfElements: integer , index: integer ) {
     if (index < numberOfElements) {
-          l, r, largest: int = left(index), right(index), index;
+          l, r, largest: integer = left(index), right(index), index;
           if (l < numberOfElements && maxHeap[l] > maxHeap[index]) {
             largest = l;
           }
@@ -1552,17 +1552,17 @@ reheapDown: function void (maxHeap: array[100] of int, numberOfElements: int , i
 
     def test_functions_69(self):
         input = """
-left: function int (i: int) { return (2 * i + 1); }
-right: function int (i: int) { return (2 * i + 2); }
-parent: function int (i: int) { return (i - 1) / 2; }
-swap: function void(x: int,y: int) {
-  k: int = x;
+left: function integer (i: integer) { return (2 * i + 1); }
+right: function integer (i: integer) { return (2 * i + 2); }
+parent: function integer (i: integer) { return (i - 1) / 2; }
+swap: function void(x: integer,y: integer) {
+  k: integer = x;
   x = y;
   y = k;
 }
-reheapDown: function void (maxHeap: array[100] of int, numberOfElements: int , index: int ) {
+reheapDown: function void (maxHeap: array[100] of integer, numberOfElements: integer , index: integer ) {
     if (index < numberOfElements) {
-          l, r, largest: int = left(index), right(index), index;
+          l, r, largest: integer = left(index), right(index), index;
           if ((l < numberOfElements) && (maxHeap[l] > maxHeap[index])) {
             largest = l;
           }
@@ -1584,17 +1584,17 @@ reheapDown: function void (maxHeap: array[100] of int, numberOfElements: int , i
 
     def test_functions_70(self):
         input = """
-left: function int (i: int) { return (2 * i + 1); }
-right: function int (i: int) { return (2 * i + 2); }
-parent: function int (i: int) { return (i - 1) / 2; }
-swap: function void(x: int,y: int) {
-  k: int = x;
+left: function integer (i: integer) { return (2 * i + 1); }
+right: function integer (i: integer) { return (2 * i + 2); }
+parent: function integer (i: integer) { return (i - 1) / 2; }
+swap: function void(x: integer,y: integer) {
+  k: integer = x;
   x = y;
   y = k;
 }
-reheapDown: function void (maxHeap: array[100] of int, numberOfElements: int , index: int ) {
+reheapDown: function void (maxHeap: array[100] of integer, numberOfElements: integer , index: integer ) {
     if (index < numberOfElements) {
-          l, r, largest: int = left(index)right(index), index;
+          l, r, largest: integer = left(index)right(index), index;
           if ((l < numberOfElements) && (maxHeap[l] > maxHeap[index])) {
             largest = l;
           }
@@ -1611,12 +1611,12 @@ reheapDown: function void (maxHeap: array[100] of int, numberOfElements: int , i
   
 }
 """
-        expect = "Error on line 12 col 42: right"
+        expect = "Error on line 12 col 46: right"
         self.assertTrue(TestParser.test(input, expect, 289))
 
     def test_functions_71(self):
         input = """
-buildMaxHeap: function void (arr: array[100] of int, numOfEl: int) {
+buildMaxHeap: function void (arr: array[100] of integer, numOfEl: integer) {
     for (i = numOfEl / 2 - 1, i >= 0, i-1) {
       heapify(arr, numOfEl, i);
     }
@@ -1627,7 +1627,7 @@ buildMaxHeap: function void (arr: array[100] of int, numOfEl: int) {
 
     def test_functions_72(self):
         input = """
-buildMaxHeap: function (arr: array[100] of int, numOfEl: int) {
+buildMaxHeap: function (arr: array[100] of integer, numOfEl: integer) {
     for (i = numOfEl / 2 - 1, i >= 0, i-1) {
       heapify(arr, numOfEl, i);
     }
@@ -1638,21 +1638,21 @@ buildMaxHeap: function (arr: array[100] of int, numOfEl: int) {
 
     def test_functions_73(self):
         input = """
-buildMaxHeap: function void (arr: array[100] of int, numOfEl: int) {
+buildMaxHeap: function void (arr: array[100] of integer, numOfEl: integer) {
     for (i = numOfEl / 2 - 1, i >= 0, i-1) {
       heapify(arr, numOfEl, i);
     }
 }
-heapSort: function void (start: array[] of int, end: array[100] of int) {
-    numOfEl: int = end - start;
+heapSort: function void (start: array[] of integer, end: array[100] of integer) {
+    numOfEl: integer = end - start;
     buildMaxHeap(start, numOfEl);
     for (i = numOfEl - 1, i >= 0, i-1) {
-      temp: int = start[0];
+      temp: integer = start[0];
       start[0] = start[i];
       start[i] = temp;
       heapify(start, i, 0);
     }
-    printArray(start, end);
+    printegerArray(start, end);
   }
 """
         expect = "successful"
@@ -1660,30 +1660,30 @@ heapSort: function void (start: array[] of int, end: array[100] of int) {
 
     def test_functions_74(self):
         input = """
-buildMaxHeap: function void (arr: array[100] of int, numOfEl: int) {
+buildMaxHeap: function void (arr: array[100] of integer, numOfEl: integer) {
     for (i = numOfEl / 2 - 1, i >= 0, i-1) {
       heapify(arr, numOfEl, i);
     }
 }
-heapSort: function void (start: array[] of int, end: array[100] of int) {
-    numOfEl: int = end - start;
+heapSort: function void (start: array[] of integer, end: array[100] of integer) {
+    numOfEl: integer = end - start;
     buildMaxHeap(start, numOfEl);
     for (i = numOfEl - 1, i >= 0, i-1) {
-      temp: int = start[0];
+      temp: integer = start[0];
       start[0] = start[i];
       start[i] = temp;
       heapify(start, i, 0);
     }
-    printArray(start; end);
+    printegerArray(start; end);
   }
 """
-        expect = "Error on line 16 col 20: ;"
+        expect = "Error on line 16 col 24: ;"
         self.assertTrue(TestParser.test(input, expect, 293))
 
     def test_functions_75(self):
         input = """
-heapify: function void(arr: array[100] of int, numOfEl: int, i: int) {
-    left, right, largest: int = 2 * i + 1, 2 * i + 2, i;
+heapify: function void(arr: array[100] of integer, numOfEl: integer, i: integer) {
+    left, right, largest: integer = 2 * i + 1, 2 * i + 2, i;
     if ((left < numOfEl) && (arr[left] > arr[largest]))
       largest = left;
 
@@ -1692,7 +1692,7 @@ heapify: function void(arr: array[100] of int, numOfEl: int, i: int) {
 
     // Swap and continue heapifying if root is not largest
     if (largest != i) {
-      temp: int = arr[i];
+      temp: integer = arr[i];
       arr[i] = arr[largest];
       arr[largest] = temp;
       heapify(arr, numOfEl, largest);
@@ -1704,8 +1704,8 @@ heapify: function void(arr: array[100] of int, numOfEl: int, i: int) {
 
     def test_functions_76(self):
         input = """
-heapify: function void(arr: array[100] of int, numOfEl: int, i: int) {
-    left, right, largest: int = 2 * i + 1, 2 * i + 2, i;
+heapify: function void(arr: array[100] of integer, numOfEl: integer, i: integer) {
+    left, right, largest: integer = 2 * i + 1, 2 * i + 2, i;
     if ((left < numOfEl) && (arr[left] > arr[largest]))
       largest = left;
 
@@ -1714,7 +1714,7 @@ heapify: function void(arr: array[100] of int, numOfEl: int, i: int) {
 
     // Swap and continue heapifying if root is not largest
     if (largest != i) {
-      temp: int = arr[i];
+      temp: integer = arr[i];
       arr[i] = arr[largest;
       arr[largest] = temp;
       heapify(arr, numOfEl, largest);
@@ -1726,8 +1726,8 @@ heapify: function void(arr: array[100] of int, numOfEl: int, i: int) {
 
     def test_functions_77(self):
         input = """
-heapify: function void(arr: array[100] of int, numOfEl: int, i: int) {
-    left, right, largest: int = 2 * i + 1, 2 * i + 2, i;
+heapify: function void(arr: array[100] of integer, numOfEl: integer, i: integer) {
+    left, right, largest: integer = 2 * i + 1, 2 * i + 2, i;
     if ((left < numOfEl) && (arr[left] > arr[largest]))
       largest = left;
 
@@ -1736,7 +1736,7 @@ heapify: function void(arr: array[100] of int, numOfEl: int, i: int) {
 
     // Swap and continue heapifying if root is not largest
     if (largest != i) {
-      temp: int = arr[i];
+      temp: integer = arr[i];
       arr[i] = arr[largest]
       arr[largest] = temp;
       heapify(arr, numOfEl, largest);
@@ -1748,17 +1748,17 @@ heapify: function void(arr: array[100] of int, numOfEl: int, i: int) {
 
     def test_functions_78(self):
         input = """
-minWaitingTime: function int (n: int, arrvalTime: array[] of int, completeTime: array[] of int) {
+minWaitingTime: function integer (n: integer, arrvalTime: array[] of integer, completeTime: array[] of integer) {
     sort(a, a + n, greater());
-    minTime : int = 0;
+    minTegerime : integer = 0;
 
     // Iterate through the groups
     for (i = 0, i < n, i + k)
         // Update the time taken for each group
-        minTime = minTime + (2 * a[i]);
+        minTegerime = minTegerime + (2 * a[i]);
 
     // Return the total time taken
-    return minTime;
+    return minTegerime;
 }
 """
         expect = "successful"
@@ -1766,17 +1766,17 @@ minWaitingTime: function int (n: int, arrvalTime: array[] of int, completeTime: 
 
     def test_functions_79(self):
         input = """
-minWaitingTime: function int (n: int, arrvalTime: array[1000] of int, completeTime: array[] of int) {
+minWaitingTime: function integer (n: integer, arrvalTime: array[1000] of integer, completeTime: array[] of integer) {
     sort(a, a + n, greater());
-    minTime : int = 0
+    minTegerime : integer = 0
 
     // Iterate through the groups
     for (i = 0, i < n, i + k)
         // Update the time taken for each group
-        minTime = minTime + (2 * a[i]);
+        minTegerime = minTegerime + (2 * a[i]);
 
     // Return the total time taken
-    return minTime;
+    return minTegerime;
 }
 """
         expect = "Error on line 7 col 4: for"
@@ -1784,17 +1784,17 @@ minWaitingTime: function int (n: int, arrvalTime: array[1000] of int, completeTi
 
     def test_functions_80(self):
         input = """
-minWaitingTime: function int (n: int, arrvalTime: array[1000] of int, completeTime: array[] of int) {
+minWaitingTime: function integer (n: integer, arrvalTime: array[1000] of integer, completeTime: array[] of integer) {
     sort(a, a + n, greater());
-    minTime : int = 0;
+    minTegerime : integer = 0;
 
     // Iterate through the groups
     for (i = 0, i < n, i + k)
         // Update the time taken for each group
-        minTime = minTime + (2 * a[i]);
+        minTegerime = minTegerime + (2 * a[i]);
 
     // Return the total time taken
-    return minTime
+    return minTegerime
 }
 """
         expect = "Error on line 13 col 0: }"

@@ -1,5 +1,5 @@
 
-rotation: function int (key: int, addressSize: int)
+rotation: function integer (key: integer, addressSize: integer)
 {
   x: string = to_string(key);
   temp: string = x[length(x) - 1];

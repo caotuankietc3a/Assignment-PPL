@@ -1,5 +1,5 @@
 
-reverse_string: function string(str: string, size: int) {
+reverse_string: function string(str: string, size: integer) {
     for (,,) {
         x : string = str[i];
         str[i] = str[size - i - 1];

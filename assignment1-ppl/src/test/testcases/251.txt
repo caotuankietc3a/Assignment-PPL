@@ -1,8 +1,8 @@
 
-countWaysUtil: function int (x: int, n: int, num: int)
+countWaysUtil: function integer (x: integer, n: integer, num: integer)
 {
     // Base cases
-    val: int = (x - pow(num, n));
+    val: integer = (x - pow(num, n));
     if (val == 0)
         return 1;
     if (val < 0)
@@ -12,11 +12,11 @@ countWaysUtil: function int (x: int, n: int, num: int)
            countWaysUtil(x, n, num + 1);
 }
 
-countWaySumOfSquare: function int (x: int)
+countWaySumOfSquare: function integer (x: integer)
 {
     return countWaysUtil(x, 2, 1);
 }
 
 main: function void(){
-    print(countWaySumOfSquare(100));
+    printeger(countWaySumOfSquare(100));
 }

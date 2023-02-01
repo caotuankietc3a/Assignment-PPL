@@ -1,5 +1,5 @@
 
-findGCD: function int (a: int, b: int)
+findGCD: function integer (a: integer, b: integer)
 {
     if(b){
         return findGCD(b, a % b);

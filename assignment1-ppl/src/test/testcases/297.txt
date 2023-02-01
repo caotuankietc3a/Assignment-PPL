@@ -1,13 +1,13 @@
 
-minWaitingTime: function int (n: int, arrvalTime: array[] of int, completeTime: array[] of int) {
+minWaitingTime: function integer (n: integer, arrvalTime: array[] of integer, completeTime: array[] of integer) {
     sort(a, a + n, greater());
-    minTime : int = 0;
+    minTegerime : integer = 0;
 
     // Iterate through the groups
     for (i = 0, i < n, i + k)
         // Update the time taken for each group
-        minTime = minTime + (2 * a[i]);
+        minTegerime = minTegerime + (2 * a[i]);
 
     // Return the total time taken
-    return minTime;
+    return minTegerime;
 }

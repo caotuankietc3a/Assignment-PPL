@@ -1,5 +1,5 @@
 
-check_str_code: function boolean (code : string, size: int) {
+check_str_code: function boolean (code : string, size: integer) {
     if (code == "")
         return false;
     for (i = 0, i < size, i+ 1) {

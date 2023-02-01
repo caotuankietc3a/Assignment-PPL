@@ -1,6 +1,6 @@
 
 main : function void () {
-    nE : int = 0;
+    nE : integer = 0;
     do 
         if (nE == 10) 
             break;
