@@ -170,14 +170,15 @@ fragment DIGIT
 
 // Don't make spaces with python codes
 variable_decl
-  : identifiers_list COLON (((atomic_type | array_type) (ASSIGN exprs_list)?) | (auto_type ASSIGN exprs_list)) SEMI_COLON
+  : identifiers_list COLON (((atomic_type | array_type) (ASSIGN exprs_list_var_decl)?) | (auto_type ASSIGN exprs_list_var_decl))
   {
 if self.exprs_size != -1 and self.exprs_size != self.ids_size: 
-    print("SOMETHING WENT WRONG!!!")
-
+    raise RecognitionException()
+    
 self.ids_size = -1
 self.exprs_size = -1
-  }
+}
+  SEMI_COLON
   ;
 
 identifiers_list: ID {self.ids_size += 2} (COMMA ID{self.ids_size += 1})*;
@@ -267,9 +268,14 @@ literal
   | array_lit
   ;
 
+exprs_list_var_decl
+  : expr {self.exprs_size += 1} COMMA exprs_list_var_decl
+  | expr {self.exprs_size += 2}
+  ;
+
 exprs_list
-  : expr {self.exprs_size += 2} COMMA exprs_list 
-  | expr {self.exprs_size += 1}
+  : expr COMMA exprs_list 
+  | expr
   ;
 
 // ====================== Statements ========================

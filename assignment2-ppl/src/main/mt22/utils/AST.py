@@ -271,7 +271,7 @@ class ParamDecl(Decl):
 
 
 class FuncDecl(Decl):
-    def __init__(self, name: str, return_type: Type, params: List[ParamDecl], inherit: str or None, body: BlockStmt):
+    def __init__(self, name: str, return_type: Type, params: List[ParamDecl], inherit: None or str, body: BlockStmt):
         self.name = name
         self.return_type = return_type
         self.params = params

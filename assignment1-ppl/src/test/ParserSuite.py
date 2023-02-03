@@ -63,7 +63,7 @@ a,   b,   c   : array [2, 3] of integer;
         input = """
 a,   b,   c   : array[2] of integer = {1, 2}, {8, 9};
 """
-        expect = "successful"
+        expect = "Error on line 2 col 52: ;"
         self.assertTrue(TestParser.test(input, expect, 208))
 
     def test_variable_decl_10(self):

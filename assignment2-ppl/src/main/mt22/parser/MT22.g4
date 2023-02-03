@@ -35,7 +35,6 @@ def exprs_size(self, value):
     self._exprs_size = value
 }
 
-/* program: array_lit* EOF ; */
 program: decls EOF ;
 
 decls
@@ -171,14 +170,14 @@ fragment DIGIT
 
 // Don't make spaces with python codes
 variable_decl
-  : identifiers_list COLON (((atomic_type | array_type) (ASSIGN exprs_list)?) | (auto_type ASSIGN exprs_list)) SEMI_COLON
+  : identifiers_list COLON (((atomic_type | array_type) (ASSIGN exprs_list_var_decl)?) | (auto_type ASSIGN exprs_list_var_decl))
   {
 if self.exprs_size != -1 and self.exprs_size != self.ids_size: 
-    print("SOMETHING WENT WRONG!!!")
-
+    raise RecognitionException()
 self.ids_size = -1
 self.exprs_size = -1
-  }
+}
+  SEMI_COLON
   ;
 
 identifiers_list: ID {self.ids_size += 2} (COMMA ID{self.ids_size += 1})*;
@@ -239,8 +238,12 @@ sign_expr
   ;
 
 index_expr
-  : index_expr LEFT_BRACK exprs_list RIGHT_BRACK
+  : index_expr index_operator
   | operand_expr
+  ;
+
+index_operator
+  : LEFT_BRACK exprs_list RIGHT_BRACK
   ;
 
 operand_expr
@@ -264,9 +267,14 @@ literal
   | array_lit
   ;
 
+exprs_list_var_decl
+  : expr {self.exprs_size += 1} COMMA exprs_list_var_decl
+  | expr {self.exprs_size += 2}
+  ;
+
 exprs_list
-  : expr {self.exprs_size += 2} COMMA exprs_list 
-  | expr {self.exprs_size += 1}
+  : expr COMMA exprs_list 
+  | expr
   ;
 
 // ====================== Statements ========================
@@ -295,8 +303,8 @@ assign_stmt
   ;
 
 assign_stmt_lhs
-  : (scalar_var | index_expr) ASSIGN assign_stmt_lhs
-  | (scalar_var | index_expr)
+  : scalar_var 
+  | ID index_operator
   ;
 
 assign_stmt_rhs: expr;
@@ -306,7 +314,7 @@ if_stmt
   ;
 
 for_stmt
-  : FOR LEFT_PAREN init_expr? COMMA condition_expr? COMMA update_expr? RIGHT_PAREN statement
+  : FOR LEFT_PAREN init_expr COMMA condition_expr COMMA update_expr RIGHT_PAREN statement
   ;
 
 init_expr: scalar_var ASSIGN expr;
