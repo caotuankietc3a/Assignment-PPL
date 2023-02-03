@@ -35,7 +35,6 @@ def exprs_size(self, value):
     self._exprs_size = value
 }
 
-/* program: array_lit* EOF ; */
 program: decls EOF ;
 
 decls
@@ -239,8 +238,12 @@ sign_expr
   ;
 
 index_expr
-  : index_expr LEFT_BRACK exprs_list RIGHT_BRACK
+  : index_expr index_operator
   | operand_expr
+  ;
+
+index_operator
+  : LEFT_BRACK exprs_list RIGHT_BRACK
   ;
 
 operand_expr
@@ -295,8 +298,8 @@ assign_stmt
   ;
 
 assign_stmt_lhs
-  : (scalar_var | index_expr) ASSIGN assign_stmt_lhs
-  | (scalar_var | index_expr)
+  : scalar_var 
+  | ID index_operator
   ;
 
 assign_stmt_rhs: expr;
@@ -306,7 +309,7 @@ if_stmt
   ;
 
 for_stmt
-  : FOR LEFT_PAREN init_expr? COMMA condition_expr? COMMA update_expr? RIGHT_PAREN statement
+  : FOR LEFT_PAREN init_expr COMMA condition_expr COMMA update_expr RIGHT_PAREN statement
   ;
 
 init_expr: scalar_var ASSIGN expr;

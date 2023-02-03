@@ -3,7 +3,8 @@ x : integer = 65;
 main : function void () {
     arr : array [2, 3] of integer;
     if(check_prime(7)){
-        arr[1][2] = 10;
+        arr[1, 2] = 10;
+        arr[arr[0, 1], 2] = 10;
     }
 }
 check_prime: function boolean (n : integer) {

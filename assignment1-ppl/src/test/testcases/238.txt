@@ -1,7 +1,7 @@
 
-lookUp: function boolean (name: string, scopeFounded: integer) { 
+lookUp: function boolean (name: string) { 
     // Undeclared
-    for (, scopeFounded >= 0, scopeFounded-1) {
+    for (scopeFounded = 10, scopeFounded >= 0, scopeFounded-1) {
         if (isExist(name, scopeFounded)) {
             return true; 
         }

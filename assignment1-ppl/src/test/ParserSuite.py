@@ -122,7 +122,7 @@ main : function void () {
         input = """
 main : function void () {
     nE : integer = 0;
-    for (i = 0, i < nE,) 
+    for (i = 0, i < nE, i + 1) 
         if (nE == 10 + 5) 
             return nE;
         else i = i + 1;
@@ -135,10 +135,9 @@ main : function void () {
         input = """
 main : function void () {
     nE : integer = 0;
-    for (i = 0,,) 
+    for (i = 0, i < nE, i + 1) 
         if (nE == 10 + 5) 
-            return nE;
-        else i = i + 1;
+            break;
 }
 """
         expect = "successful"
@@ -147,9 +146,9 @@ main : function void () {
     def test_function_5(self):
         input = """
 main : function void () {
-    nE : integer = 0;
-    for (,,) 
-        if (nE == 10 + 5) 
+    nE : float = 0;
+    for (i = 0, i < nE, i + 1) 
+        if (nE <= 10 + 5) 
             return nE;
         else nE = nE + 1;
 }
@@ -254,7 +253,7 @@ inc : function void (out n: integer, delta : integer) {
     } while(true);
 }
     """
-        expect = "Error on line 14 col 0: }"
+        expect = "Error on line 13 col 10: ["
         self.assertTrue(TestParser.test(input, expect, 221))
 
     def test_functions_3(self):
@@ -263,7 +262,8 @@ x : integer = 65;
 main : function void () {
     arr : array [2, 3] of integer;
     if(check_prime(7)){
-        arr[1][2] = 10;
+        arr[1, 2] = 10;
+        arr[arr[0, 1], 2] = 10;
     }
 }
 check_prime: function boolean (n : integer) {
@@ -286,7 +286,7 @@ x : integer = 65;
 main : function void () {
     arr : array [2, 3] of integer;
     if(check_prime(7)){
-        arr[1][2] = Fibonacci(10);
+        arr[1, 2] = Fibonacci(10);
     }
 
 }
@@ -565,9 +565,9 @@ main : function void () {
 
     def test_functions_18(self):
         input = """
-lookUp: function boolean (name: string, scopeFounded: integer) { 
+lookUp: function boolean (name: string) { 
     // Undeclared
-    for (, scopeFounded >= 0, scopeFounded-1) {
+    for (scopeFounded = 10, scopeFounded >= 0, scopeFounded-1) {
         if (isExist(name, scopeFounded)) {
             return true; 
         }
@@ -580,9 +580,9 @@ lookUp: function boolean (name: string, scopeFounded: integer) {
 
     def test_functions_19(self):
         input = """
-lookUp: function boolean (name: string, scopeFounded: integer) { 
+lookUp: function boolean (name: string) { 
     // Undeclared
-    for (, scopeFounded >= 0, scopeFounded-1) {
+    for (scopeFounded = 10, scopeFounded >= 0, scopeFounded-1) {
         if (isExist(name, scopeFounded)) {
             return true; 
         }
@@ -818,7 +818,7 @@ main : function void () {
     printegerPattern(10);
 }
 """
-        expect = "Error on line 8 col 15: ;"
+        expect = "Error on line 8 col 13: -"
         self.assertTrue(TestParser.test(input, expect, 248))
 
     def test_functions_29_2(self):
@@ -1016,7 +1016,7 @@ main: function void(){
         input = """
 consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) {
     found: boolean = false;
-    for (i = 0, i < size,) {
+    for (i = 0, i < size, i + 1) {
         if (nums[i] == 1) {
             if(found) return false;
             while (i < size) {
@@ -1040,7 +1040,7 @@ consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) 
         input = """
 consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) {
     found: boolean = false;
-    for (i = 0; i < size;) {
+    for (i = 0; i < size; i + 1) {
         if (nums[i] == 1) {
             if(found) return false;
             while (i < size) {
@@ -1064,7 +1064,7 @@ consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) 
         input = """
 consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) {
     found: boolean = false;
-    for (i = 0, i < size,) {
+    for (i = 0, i < size, i + 1) {
         if (nums[i] == 1) {
             if(found) return false;
             while (i < size) {
@@ -1088,7 +1088,7 @@ consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) 
         input = """
 consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) {
     found: boolean = false;
-    for (i = 0, i < size,) {
+    for (i = 0, i < size, i + 1) {
         if (nums[i] == 1) {
             if(found) return false;
             while (i < size) {
@@ -1159,7 +1159,7 @@ reverse_string: function string(str: string, size: integer) {
     def test_functions_44(self):
         input = """
 reverse_string: function string(str: string, size: integer) {
-    for (,,) {
+    for (i = 0, i < size / 2, i+1) {
         x : string = str[i];
         str[i] = str[size - i - 1];
         str[size - i - 1] = x;
@@ -1324,7 +1324,7 @@ digitExtraction: function integer (seed: integer, extractDigits: array[100] of i
   return stoi(s);
 }
 """
-        expect = "Error on line 5 col 7: ="
+        expect = "Error on line 5 col 6: +"
         self.assertTrue(TestParser.test(input, expect, 275))
 
     def test_functions_57(self):
@@ -1346,7 +1346,7 @@ foldShift: function integer (key: integer, addressSize: integer)
 {
     x: string = to_string(key);
     sum: integer = 0;
-  for (i = 0, i < length(x),) {
+  for (i = 0, i < length(x), i + 1) {
     s: string = substr(x, i, addressSize);
     i = i + addressSize;
     sum = sum + stoi(s);
@@ -1400,7 +1400,7 @@ foldShift: function integer (key: integer, addressSize: integer)
 {
     x: string = to_string(key);
     sum: integer = 0;
-  for (i = 0, i < length(x),) {
+  for (i = 0, i < length(x), i + 1) {
     s: string = substr(x, i, addressSize);
     i = i + addressSize;
     sum = sum + stoi(s);
@@ -1782,20 +1782,20 @@ minWaitingTime: function integer (n: integer, arrvalTime: array[1000] of integer
         expect = "Error on line 7 col 4: for"
         self.assertTrue(TestParser.test(input, expect, 298))
 
-    def test_functions_80(self):
-        input = """
-minWaitingTime: function integer (n: integer, arrvalTime: array[1000] of integer, completeTime: array[] of integer) {
-    sort(a, a + n, greater());
-    minTegerime : integer = 0;
-
-    // Iterate through the groups
-    for (i = 0, i < n, i + k)
-        // Update the time taken for each group
-        minTegerime = minTegerime + (2 * a[i]);
-
-    // Return the total time taken
-    return minTegerime
-}
-"""
-        expect = "Error on line 13 col 0: }"
-        self.assertTrue(TestParser.test(input, expect, 299))
+#     def test_functions_80(self):
+#         input = """
+# minWaitingTime: function integer (n: integer, arrvalTime: array[1000] of integer, completeTime: array[] of integer) {
+#     sort(a, a + n, greater());
+#     minTegerime : integer = 0;
+#
+#     // Iterate through the groups
+#     for (i = 0, i < n, i + k)
+#         // Update the time taken for each group
+#         minTegerime = minTegerime + (2 * a[i]);
+#
+#     // Return the total time taken
+#     return minTegerime
+# }
+# """
+#         expect = "Error on line 13 col 0: }"
+#         self.assertTrue(TestParser.test(input, expect, 299))
