@@ -54,7 +54,7 @@ a, b, c : integer;
 
     def test_variable_decl_8(self):
         input = """
-a,   b,   c   : array [2, 3] of integer;
+a,   b,   c   : array [2, 3] of float;
 """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 207))

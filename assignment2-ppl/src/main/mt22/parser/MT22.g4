@@ -343,25 +343,28 @@ scalar_var: ID;
 
 
 // ====================== Type system and values ========================
-///////////////////////////////////// Start test //////////////////////////
-
-/* Atomic types */
 boolean_type: BOOLEAN; 
+
 int_type: INTEGER;
+
 float_type: FLOAT;
+
 string_type: STRING;
+
 void_type: VOID;
+
 auto_type: AUTO;
+
 array_type: ARRAY LEFT_BRACK dimensions? RIGHT_BRACK OF atomic_type;
+
 dimensions: INTEGER_LIT (COMMA INTEGER_LIT)* ;
+
 atomic_type
   : boolean_type
   | int_type
   | float_type
   | string_type
   ;
-
-///////////////////////////////////// End test //////////////////////////
 
 // ====================== Keywords ========================
 AUTO: 'auto';
