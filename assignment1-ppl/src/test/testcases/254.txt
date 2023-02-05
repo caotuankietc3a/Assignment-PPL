@@ -10,7 +10,7 @@ buyCar: function integer (nums : array [200] of integer, length: integer, k: int
   return result;
 }
 main: function void(){
-    nums: array [] of integer = {90,30,40,90,20};
+    nums: array [5] of integer = {90,30,40,90,20};
     length : integer = sizeof(nums)/sizeof(nums[0]);
     printeger(buyCar(nums, length, 90));
 }

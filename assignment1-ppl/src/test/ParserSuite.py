@@ -80,7 +80,7 @@ a,   b,   c   : array [2, 3] of integer = {{1, 2, 3}, {0, 5, 6}}, {{}, {}}, {{2,
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 210))
 
-    def test_variable_decl_12(self):
+    def test_function_0(self):
         input = """
 main : function void () {
     found : boolean = true;
@@ -528,7 +528,8 @@ main : function void () {
 
     def test_functions_16(self):
         input = """
-Recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {
+Test: function void (i: integer){return i / 2;}
+Recursive: function void(inherit nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) inherit Test{
     if (sum >= size) {
         if (minjump > count)
             minjump = count;
@@ -900,33 +901,6 @@ main: function void(){
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 251))
 
-    def test_functions_32(self):
-        input = """
-countWaysUtil: function integer (x: integer, n: integer, num: integer)
-{
-    // Base cases
-    val: integer = (x - pow(num, n));
-    if (val == 0)
-        return 1;
-    if (val < 0)
-        return 0;
-
-    return countWaysUtil(val, n, num + 1) +
-           countWaysUtil(x, n, num + 1);
-}
-
-countWaySumOfSquare: function integer (x: integer)
-{
-    return countWaysUtil(x, 2, 1);
-}
-
-main: function void(){
-    printeger(countWaySumOfSquare(100));
-}
-"""
-        expect = "successful"
-        self.assertTrue(TestParser.test(input, expect, 251))
-
     def test_functions_33(self):
         input = """
 countWaysUtil: function integer (x: integer, n: integer, num: integer)
@@ -983,7 +957,7 @@ buyCar: function integer (nums : array [200] of integer, length: integer, k: int
   return result;
 }
 main: function void(){
-    nums: array [] of integer = {90,30,40,90,20};
+    nums: array [5] of integer = {90,30,40,90,20};
     length : integer = sizeof(nums)/sizeof(nums[0]);
     printeger(buyCar(nums, length, 90));
 }
@@ -1643,7 +1617,7 @@ buildMaxHeap: function void (arr: array[100] of integer, numOfEl: integer) {
       heapify(arr, numOfEl, i);
     }
 }
-heapSort: function void (start: array[] of integer, end: array[100] of integer) {
+heapSort: function void (start: array[100] of integer, end: array[100] of integer) {
     numOfEl: integer = end - start;
     buildMaxHeap(start, numOfEl);
     for (i = numOfEl - 1, i >= 0, i-1) {
@@ -1665,7 +1639,7 @@ buildMaxHeap: function void (arr: array[100] of integer, numOfEl: integer) {
       heapify(arr, numOfEl, i);
     }
 }
-heapSort: function void (start: array[] of integer, end: array[100] of integer) {
+heapSort: function void (start: array[100] of integer, end: array[100] of integer) {
     numOfEl: integer = end - start;
     buildMaxHeap(start, numOfEl);
     for (i = numOfEl - 1, i >= 0, i-1) {
@@ -1748,7 +1722,7 @@ heapify: function void(arr: array[100] of integer, numOfEl: integer, i: integer)
 
     def test_functions_78(self):
         input = """
-minWaitingTime: function integer (n: integer, arrvalTime: array[] of integer, completeTime: array[] of integer) {
+minWaitingTime: function integer (n: integer, arrvalTime: array[1000] of integer, completeTime: array[1000] of integer) {
     sort(a, a + n, greater());
     minTegerime : integer = 0;
 
@@ -1766,36 +1740,32 @@ minWaitingTime: function integer (n: integer, arrvalTime: array[] of integer, co
 
     def test_functions_79(self):
         input = """
-minWaitingTime: function integer (n: integer, arrvalTime: array[1000] of integer, completeTime: array[] of integer) {
+minWaitingTime: function integer (n: integer, arrvalTime: array[1000] of integer, completeTime: array[1000] of integer) {
     sort(a, a + n, greater());
     minTegerime : integer = 0
 
-    // Iterate through the groups
     for (i = 0, i < n, i + k)
         // Update the time taken for each group
         minTegerime = minTegerime + (2 * a[i]);
 
-    // Return the total time taken
     return minTegerime;
 }
 """
-        expect = "Error on line 7 col 4: for"
+        expect = "Error on line 6 col 4: for"
         self.assertTrue(TestParser.test(input, expect, 298))
 
-#     def test_functions_80(self):
-#         input = """
-# minWaitingTime: function integer (n: integer, arrvalTime: array[1000] of integer, completeTime: array[] of integer) {
-#     sort(a, a + n, greater());
-#     minTegerime : integer = 0;
-#
-#     // Iterate through the groups
-#     for (i = 0, i < n, i + k)
-#         // Update the time taken for each group
-#         minTegerime = minTegerime + (2 * a[i]);
-#
-#     // Return the total time taken
-#     return minTegerime
-# }
-# """
-#         expect = "Error on line 13 col 0: }"
-#         self.assertTrue(TestParser.test(input, expect, 299))
+    def test_functions_80(self):
+        input = """
+minWaitingTime: function integer (n: integer, arrvalTime: array[1000] of integer, completeTime: array[1000] of integer) {
+    sort(a, a + n, greater());
+    minTegerime : integer = 0;
+
+    for (i = 0, i < n, i + k)
+        // Update the time taken for each group
+        minTegerime = minTegerime + (2 * a[i]);
+
+    return minTegerime
+}
+"""
+        expect = "Error on line 11 col 0: }"
+        self.assertTrue(TestParser.test(input, expect, 299))

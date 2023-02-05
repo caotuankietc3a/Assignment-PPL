@@ -174,7 +174,6 @@ variable_decl
   {
 if self.exprs_size != -1 and self.exprs_size != self.ids_size: 
     raise RecognitionException()
-    
 self.ids_size = -1
 self.exprs_size = -1
 }
@@ -281,8 +280,8 @@ exprs_list
 // ====================== Statements ========================
 
 statements_list
-  : statement statements_list
-  | statement
+  : (statement | variable_decl) statements_list
+  | (statement | variable_decl)
   ;
 
 statement
@@ -296,7 +295,6 @@ statement
   | return_stmt
   | call_stmt
   | block_stmt
-  | variable_decl
   ;
 
 assign_stmt
@@ -344,25 +342,28 @@ scalar_var: ID;
 
 
 // ====================== Type system and values ========================
-///////////////////////////////////// Start test //////////////////////////
-
-/* Atomic types */
 boolean_type: BOOLEAN; 
+
 int_type: INTEGER;
+
 float_type: FLOAT;
+
 string_type: STRING;
+
 void_type: VOID;
+
 auto_type: AUTO;
-array_type: ARRAY LEFT_BRACK dimensions? RIGHT_BRACK OF atomic_type;
+
+array_type: ARRAY LEFT_BRACK dimensions RIGHT_BRACK OF atomic_type;
+
 dimensions: INTEGER_LIT (COMMA INTEGER_LIT)* ;
+
 atomic_type
   : boolean_type
   | int_type
   | float_type
   | string_type
   ;
-
-///////////////////////////////////// End test //////////////////////////
 
 // ====================== Keywords ========================
 AUTO: 'auto';

@@ -1,5 +1,5 @@
 
-minWaitingTime: function integer (n: integer, arrvalTime: array[] of integer, completeTime: array[] of integer) {
+minWaitingTime: function integer (n: integer, arrvalTime: array[1000] of integer, completeTime: array[1000] of integer) {
     sort(a, a + n, greater());
     minTegerime : integer = 0;
 

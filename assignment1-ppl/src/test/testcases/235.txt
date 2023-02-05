@@ -1,5 +1,6 @@
 
-Recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {
+Test: function void (i: integer){return i / 2;}
+Recursive: function void(inherit nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) inherit Test{
     if (sum >= size) {
         if (minjump > count)
             minjump = count;
