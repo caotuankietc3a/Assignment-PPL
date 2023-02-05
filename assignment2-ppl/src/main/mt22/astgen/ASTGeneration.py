@@ -33,7 +33,7 @@ class ASTGeneration(MT22Visitor):
 
     # function_decl: ID COLON FUNCTION (atomic_type | void_type | auto_type) LEFT_PAREN params_list? RIGHT_PAREN (INHERIT ID)? body;
     def visitFunction_decl(self, ctx: MT22Parser.Function_declContext):
-        return [FuncDecl(ctx.ID(0).getText(), ctx.getChild(3).accept(self), ctx.params_list().accept(self) if ctx.params_list() else [], ctx.INHERIT().getText() if ctx.INHERIT() else ctx.INHERIT(), ctx.body().accept(self))]
+        return [FuncDecl(Id(ctx.ID(0).getText()), ctx.getChild(3).accept(self), ctx.params_list().accept(self) if ctx.params_list() else [], ctx.INHERIT().getText() if ctx.INHERIT() else ctx.INHERIT(), ctx.body().accept(self))]
 
     # params_list : parameter_decl COMMA params_list | parameter_decl ;
     def visitParams_list(self, ctx: MT22Parser.Params_listContext):
@@ -41,7 +41,7 @@ class ASTGeneration(MT22Visitor):
 
     # parameter_decl : INHERIT? OUT? ID COLON (atomic_type | array_type | auto_type) ;
     def visitParameter_decl(self, ctx: MT22Parser.Parameter_declContext):
-        return ParamDecl(ctx.ID().getText(), ctx.getChild(ctx.getChildCount() - 1).accept(self), True if ctx.OUT() else False, True if ctx.INHERIT() else False)
+        return ParamDecl(Id(ctx.ID().getText()), ctx.getChild(ctx.getChildCount() - 1).accept(self), True if ctx.OUT() else False, True if ctx.INHERIT() else False)
 
     # body: block_stmt;
     def visitBody(self, ctx: MT22Parser.BodyContext):
@@ -103,7 +103,7 @@ class ASTGeneration(MT22Visitor):
 
     # func_call: ID LEFT_PAREN exprs_list? RIGHT_PAREN;
     def visitFunc_call(self, ctx: MT22Parser.Func_callContext):
-        id = ctx.ID().getText()
+        id = Id(ctx.ID().getText())
         exprs_list = ctx.exprs_list().accept(self) if ctx.exprs_list() else []
         return [FuncCall(id, exprs_list), id, exprs_list]
 
@@ -132,11 +132,14 @@ class ASTGeneration(MT22Visitor):
     def visitExprs_list(self, ctx: MT22Parser.Exprs_listContext):
         return [ctx.expr().accept(self), *ctx.exprs_list().accept(self)] if ctx.getChildCount() == 3 else [ctx.expr().accept(self)]
 
-    # statements_list : statement statements_list | statement ;
+    # statements_list : (statement | variable_decl) statements_list | (statement | variable_decl) ;
     def visitStatements_list(self, ctx: MT22Parser.Statements_listContext):
+        if ctx.variable_decl():
+            return [*ctx.variable_decl().accept(self), *ctx.statements_list().accept(self)] if ctx.getChildCount() == 2 else ctx.variable_decl().accept(self)
+
         return [ctx.statement().accept(self), *ctx.statements_list().accept(self)] if ctx.getChildCount() == 2 else [ctx.statement().accept(self)]
 
-    # statement : assign_stmt | if_stmt | for_stmt | while_stmt | do_while_stmt | break_stmt | continue_stmt | return_stmt | call_stmt | block_stmt | variable_decl ;
+    # statement : assign_stmt | if_stmt | for_stmt | while_stmt | do_while_stmt | break_stmt | continue_stmt | return_stmt | call_stmt | block_stmt ;
     def visitStatement(self, ctx: MT22Parser.StatementContext):
         return ctx.getChild(0).accept(self)
 
@@ -146,7 +149,7 @@ class ASTGeneration(MT22Visitor):
 
     # assign_stmt_lhs : scalar_var | ID index_operator ;
     def visitAssign_stmt_lhs(self, ctx: MT22Parser.Assign_stmt_lhsContext):
-        return ArrayCell(ctx.ID().getText(), ctx.index_operator().accept(self)) if ctx.getChildCount() == 2 else ctx.scalar_var().accept(self)
+        return ArrayCell(Id(ctx.ID().getText()), ctx.index_operator().accept(self)) if ctx.getChildCount() == 2 else ctx.scalar_var().accept(self)
 
     # assign_stmt_rhs: expr;
     def visitAssign_stmt_rhs(self, ctx: MT22Parser.Assign_stmt_rhsContext):
@@ -229,7 +232,7 @@ class ASTGeneration(MT22Visitor):
     def visitAuto_type(self, ctx: MT22Parser.Auto_typeContext):
         return AutoType()
 
-    # array_type: ARRAY LEFT_BRACK dimensions? RIGHT_BRACK OF atomic_type;
+    # array_type: ARRAY LEFT_BRACK dimensions RIGHT_BRACK OF atomic_type;
     def visitArray_type(self, ctx: MT22Parser.Array_typeContext):
         return ArrayType(ctx.dimensions().accept(self), ctx.atomic_type().accept(self))
 

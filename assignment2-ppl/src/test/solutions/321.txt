@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(nE), IntegerType, IntegerLit(0)), DoWhileStmt(BooleanLit(True), BlockStmt([IfStmt(BinExpr(==, Id(nE), IntegerLit(10)), BreakStmt(), BlockStmt([AssignStmt(Id(nE), BinExpr(+, Id(nE), IntegerLit(1))), ContinueStmt()]))]))]))
+])

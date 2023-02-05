@@ -1,0 +1,5 @@
+Program([
+	VarDecl(Id(a1), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([StringLit(hello), StringLit(world), StringLit(!!!)]), ArrayLit([StringLit(test\n), StringLit(string\t)])]))
+	VarDecl(Id(b1), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([]), ArrayLit([])]))
+	VarDecl(Id(c1), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([StringLit(hahaha)]), ArrayLit([])]))
+])

@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(lookUp), BooleanType, [Param(Id(name), StringType)], None, BlockStmt([ForStmt(AssignStmt(Id(scopeFounded), IntegerLit(10)), BinExpr(>=, Id(scopeFounded), IntegerLit(0)), BinExpr(-, Id(scopeFounded), IntegerLit(1)), BlockStmt([IfStmt(FuncCall(Id(isExist), [Id(name), Id(scopeFounded)]), BlockStmt([ReturnStmt(BooleanLit(True))]))])), ReturnStmt(BooleanLit(True))]))
+])

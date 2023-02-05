@@ -280,8 +280,8 @@ exprs_list
 // ====================== Statements ========================
 
 statements_list
-  : statement statements_list
-  | statement
+  : (statement | variable_decl) statements_list
+  | (statement | variable_decl)
   ;
 
 statement
@@ -295,7 +295,6 @@ statement
   | return_stmt
   | call_stmt
   | block_stmt
-  | variable_decl
   ;
 
 assign_stmt
@@ -355,7 +354,7 @@ void_type: VOID;
 
 auto_type: AUTO;
 
-array_type: ARRAY LEFT_BRACK dimensions? RIGHT_BRACK OF atomic_type;
+array_type: ARRAY LEFT_BRACK dimensions RIGHT_BRACK OF atomic_type;
 
 dimensions: INTEGER_LIT (COMMA INTEGER_LIT)* ;
 
