@@ -53,7 +53,7 @@ class ASTGeneration(MT22Visitor):
 
     # string_expr : string_expr SR relational_expr | relational_expr ;
     def visitString_expr(self, ctx: MT22Parser.String_exprContext):
-        return BinExpr(ctx.SR().getText(), ctx.string_expr().accept(self), ctx.relational_expr().accept(self)) if ctx.getChildCount() == 3 else ctx.relational_expr().accept(self)
+        return BinExpr(ctx.SR().getText(), ctx.relational_expr(0).accept(self), ctx.relational_expr(1).accept(self)) if ctx.getChildCount() == 3 else ctx.relational_expr(0).accept(self)
 
     # relational_expr : logical_expr_1 (EQ | NOT_EQ | GT | LT | LT_EQ | GT_EQ) logical_expr_1 | logical_expr_1 ;
     def visitRelational_expr(self, ctx: MT22Parser.Relational_exprContext):

@@ -1,0 +1,1 @@
+Program([VarDecl(b,IntType),FuncDecl(a,[VarDecl(m,FloatType),VarDecl(b,IntType),VarDecl(d,FloatType)],[[<AST.ConstDecl object at 0x7fdfc163a9b0>, <AST.FuncDecl object at 0x7fdfc163a9e0>],[]])])

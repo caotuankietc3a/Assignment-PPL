@@ -8,7 +8,7 @@ Program([
 	VarDecl(Id(a3), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([StringLit(hello), StringLit(world), StringLit(!!!)]), ArrayLit([StringLit(test\n), StringLit(string\t)])]))
 	VarDecl(Id(b3), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([]), ArrayLit([])]))
 	VarDecl(Id(c3), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([StringLit(hahaha)]), ArrayLit([])]))
-	VarDecl(Id(a4), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(1.33333), FloatLit(.5555), FloatLit(189.00000)]), ArrayLit([FloatLit(157.), FloatLit(1234.), FloatLit(12356.1234)])]))
+	VarDecl(Id(a4), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(1.33333), FloatLit(.5555e1), FloatLit(189.00000)]), ArrayLit([FloatLit(157.), FloatLit(1234.), FloatLit(12356.1234)])]))
 	VarDecl(Id(b4), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([]), ArrayLit([])]))
 	VarDecl(Id(c4), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(0.33E-3), FloatLit(12e8)]), ArrayLit([])]))
 ])

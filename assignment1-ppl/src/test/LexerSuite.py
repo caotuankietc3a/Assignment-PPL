@@ -147,7 +147,7 @@ class LexerSuite(unittest.TestCase):
         self.assertTrue(
             TestLexer.test(
                 r""".5555""",
-                ".5555,<EOF>",
+                ".,5555,<EOF>",
                 126,
             )
         )
@@ -192,7 +192,7 @@ class LexerSuite(unittest.TestCase):
         self.assertTrue(
             TestLexer.test(
                 r"""1_.34""",
-                "1,_,.34,<EOF>",
+                "1,_,.,34,<EOF>",
                 131,
             )
         )
@@ -353,7 +353,7 @@ h98f394__VWT_b5_VT_YGU87udhf__T_
     def test_others_2(self):
         self.assertTrue(TestLexer.test("""
 e-12 e+12 . 1e 12e 12.05e .05e ee e01 .12 143e
-        """, "e,-,12,e,+,12,.,1,e,12,e,12.05,e,.05,e,ee,e01,.12,143,e,<EOF>", 163))
+        """, "e,-,12,e,+,12,.,1,e,12,e,12.05,e,.,0,5,e,ee,e01,.,12,143,e,<EOF>", 163))
 
     def test_others_3(self):
         self.assertTrue(TestLexer.test("""

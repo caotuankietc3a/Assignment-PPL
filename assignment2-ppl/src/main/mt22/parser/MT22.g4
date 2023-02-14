@@ -97,7 +97,7 @@ INTEGER_LIT
   ;
 
 FLOAT_LIT
-  : (POINT_FLOAT | EXPONENT_FLOAT)
+  : ((INTEGER_LIT DECIMAL EXPONENT?) | (DECIMAL EXPONENT) | (INTEGER_LIT EXPONENT))
   {
     self.text = self.text.replace('_', '')
   }
@@ -140,17 +140,8 @@ fragment ESC_ERR
   | '\'' ~'"'
   ;
 
-fragment POINT_FLOAT
- : INTEGER_LIT? DECIMAL
- | INTEGER_LIT '.'
- ;
-
-fragment EXPONENT_FLOAT
- : ( INTEGER_LIT | POINT_FLOAT ) EXPONENT
- ;
-
 fragment DECIMAL
- : '.' DIGIT+
+ : '.' DIGIT*
  ;
 
 fragment EXPONENT
@@ -203,7 +194,7 @@ expr
   ;
 
 string_expr
-  : string_expr SR relational_expr 
+  : relational_expr SR relational_expr 
   | relational_expr
   ;
 
