@@ -83,3 +83,35 @@ class RedeclaredFunction(StaticError):
 
     def __str__(self):
         return "Redeclared Function: " + str(self.n)
+
+
+class TypeMismatchInExpression(StaticError):
+    def __init__(self, expr):
+        self.expr = expr
+
+    def __str__(self):
+        return f"Type Mismatch In Expression: {str(self.expr)}"
+
+
+class TypeMismatchInStatement(StaticError):
+    def __init__(self, stmt):
+        self.stmt = stmt
+
+    def __str__(self):
+        return f"Type Mismatch In Statement: {str(self.stmt)}"
+
+
+class TypeCannotBeInferred(StaticError):
+    def __init__(self, expr):
+        self.expr = expr
+
+    def __str__(self):
+        return f"Type Cannot Be Inferred: {str(self.expr)}"
+
+
+class UndeclaredIdentifier(StaticError):
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return f"UndeclaredIdentifier: {str(self.name)}"

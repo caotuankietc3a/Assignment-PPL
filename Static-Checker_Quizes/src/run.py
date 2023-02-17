@@ -19,11 +19,11 @@ def main(argv):
         subprocess.run(["rm", "-rf", TARGET_DIR + "/*"])
 
     elif argv[0] == 'test':
-        if not os.path.isdir(TARGET_DIR + "/" + GENERATE_DIR):
-            subprocess.run(["java", "-jar", ANTLR_JAR, "-o", GENERATE_DIR,
-                           "-no-listener", "-visitor", "main/bkool/parser/BKOOL.g4"])
-        if not (TARGET_DIR + "/" + GENERATE_DIR) in sys.path:
-            sys.path.append(TARGET_DIR + "/" + GENERATE_DIR)
+        # if not os.path.isdir(TARGET_DIR + "/" + GENERATE_DIR):
+        #     subprocess.run(["java", "-jar", ANTLR_JAR, "-o", GENERATE_DIR,
+        #                    "-no-listener", "-visitor", "main/bkool/parser/BKOOL.g4"])
+        # if not (TARGET_DIR + "/" + GENERATE_DIR) in sys.path:
+        #     sys.path.append(TARGET_DIR + "/" + GENERATE_DIR)
         if len(argv) < 2:
             printUsage()
         elif argv[1] == 'CheckerSuite':
@@ -54,7 +54,7 @@ def test(suite):
 
 
 def printUsage():
-    print("python3 run.py test ASTGenSuite")
+    print("python3 run.py test CheckerSuite")
 
 
 if __name__ == "__main__":

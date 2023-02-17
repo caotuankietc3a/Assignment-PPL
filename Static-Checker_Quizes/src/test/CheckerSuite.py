@@ -91,62 +91,159 @@ class CheckerSuite(unittest.TestCase):
     #     expect = "Redeclared Variable: x"
     #     self.assertTrue(TestChecker.test(input, expect, 113))
     # Quiz4
-    def test_15(self):
-        input = Program([VarDecl("a", IntType()), ConstDecl(
-            "b", IntLit(3)), FuncDecl("a", [], ([], []))])
-        expect = "Redeclared Function: a"
-        self.assertTrue(TestChecker.test(input, expect, 114))
+    # def test_15(self):
+    #     input = Program([VarDecl("a", IntType()), ConstDecl(
+    #         "b", IntLit(3)), FuncDecl("a", [], ([], []))])
+    #     expect = "Redeclared Function: a"
+    #     self.assertTrue(TestChecker.test(input, expect, 114))
 
-    def test_16(self):
-        input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("a", FloatType())], ([
-                        ConstDecl("c", IntLit(3)), VarDecl("b", IntType()), VarDecl("c", IntType())], []))])
-        expect = "Redeclared Variable: c"
-        self.assertTrue(TestChecker.test(input, expect, 115))
+    # def test_16(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("a", FloatType())], ([
+    #                     ConstDecl("c", IntLit(3)), VarDecl("b", IntType()), VarDecl("c", IntType())], []))])
+    #     expect = "Redeclared Variable: c"
+    #     self.assertTrue(TestChecker.test(input, expect, 115))
 
-    def test_17(self):
-        input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl(
-            "b", IntType()), VarDecl("m", FloatType())], ([ConstDecl("c", IntLit(3)), VarDecl("d", IntType())], []))])
-        expect = "Redeclared Variable: m"
-        self.assertTrue(TestChecker.test(input, expect, 116))
+    # def test_17(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl(
+    #         "b", IntType()), VarDecl("m", FloatType())], ([ConstDecl("c", IntLit(3)), VarDecl("d", IntType())], []))])
+    #     expect = "Redeclared Variable: m"
+    #     self.assertTrue(TestChecker.test(input, expect, 116))
 
-    def test_18(self):
-        input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl(
-            "b", IntType()), VarDecl("d", FloatType())], ([ConstDecl("c", IntLit(3)), VarDecl("d", IntType())], []))])
-        expect = "Redeclared Variable: d"
-        self.assertTrue(TestChecker.test(input, expect, 117))
+    # def test_18(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl(
+    #         "b", IntType()), VarDecl("d", FloatType())], ([ConstDecl("c", IntLit(3)), VarDecl("d", IntType())], []))])
+    #     expect = "Redeclared Variable: d"
+    #     self.assertTrue(TestChecker.test(input, expect, 117))
 
-    def test_19(self):
-        input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl(
-            "b", IntType()), VarDecl("d", FloatType())], ([ConstDecl("c", IntLit(3)), FuncDecl("d", [], ([], []))], []))])
-        expect = "Redeclared Function: d"
-        self.assertTrue(TestChecker.test(input, expect, 118))
+    # def test_19(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl(
+    #         "b", IntType()), VarDecl("d", FloatType())], ([ConstDecl("c", IntLit(3)), FuncDecl("d", [], ([], []))], []))])
+    #     expect = "Redeclared Function: d"
+    #     self.assertTrue(TestChecker.test(input, expect, 118))
 
-    def test_20(self):
-        input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl("b", IntType()), VarDecl(
-            "d", FloatType())], ([ConstDecl("c", IntLit(3)), FuncDecl("foo", [VarDecl("x", IntType())], ([VarDecl("x", IntType())], []))], []))])
-        expect = "Redeclared Variable: x"
-        self.assertTrue(TestChecker.test(input, expect, 119))
+    # def test_20(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl("b", IntType()), VarDecl(
+    #         "d", FloatType())], ([ConstDecl("c", IntLit(3)), FuncDecl("foo", [VarDecl("x", IntType())], ([VarDecl("x", IntType())], []))], []))])
+    #     expect = "Redeclared Variable: x"
+    #     self.assertTrue(TestChecker.test(input, expect, 119))
 
-    def test_21(self):
-        input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl("b", IntType()), VarDecl("d", FloatType())], ([ConstDecl("c", IntLit(3)), FuncDecl(
-            "foo", [VarDecl("x", IntType())], ([VarDecl("y", IntType()), VarDecl("z", IntType())], [Id("y"), Id("x"), Id("foo"), Id("c"), Id("m"), Id("a")]))], [Id("foo"), Id("d"), Id("z")]))])
-        expect = "Undeclared Identifier: z"
-        self.assertTrue(TestChecker.test(input, expect, 120))
+    # def test_21(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl("b", IntType()), VarDecl("d", FloatType())], ([ConstDecl("c", IntLit(3)), FuncDecl(
+    #         "foo", [VarDecl("x", IntType())], ([VarDecl("y", IntType()), VarDecl("z", IntType())], [Id("y"), Id("x"), Id("foo"), Id("c"), Id("m"), Id("a")]))], [Id("foo"), Id("d"), Id("z")]))])
+    #     expect = "Undeclared Identifier: z"
+    #     self.assertTrue(TestChecker.test(input, expect, 120))
 
-    def test_22(self):
-        input = Program([VarDecl("a", IntType()), ConstDecl("b", IntLit(3)), FuncDecl(
-            "c", [], ([], [IntLit(1), Id("a"), Id("d"), Id("b")]))])
-        expect = "Undeclared Identifier: d"
-        self.assertTrue(TestChecker.test(input, expect, 121))
+    # def test_22(self):
+    #     input = Program([VarDecl("a", IntType()), ConstDecl("b", IntLit(3)), FuncDecl(
+    #         "c", [], ([], [IntLit(1), Id("a"), Id("d"), Id("b")]))])
+    #     expect = "Undeclared Identifier: d"
+    #     self.assertTrue(TestChecker.test(input, expect, 121))
 
-    def test_23(self):
-        input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl("b", IntType()), VarDecl("n", FloatType())], ([
-                        ConstDecl("c", IntLit(3)), VarDecl("d", IntType())], [Id("a"), Id("b"), Id("c"), Id("d"), IntLit(3), Id("m"), Id("q"), Id("n")]))])
-        expect = "Undeclared Identifier: q"
-        self.assertTrue(TestChecker.test(input, expect, 122))
+    # def test_23(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl("b", IntType()), VarDecl("n", FloatType())], ([
+    #                     ConstDecl("c", IntLit(3)), VarDecl("d", IntType())], [Id("a"), Id("b"), Id("c"), Id("d"), IntLit(3), Id("m"), Id("q"), Id("n")]))])
+    #     expect = "Undeclared Identifier: q"
+    #     self.assertTrue(TestChecker.test(input, expect, 122))
 
-    def test_24(self):
-        input = Program([VarDecl("t", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl("b", IntType()), VarDecl("d", FloatType())], ([ConstDecl("c", IntLit(3)), FuncDecl("foo", [VarDecl("x", IntType())], ([VarDecl("y", IntType()), VarDecl("z", IntType())], [Id("y"), Id("x"), Id("foo"), Id("c"), Id("m"), Id("a"), Id("t")])),
-                                                                                                                                                  FuncDecl("foo1", [], ([], [Id("foo"), Id("d"), Id("x")]))], [Id("foo"), Id("d"), Id("foo1")]))])
-        expect = "Undeclared Identifier: x"
-        self.assertTrue(TestChecker.test(input, expect, 123))
+    # def test_24(self):
+    #     input = Program([VarDecl("t", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl("b", IntType()), VarDecl("d", FloatType())], ([ConstDecl("c", IntLit(3)), FuncDecl("foo", [VarDecl("x", IntType())], ([VarDecl("y", IntType()), VarDecl("z", IntType())], [Id("y"), Id("x"), Id("foo"), Id("c"), Id("m"), Id("a"), Id("t")])),
+    #                                                                                                                                               FuncDecl("foo1", [], ([], [Id("foo"), Id("d"), Id("x")]))], [Id("foo"), Id("d"), Id("foo1")]))])
+    #     expect = "Undeclared Identifier: x"
+    #     self.assertTrue(TestChecker.test(input, expect, 123))
+
+    # Quiz4
+    # def test_15(self):
+    #     input = Program([VarDecl("a", IntType()), ConstDecl(
+    #         "b", IntLit(3)), FuncDecl("a", [], ([], []))])
+    #     expect = "Redeclared Function: a"
+    #     self.assertTrue(TestChecker.test(input, expect, 114))
+
+    # def test_16(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("a", FloatType())], ([
+    #                     ConstDecl("c", IntLit(3)), VarDecl("b", IntType()), VarDecl("c", IntType())], []))])
+    #     expect = "Redeclared Variable: c"
+    #     self.assertTrue(TestChecker.test(input, expect, 115))
+
+    # def test_17(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl(
+    #         "b", IntType()), VarDecl("m", FloatType())], ([ConstDecl("c", IntLit(3)), VarDecl("d", IntType())], []))])
+    #     expect = "Redeclared Variable: m"
+    #     self.assertTrue(TestChecker.test(input, expect, 116))
+
+    # def test_18(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl(
+    #         "b", IntType()), VarDecl("d", FloatType())], ([ConstDecl("c", IntLit(3)), VarDecl("d", IntType())], []))])
+    #     expect = "Redeclared Variable: d"
+    #     self.assertTrue(TestChecker.test(input, expect, 117))
+
+    # def test_19(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl(
+    #         "b", IntType()), VarDecl("d", FloatType())], ([ConstDecl("c", IntLit(3)), FuncDecl("d", [], ([], []))], []))])
+    #     expect = "Redeclared Function: d"
+    #     self.assertTrue(TestChecker.test(input, expect, 118))
+
+    # def test_20(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl("b", IntType()), VarDecl(
+    #         "d", FloatType())], ([ConstDecl("c", IntLit(3)), FuncDecl("foo", [VarDecl("x", IntType())], ([VarDecl("x", IntType())], []))], []))])
+    #     expect = "Redeclared Variable: x"
+    #     self.assertTrue(TestChecker.test(input, expect, 119))
+
+    # def test_21(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl("b", IntType()), VarDecl("d", FloatType())], ([ConstDecl("c", IntLit(3)), FuncDecl(
+    #         "foo", [VarDecl("x", IntType())], ([VarDecl("y", IntType()), VarDecl("z", IntType())], [Id("y"), Id("x"), Id("foo"), Id("c"), Id("m"), Id("a")]))], [Id("foo"), Id("d"), Id("z")]))])
+    #     expect = "Undeclared Identifier: z"
+    #     self.assertTrue(TestChecker.test(input, expect, 120))
+
+    # def test_22(self):
+    #     input = Program([VarDecl("a", IntType()), ConstDecl("b", IntLit(3)), FuncDecl(
+    #         "c", [], ([], [IntLit(1), Id("a"), Id("d"), Id("b")]))])
+    #     expect = "Undeclared Identifier: d"
+    #     self.assertTrue(TestChecker.test(input, expect, 121))
+
+    # def test_23(self):
+    #     input = Program([VarDecl("b", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl("b", IntType()), VarDecl("n", FloatType())], ([
+    #                     ConstDecl("c", IntLit(3)), VarDecl("d", IntType())], [Id("a"), Id("b"), Id("c"), Id("d"), IntLit(3), Id("m"), Id("q"), Id("n")]))])
+    #     expect = "Undeclared Identifier: q"
+    #     self.assertTrue(TestChecker.test(input, expect, 122))
+
+    # def test_24(self):
+    #     input = Program([VarDecl("t", IntType()), FuncDecl("a", [VarDecl("m", FloatType()), VarDecl("b", IntType()), VarDecl("d", FloatType())], ([ConstDecl("c", IntLit(3)), FuncDecl("foo", [VarDecl("x", IntType())], ([VarDecl("y", IntType()), VarDecl("z", IntType())], [Id("y"), Id("x"), Id("foo"), Id("c"), Id("m"), Id("a"), Id("t")])),
+    #                                                                                                                                               FuncDecl("foo1", [], ([], [Id("foo"), Id("d"), Id("x")]))], [Id("foo"), Id("d"), Id("foo1")]))])
+    #     expect = "Undeclared Identifier: x"
+    #     self.assertTrue(TestChecker.test(input, expect, 123))
+
+    # def test_25(self):
+    #     input = Program([VarDecl("x")], [Assign(Id("x"), BinOp(
+    #         "*", BinOp("+", Id("x"), IntLit(3.4)), BinOp("-", Id("x"), FloatLit(2.1))))])
+    #     expect = """Type Mismatch In Expression: BinOp("-",Id("x"),FloatLit(2.1))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 124))
+
+    # def test_26(self):
+    #     input = Program([VarDecl("x"), VarDecl("y"), VarDecl("z")], [Assign(Id("x"), BinOp(">b", BinOp("&&", Id(
+    #         "x"), Id("y")), BinOp("||", BoolLit(False), BinOp(">", Id("z"), IntLit(3))))), Assign(Id("z"), Id("x"))])
+    #     expect = """Type Mismatch In Statement: Assign(Id("z"),Id("x"))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 125))
+
+    # def test_27(self):
+    #     input = Program([VarDecl("x"), VarDecl("y")],
+    #                     [Assign(Id("x"), Id("y"))])
+    #     expect = """Type Cannot Be Inferred: Assign(Id("x"),Id("y"))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 126))
+
+    # def test_28(self):
+    #     input = Program([VarDecl("x"), VarDecl("y"), VarDecl("z")], [Assign(Id("z"), BinOp(
+    #         "&&", BinOp(">", BinOp("-", Id("x"), IntLit(3)), UnOp("-", Id("y"))), UnOp("!", Id("y"))))])
+    #     expect = """Type Mismatch In Expression: UnOp("!",Id("y"))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 127))
+
+    # def test_29(self):
+    #     input = Program([VarDecl("x"), VarDecl("y"), VarDecl("z")], [Assign(
+    #         Id("x"), UnOp("!", BinOp("=", Id("z"), BinOp("*", Id("y"), Id("x")))))])
+    #     expect = """Type Mismatch In Statement: Assign(Id("x"),UnOp("!",BinOp("=",Id("z"),BinOp("*",Id("y"),Id("x")))))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 128))
+
+    def test_30(self):
+        input = Program([VarDecl("x"), VarDecl("y"), VarDecl("z")], [Assign(Id("x"), UnOp(
+            "-.", BinOp("-.", Id("z"), BinOp("/.", UnOp("i2f", Id("y")), Id("x"))))), Assign(Id("y"), FloatLit(3.2))])
+        expect = """Type Mismatch In Statement: Assign(Id("y"),FloatLit(3.2))"""
+        self.assertTrue(TestChecker.test(input, expect, 129))
