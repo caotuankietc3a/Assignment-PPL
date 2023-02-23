@@ -35,7 +35,7 @@ a, b, c : boolean = false, true, false;
         input = """
 a,   b,   c   : auto;
 """
-        expect = "Error on line 2 col 20: ;"
+        expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 204))
 
     def test_variable_decl_6(self):

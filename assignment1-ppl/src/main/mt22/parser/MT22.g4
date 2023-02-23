@@ -161,10 +161,12 @@ fragment DIGIT
 
 // Don't make spaces with python codes
 variable_decl
-  : identifiers_list COLON (((atomic_type | array_type) (ASSIGN exprs_list_var_decl)?) | (auto_type ASSIGN exprs_list_var_decl))
-  {
+  : identifiers_list COLON (atomic_type | array_type | auto_type) (ASSIGN exprs_list_var_decl)?
+{
 if self.exprs_size != -1 and self.exprs_size != self.ids_size: 
-    raise RecognitionException()
+    self.ids_size = -1
+    self.exprs_size = -1
+    raise NoViableAltException(self)
 self.ids_size = -1
 self.exprs_size = -1
 }
