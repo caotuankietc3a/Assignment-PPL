@@ -242,8 +242,122 @@ class CheckerSuite(unittest.TestCase):
     #     expect = """Type Mismatch In Statement: Assign(Id("x"),UnOp("!",BinOp("=",Id("z"),BinOp("*",Id("y"),Id("x")))))"""
     #     self.assertTrue(TestChecker.test(input, expect, 128))
 
-    def test_30(self):
-        input = Program([VarDecl("x"), VarDecl("y"), VarDecl("z")], [Assign(Id("x"), UnOp(
-            "-.", BinOp("-.", Id("z"), BinOp("/.", UnOp("i2f", Id("y")), Id("x"))))), Assign(Id("y"), FloatLit(3.2))])
-        expect = """Type Mismatch In Statement: Assign(Id("y"),FloatLit(3.2))"""
-        self.assertTrue(TestChecker.test(input, expect, 129))
+    # def test_30(self):
+    #     input = Program([VarDecl("x"), VarDecl("y"), VarDecl("z")], [Assign(Id("x"), UnOp(
+    #         "-.", BinOp("-.", Id("z"), BinOp("/.", UnOp("i2f", Id("y")), Id("x"))))), Assign(Id("y"), FloatLit(3.2))])
+    #     expect = """Type Mismatch In Statement: Assign(Id("y"),FloatLit(3.2))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 129))
+
+    # def test_31(self):
+    #     input = Program([VarDecl("x")], [Assign(Id("x"), IntLit(3)), Block(
+    #         [VarDecl("y")], [Assign(Id("x"), Id("y")), Assign(Id("y"), BoolLit(True))])])
+    #     expect = """Type Mismatch In Statement: Assign(Id("y"),BoolLit(True))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 130))
+
+    # def test_32(self):
+    #     input = Program([VarDecl("x")], [Assign(Id("x"), IntLit(3)), Block([VarDecl("y"), VarDecl(
+    #         "x"), VarDecl("y")], [Assign(Id("x"), Id("y")), Assign(Id("y"), IntLit(3))])])
+    #     expect = """Redeclared: VarDecl("y")"""
+    #     self.assertTrue(TestChecker.test(input, expect, 131))
+
+    # def test_33(self):
+    #     input = Program([VarDecl("x")], [Assign(Id("x"), IntLit(3)), Block(
+    #         [VarDecl("y")], [Assign(Id("x"), Id("y")), Assign(Id("y"), BoolLit(True))])])
+    #     expect = """Type Mismatch In Statement: Assign(Id("y"),BoolLit(True))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 132))
+
+    # def test_34(self):
+    #     input = Program([VarDecl("x")], [Assign(Id("x"), IntLit(3)), Block([VarDecl(
+    #         "y"), VarDecl("x")], [Assign(Id("x"), Id("y")), Assign(Id("y"), FloatLit(3))])])
+    #     expect = """Type Cannot Be Inferred: Assign(Id("x"),Id("y"))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 133))
+
+    # def test_35(self):
+    #     input = Program([VarDecl("x"), VarDecl("t")], [Assign(Id("x"), IntLit(3)), Block([VarDecl("y")], [
+    #                     Assign(Id("x"), Id("y")), Block([], [Assign(Id("t"), FloatLit(3)), Assign(Id("z"), Id("t"))])])])
+    #     expect = """Undeclared Identifier: z"""
+    #     self.assertTrue(TestChecker.test(input, expect, 134))
+
+    # def test_36(self):
+    #     input = Program([VarDecl("x"), VarDecl("t")], [Assign(Id("x"), IntLit(3)), Block([VarDecl("y")], [Assign(
+    #         Id("x"), Id("y")), Block([VarDecl("z")], [Assign(Id("t"), FloatLit(3)), Assign(Id("z"), UnOp("-", Id("t")))])])])
+    #     expect = """Type Mismatch In Expression: UnOp("-",Id("t"))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 135))
+
+    # def test_37(self):
+    #     input = Program([VarDecl("x"), VarDecl("t")], [Assign(Id("x"), IntLit(3)), Block([VarDecl("y")], [Assign(Id("x"), Id(
+    #         "y")), Block([VarDecl("z")], [Assign(Id("t"), FloatLit(3)), Assign(Id("z"), BinOp("-", Id("t"), Id("x")))])])])
+    #     expect = """Type Mismatch In Expression: BinOp("-",Id("t"),Id("x"))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 136))
+
+    # def test_38(self):
+    #     input = Program([VarDecl("x"), VarDecl("t")], [Assign(Id("x"), IntLit(3)), Block([VarDecl("y")], [Assign(Id("x"), Id(
+    #         "y")), Block([VarDecl("z")], [Assign(Id("t"), FloatLit(3)), Assign(Id("y"), BinOp("-.", Id("t"), UnOp("i2f", Id("x"))))])])])
+    #     expect = """Type Mismatch In Statement: Assign(Id("y"),BinOp("-.",Id("t"),UnOp("i2f",Id("x"))))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 137))
+
+    # def test_39(self):
+    #     input = Program([VarDecl("x"), VarDecl("t")], [Assign(Id("x"), IntLit(3)), Block([VarDecl("y")], [Assign(
+    #         Id("x"), Id("y")), Block([VarDecl("z")], [Assign(Id("t"), FloatLit(3)), Assign(Id("z"), UnOp("floor", Id("y")))])])])
+    #     expect = """Type Mismatch In Expression: UnOp("floor",Id("y"))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 138))
+
+    # def test_40(self):
+    #     input = Program([VarDecl("x"), VarDecl("t")], [Assign(Id("x"), IntLit(3)), Block([VarDecl("x")], [
+    #                     Assign(Id("x"), FloatLit(3.0)), Assign(Id("t"), Id("x"))]), Assign(Id("x"), Id("t"))])
+    #     expect = """Type Mismatch In Statement: Assign(Id("x"),Id("t"))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 139))
+
+    # def test_41(self):
+    #     input = Program([VarDecl("x")], [Assign(Id("x"), IntLit(3)), Block(
+    #         [VarDecl("x")], [Assign(Id("x"), FloatLit(3.0))]), Assign(Id("x"), BoolLit(False))])
+    #     expect = """Type Mismatch In Statement: Assign(Id("x"),BoolLit(False))"""
+    #     self.assertTrue(TestChecker.test(input, expect, 140))
+
+    def test_42(self):
+        input = Program([VarDecl("x"), FuncDecl("foo", [VarDecl("x")], [], [Assign(
+            Id("x"), FloatLit(2))])], [Assign(Id("x"), IntLit(3)), CallStmt("foo", [Id("x")])])
+        expect = """Type Mismatch In Statement: CallStmt("foo",[Id("x")])"""
+        self.assertTrue(TestChecker.test(input, expect, 141))
+
+    def test_43(self):
+        input = Program([VarDecl("x"), FuncDecl("foo", [VarDecl("y"), VarDecl(
+            "z")], [], [])], [CallStmt("foo", [IntLit(3), Id("x")])])
+        expect = """Type Cannot Be Inferred: CallStmt("foo",[IntLit(3),Id("x")])"""
+        self.assertTrue(TestChecker.test(input, expect, 142))
+
+    def test_44(self):
+        input = Program([VarDecl("x"), FuncDecl("foo", [], [VarDecl("x")], [Assign(
+            Id("x"), FloatLit(2))])], [Assign(Id("x"), IntLit(3)), CallStmt("foo", [Id("x")])])
+        expect = """Type Mismatch In Statement: CallStmt("foo",[Id("x")])"""
+        self.assertTrue(TestChecker.test(input, expect, 143))
+
+    def test_45(self):
+        input = Program([VarDecl("x"), FuncDecl(
+            "x", [VarDecl("y")], [], [])], [])
+        expect = """Redeclared: FuncDecl("x",[VarDecl("y")],[],[])"""
+        self.assertTrue(TestChecker.test(input, expect, 144))
+
+    def test_46(self):
+        input = Program([VarDecl("x"), FuncDecl(
+            "foo", [VarDecl("y")], [], [CallStmt("x", [])])], [])
+        expect = """Undeclared Identifier: x"""
+        self.assertTrue(TestChecker.test(input, expect, 145))
+
+    def test_47(self):
+        input = Program([VarDecl("x"), FuncDecl("foo", [VarDecl("y")], [FuncDecl(
+            "foo2", [], [], [])], [CallStmt("foo2", [])])], [CallStmt("foo2", [])])
+        expect = """Undeclared Identifier: foo2"""
+        self.assertTrue(TestChecker.test(input, expect, 146))
+
+    def test_48(self):
+        input = Program([VarDecl("x"), FuncDecl("foo", [VarDecl("y")], [], [])], [CallStmt(
+            "foo", [IntLit(3)]), CallStmt("foo", [Id("x")]), Assign(Id("x"), FloatLit(0.0))])
+        expect = """Type Mismatch In Statement: Assign(Id("x"),FloatLit(0.0))"""
+        self.assertTrue(TestChecker.test(input, expect, 147))
+
+    def test_49(self):
+        input = Program([VarDecl("x"), FuncDecl("foo", [VarDecl("y")], [], [])], [CallStmt(
+            "foo", [IntLit(3)]), CallStmt("foo", [Id("x")]), Assign(Id("x"), FloatLit(0.0))])
+        expect = """Type Mismatch In Statement: Assign(Id("x"),FloatLit(0.0))"""
+        self.assertTrue(TestChecker.test(input, expect, 148))

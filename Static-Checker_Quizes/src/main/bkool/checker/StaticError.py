@@ -114,4 +114,13 @@ class UndeclaredIdentifier(StaticError):
         self.name = name
 
     def __str__(self):
-        return f"UndeclaredIdentifier: {str(self.name)}"
+        return f"Undeclared Identifier: {str(self.name)}"
+
+
+class Redeclared(StaticError):
+
+    def __init__(self, n):
+        self.n = n
+
+    def __str__(self):
+        return "Redeclared: " + str(self.n)

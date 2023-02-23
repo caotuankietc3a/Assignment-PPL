@@ -18,7 +18,6 @@ class Program(AST):
         self.stmts = stmts
 
     def __str__(self):
-        # return "Program([" + ','.join(str(i) for i in self.decl) + "])"
         return f"Program([{','.join(str(i) for i in self.decl)}],[{','.join(str(i) for i in self.stmts)}])"
 
     def accept(self, v: Visitor, param):
@@ -30,21 +29,6 @@ class Decl(AST):
     pass
 
 
-class FuncDecl(Decl):
-    # name: str
-    # name:str,param:List[VarDecl],body:Tuple(List[Decl],List[Expr])
-    def __init__(self, name, param, body):
-        self.name = name
-        self.param = param
-        self.body = body
-
-    def __str__(self):
-        return "FuncDecl(" + str(self.name) + ",[" + ','.join(str(i) for i in self.param) + "],[" + ','.join(str(i) for i in self.body) + "])"
-
-    def accept(self, v, param):
-        return v.visitFuncDecl(self, param)
-
-
 class VarDecl(Decl):
     # name: str
     # typ: Type
@@ -53,7 +37,7 @@ class VarDecl(Decl):
         # self.typ = typ
 
     def __str__(self) -> str:
-        return "VarDecl(" + str(self.name) + ")"
+        return "VarDecl(\"" + str(self.name) + "\")"
 
     def accept(self, v, param):
         return v.visitVarDecl(self, param)
@@ -105,6 +89,21 @@ class BoolType(Type):
 class Stmt(AST):
     __metaclass__ = ABCMeta
     pass
+
+
+class FuncDecl(Decl):
+    # name:str,param:List[VarDecl],local:List[Decl],stmts:List[Stmt]
+    def __init__(self, name, param: list[VarDecl], local: list[Decl], stmts: list[Stmt]):
+        self.name = name
+        self.param = param
+        self.local = local
+        self.stmts = stmts
+
+    def __str__(self):
+        return "FuncDecl(\"" + str(self.name) + "\",[" + ','.join(str(i) for i in self.param) + "],[" + ','.join(str(i) for i in self.local) + "],[" + ','.join(str(i) for i in self.stmts) + "])"
+
+    def accept(self, v, param):
+        return v.visitFuncDecl(self, param)
 
 
 class Expr(Stmt):
@@ -207,3 +206,27 @@ class Assign:
 
     def accept(self, v, param):
         return v.visitAssign(self, param)
+
+
+class CallStmt(Stmt):
+    def __init__(self, name: str, args: list[Expr]) -> None:
+        self.name = name
+        self.args = args
+
+    def __str__(self) -> str:
+        return f"CallStmt(\"{str(self.name)}\",[{','.join(str(arg) for arg in self.args)}])"
+
+    def accept(self, v, param):
+        return v.visitCallStmt(self, param)
+
+
+class Block:
+    def __init__(self, decl: list[VarDecl], stmts: list[Stmt]):
+        self.decl = decl
+        self.stmts = stmts
+
+    def __str__(self) -> str:
+        return f"Block([{','.join(str(i) for i in self.decl)}],[{','.join(str(i) for i in self.stmts)}])"
+
+    def accept(self, v, param):
+        return v.visitBlock(self, param)
