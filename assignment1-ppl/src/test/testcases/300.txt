@@ -1,3 +1,16 @@
 
-a2,   b2,   c2   : array [2, 3] of float = {{1.33333, .5555, 189.00000}, {157., 1_2_3_4., 1_2_3_56.1234}}, {{}, {}}, {{12e8}, {}};
-a,   b,   c2   : array [2, 3] of auto = {{1.33333, .5555, 189.00000}, {"hello", "world", "!!!"}}, {{}, {}}, {{1, false, true}, {}};
+        foo: function boolean(x: integer) inherit bar 
+        {
+            r, s: integer;
+            r = 2.0;
+            a, b: array [5] of integer;
+            s = r * r * myPI;
+            a[0] = s;
+        }
+        main: function void() {
+            r, s: integer;
+            r = 2.0;
+            a, b: array [5] of integer;
+            s = r * r * myPI;
+            a[0] = s;
+        }

@@ -33,6 +33,21 @@ def ids_size(self, value):
 @exprs_size.setter
 def exprs_size(self, value):
     self._exprs_size = value
+
+
+def check(self, flag):
+    if flag: 
+        if self.exprs_size != -1 and self.exprs_size != self.ids_size: 
+            raise NoViableAltException(self)
+        else:
+            self.ids_size = -1
+            self.exprs_size = -1
+    else:
+        if self.exprs_size + 2 >= self.ids_size:
+            raise NoViableAltException(self)
+        else:
+            self.exprs_size += 1
+    
 }
 
 program: decls EOF ;
@@ -163,12 +178,7 @@ fragment DIGIT
 variable_decl
   : identifiers_list COLON (atomic_type | array_type | auto_type) (ASSIGN exprs_list_var_decl)?
 {
-if self.exprs_size != -1 and self.exprs_size != self.ids_size: 
-    self.ids_size = -1
-    self.exprs_size = -1
-    raise NoViableAltException(self)
-self.ids_size = -1
-self.exprs_size = -1
+self.check(True)
 }
   SEMI_COLON
   ;
@@ -176,7 +186,7 @@ self.exprs_size = -1
 identifiers_list: ID {self.ids_size += 2} (COMMA ID{self.ids_size += 1})*;
 
 function_decl
-  : ID COLON FUNCTION (atomic_type | void_type | auto_type) LEFT_PAREN params_list? RIGHT_PAREN (INHERIT ID)? body
+  : ID COLON FUNCTION (atomic_type | void_type | auto_type | array_type) LEFT_PAREN params_list? RIGHT_PAREN (INHERIT ID)? body
   ;
 
 params_list
@@ -261,7 +271,11 @@ literal
   ;
 
 exprs_list_var_decl
-  : expr {self.exprs_size += 1} COMMA exprs_list_var_decl
+  : expr 
+{
+self.check(False)
+} 
+  COMMA exprs_list_var_decl
   | expr {self.exprs_size += 2}
   ;
 
