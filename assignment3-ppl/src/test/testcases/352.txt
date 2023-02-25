@@ -1,0 +1,19 @@
+
+consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) {
+    found: boolean = false;
+    for (i = 0, i < size, i + 1) {
+        if (nums[i] == 1) {
+            if(found) return false;
+            while (i < size) {
+                if(nums[i] != 1){
+                    found = true;
+                    break;
+                }
+                i = i+1;
+            }
+        }
+
+        i = i+1;
+    }
+    return true;
+}

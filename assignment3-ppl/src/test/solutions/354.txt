@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(removeDuplicates), StringType, [Param(Id(S), StringType), Param(Id(length), IntegerType)], None, BlockStmt([VarDecl(Id(ans), StringType), CallStmt(Id(push_back), Id(ans), ArrayCell(Id(S), [IntegerLit(0)])), ForStmt(AssignStmt(Id(i), IntegerLit(1)), BinExpr(<, Id(i), Id(length)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(S), [Id(i)]), FuncCall(Id(back), [Id(ans)])), BlockStmt([CallStmt(Id(pop_back), Id(ans))]), BlockStmt([CallStmt(Id(push_back), Id(ans), ArrayCell(Id(S), [Id(i)]))]))])), ReturnStmt(Id(ans))]))
+])

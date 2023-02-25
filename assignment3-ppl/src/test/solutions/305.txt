@@ -1,0 +1,5 @@
+Program([
+	VarDecl(Id(a), AutoType, IntegerLit(1))
+	VarDecl(Id(b), AutoType, BooleanLit(True))
+	VarDecl(Id(c), AutoType, StringLit(Hello World!))
+])

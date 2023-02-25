@@ -1,0 +1,6 @@
+Program([
+	VarDecl(Id(a), StringType, StringLit(12345))
+	VarDecl(Id(b), StringType, StringLit(test))
+	VarDecl(Id(c), StringType, StringLit(0000000))
+	VarDecl(Id(d), StringType, StringLit(Hello World\n))
+])

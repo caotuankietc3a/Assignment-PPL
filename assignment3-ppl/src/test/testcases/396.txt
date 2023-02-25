@@ -1,0 +1,12 @@
+
+isSymmetry: function boolean(head: array[100] of integer, tail: array[100] of integer, size: integer) {
+  for (i = 0, i < size / 2, i+1) {
+    if (head[i] != tail[i])
+      return false;
+  }
+  return true;
+}
+main: function void() {
+    head, tail   : array [5] of integer = {1, 91, 0, -100, 100}, {10, 1, 1000, -100, 100};
+    isSymmetry(head, tail, 5);
+}
