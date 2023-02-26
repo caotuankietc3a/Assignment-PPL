@@ -10,6 +10,7 @@ class ASTGeneration(MT22Visitor):
 
     # decls: decl decls | decl;
     def visitDecls(self, ctx: MT22Parser.DeclsContext):
+        print(ctx)
         return [*ctx.decl().accept(self), *ctx.decls().accept(self)] if ctx.getChildCount() == 2 else ctx.decl().accept(self)
 
     # decl: variable_decl | function_decl;
@@ -23,9 +24,9 @@ class ASTGeneration(MT22Visitor):
     # variable_decl: identifiers_list COLON (((atomic_type | array_type) (ASSIGN exprs_list_var_decl)?) | (auto_type ASSIGN exprs_list_var_decl)) SEMI_COLON;
     def visitVariable_decl(self, ctx: MT22Parser.Variable_declContext):
         if not ctx.exprs_list_var_decl():
-            return [str(VarDecl(id, ctx.getChild(2).accept(self), None)) for id in ctx.identifiers_list().accept(self)]
+            return [VarDecl(id, ctx.getChild(2).accept(self), None) for id in ctx.identifiers_list().accept(self)]
 
-        return [str(VarDecl(id, ctx.getChild(2).accept(self), expr)) for id, expr in zip(ctx.identifiers_list().accept(self), ctx.exprs_list_var_decl().accept(self))]
+        return [VarDecl(id, ctx.getChild(2).accept(self), expr) for id, expr in zip(ctx.identifiers_list().accept(self), ctx.exprs_list_var_decl().accept(self))]
 
     # identifiers_list: ID (COMMA ID)*;
     def visitIdentifiers_list(self, ctx: MT22Parser.Identifiers_listContext):
