@@ -1,3 +1,0 @@
-
-a1,   b2,   c3   : array [2] of string;
-a,   b,   c   : array [6, 3, 10] of float;

@@ -10,22 +10,22 @@ class Kind(ABC):
 
 class Function(Kind):
     def __str__(self):
-        return "Function"
+        return self.__class__.__name__
 
 
 class Parameter(Kind):
     def __str__(self):
-        return "Parameter"
+        return self.__class__.__name__
 
 
 class Variable(Kind):
     def __str__(self):
-        return "Variable"
+        return self.__class__.__name__
 
 
 class Identifier(Kind):
     def __str__(self):
-        return "Identifier"
+        return self.__class__.__name__
 
 
 class StaticError(Exception):

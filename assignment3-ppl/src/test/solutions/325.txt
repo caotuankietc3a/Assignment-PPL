@@ -1,4 +1,0 @@
-Program([
-	FuncDecl(Id(lengthOfFirstWord), AutoType, [], None, BlockStmt([ReturnStmt(StringLit())]))
-	FuncDecl(Id(lengthOfLastWord), AutoType, [], inherit, BlockStmt([ReturnStmt(StringLit(lengthOfLastWord))]))
-])

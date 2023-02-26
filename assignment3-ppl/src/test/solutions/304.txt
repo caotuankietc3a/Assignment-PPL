@@ -1,5 +1,0 @@
-Program([
-	VarDecl(Id(a), BooleanType, BooleanLit(True))
-	VarDecl(Id(b), BooleanType, BooleanLit(True))
-	VarDecl(Id(c), BooleanType, BooleanLit(True))
-])

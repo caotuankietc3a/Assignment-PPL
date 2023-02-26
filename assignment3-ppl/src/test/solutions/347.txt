@@ -1,6 +1,0 @@
-Program([
-	VarDecl(Id(isZero), BooleanType, IntegerLit(0))
-	VarDecl(Id(no_count), BooleanType, IntegerLit(0))
-	FuncDecl(Id(printegerPattern), VoidType, [Param(Id(n), IntegerType), OutParam(Id(isZero), BooleanType), OutParam(Id(no_count), BooleanType)], None, BlockStmt([IfStmt(BinExpr(<=, Id(n), IntegerLit(0)), AssignStmt(Id(isZero), IntegerLit(1))), IfStmt(Id(isZero), BlockStmt([AssignStmt(Id(no_count), BinExpr(-, Id(no_count), IntegerLit(1))), IfStmt(BinExpr(==, Id(no_count), UnExpr(-, IntegerLit(1))), ReturnStmt(), BlockStmt([CallStmt(Id(printeger), StringLit( ))])), CallStmt(Id(printegerPattern), BinExpr(+, Id(n), IntegerLit(5)))]), BlockStmt([CallStmt(Id(printeger), StringLit( )), AssignStmt(Id(no_count), BinExpr(+, Id(no_count), IntegerLit(1))), CallStmt(Id(printegerPattern), BinExpr(-, Id(n), IntegerLit(5)))]))]))
-	FuncDecl(Id(main), VoidType, [], None, BlockStmt([CallStmt(Id(printegerPattern), IntegerLit(10), Id(isZero), Id(no_count))]))
-])

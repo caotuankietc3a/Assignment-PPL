@@ -1,3 +1,0 @@
-Program([
-	FuncDecl(Id(moduloDivision), IntegerType, [Param(Id(seed), IntegerType), Param(Id(mod), IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(%, Id(seed), Id(mod)))]))
-])

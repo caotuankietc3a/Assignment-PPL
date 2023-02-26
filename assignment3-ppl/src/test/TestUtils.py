@@ -8,6 +8,8 @@ if not './main/mt22/astgen/' in sys.path:
     sys.path.append('./main/mt22/astgen/')
 if os.path.isdir('../target/main/mt22/parser') and not '../target/main/mt22/parser/' in sys.path:
     sys.path.append('../target/main/mt22/parser/')
+from StaticCheck import StaticChecker
+from StaticError import *
 from MT22Lexer import MT22Lexer
 from MT22Parser import MT22Parser
 from ASTGeneration import ASTGeneration

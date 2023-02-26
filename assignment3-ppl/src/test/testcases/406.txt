@@ -1,0 +1,3 @@
+
+    x: boolean = false;
+    y: auto = x == true;

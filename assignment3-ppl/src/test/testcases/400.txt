@@ -1,0 +1,3 @@
+
+    x: integer = 3;
+    x: string;
