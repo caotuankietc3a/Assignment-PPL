@@ -10,7 +10,6 @@ class ASTGeneration(MT22Visitor):
 
     # decls: decl decls | decl;
     def visitDecls(self, ctx: MT22Parser.DeclsContext):
-        print(ctx)
         return [*ctx.decl().accept(self), *ctx.decls().accept(self)] if ctx.getChildCount() == 2 else ctx.decl().accept(self)
 
     # decl: variable_decl | function_decl;
@@ -82,7 +81,7 @@ class ASTGeneration(MT22Visitor):
 
     # index_expr : index_expr index_operator | operand_expr ;
     def visitIndex_expr(self, ctx: MT22Parser.Index_exprContext):
-        return ArrayCell(ctx.index_expr().accept(self), ctx.index_operator().accept(self)) if ctx.getChildCount() == 2 else ctx.operand_expr().accept(self)
+        return ArrayCell(Id(ctx.ID().getText()), ctx.index_operator().accept(self)) if ctx.getChildCount() == 2 else ctx.operand_expr().accept(self)
 
     # index_operator : LEFT_BRACK exprs_list RIGHT_BRACK ;
     def visitIndex_operator(self, ctx: MT22Parser.Index_operatorContext):

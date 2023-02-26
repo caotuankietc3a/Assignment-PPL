@@ -659,10 +659,10 @@ longestSublist: function integer (words: array[100] of string, size: integer) {
     if(!size) return 0;
     result : integer = 1;
     for (i = 0, i < size - 1, i + 1) {
-        if (!(words[i][0] == words[i + 1][0])) {
+        if (!(words[i, 0] == words[i + 1, 0])) {
           pre_result, j: integer  = 2 , i + 1;
           while (true) {
-            if (words[j][0] != words[j + 1][0]) {
+            if (words[j, 0] != words[j + 1, 0]) {
               pre_result = pre_result + 1;
               j = j + 1;
             } else {
@@ -676,7 +676,7 @@ longestSublist: function integer (words: array[100] of string, size: integer) {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(longestSublist), IntegerType, [Param(Id(words), ArrayType([100], StringType)), Param(Id(size), IntegerType)], None, BlockStmt([IfStmt(UnExpr(!, Id(size)), ReturnStmt(IntegerLit(0))), VarDecl(Id(result), IntegerType, IntegerLit(1)), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(-, Id(size), IntegerLit(1))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(UnExpr(!, BinExpr(==, ArrayCell(ArrayCell(Id(words), [Id(i)]), [IntegerLit(0)]), ArrayCell(ArrayCell(Id(words), [BinExpr(+, Id(i), IntegerLit(1))]), [IntegerLit(0)]))), BlockStmt([VarDecl(Id(pre_result), IntegerType, IntegerLit(2)), VarDecl(Id(j), IntegerType, BinExpr(+, Id(i), IntegerLit(1))), WhileStmt(BooleanLit(True), BlockStmt([IfStmt(BinExpr(!=, ArrayCell(ArrayCell(Id(words), [Id(j)]), [IntegerLit(0)]), ArrayCell(ArrayCell(Id(words), [BinExpr(+, Id(j), IntegerLit(1))]), [IntegerLit(0)])), BlockStmt([AssignStmt(Id(pre_result), BinExpr(+, Id(pre_result), IntegerLit(1))), AssignStmt(Id(j), BinExpr(+, Id(j), IntegerLit(1)))]), BlockStmt([ContinueStmt()]))])), IfStmt(BinExpr(>, Id(pre_result), Id(result)), AssignStmt(Id(result), BinExpr(/, Id(result), Id(pre_result))))]))])), ReturnStmt(Id(result))]))
+	FuncDecl(Id(longestSublist), IntegerType, [Param(Id(words), ArrayType([100], StringType)), Param(Id(size), IntegerType)], None, BlockStmt([IfStmt(UnExpr(!, Id(size)), ReturnStmt(IntegerLit(0))), VarDecl(Id(result), IntegerType, IntegerLit(1)), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(-, Id(size), IntegerLit(1))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(UnExpr(!, BinExpr(==, ArrayCell(Id(words), [Id(i), IntegerLit(0)]), ArrayCell(Id(words), [BinExpr(+, Id(i), IntegerLit(1)), IntegerLit(0)]))), BlockStmt([VarDecl(Id(pre_result), IntegerType, IntegerLit(2)), VarDecl(Id(j), IntegerType, BinExpr(+, Id(i), IntegerLit(1))), WhileStmt(BooleanLit(True), BlockStmt([IfStmt(BinExpr(!=, ArrayCell(Id(words), [Id(j), IntegerLit(0)]), ArrayCell(Id(words), [BinExpr(+, Id(j), IntegerLit(1)), IntegerLit(0)])), BlockStmt([AssignStmt(Id(pre_result), BinExpr(+, Id(pre_result), IntegerLit(1))), AssignStmt(Id(j), BinExpr(+, Id(j), IntegerLit(1)))]), BlockStmt([ContinueStmt()]))])), IfStmt(BinExpr(>, Id(pre_result), Id(result)), AssignStmt(Id(result), BinExpr(/, Id(result), Id(pre_result))))]))])), ReturnStmt(Id(result))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 340))
 
