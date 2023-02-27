@@ -1,0 +1,2 @@
+
+a1,   b1,   c1   : array [2, 3] of string = {{"hello", "world", "!!!"}, {"test\n", "string\t"}}, {{}, {}}, {{"hahaha"}, {}};

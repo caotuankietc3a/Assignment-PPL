@@ -158,8 +158,21 @@ class CheckerSuite(unittest.TestCase):
     def test_17(self):
         input = """
     b : integer = 10;
-    a : array [2, 2] of integer = {{b, 100}, {3, 199}};
+    a3 : array [2, 2] of integer = {{1, 3, 4, 5}};
+    //a3 : array [2, 2] of integer = {{} , {}};
+    // a4 : array [2, 2] of integer = {{3, 199}, 1};
+    // a5 : array [2, 2] of integer = {3.0, 199, 1};
 """
 
         expect = "[]"
         self.assertTrue(TestChecker.test(input, expect, 417))
+
+#     def test_18(self):
+#         input = """
+#     c : array [1] of integer = {1}
+#     b : integer = 10;
+#     a : array [2, 2] of integer = {{b, c[1]}, {3, 199}};
+# """
+
+#         expect = "[]"
+#         self.assertTrue(TestChecker.test(input, expect, 418))

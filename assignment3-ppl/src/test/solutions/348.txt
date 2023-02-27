@@ -1,0 +1,4 @@
+Program([
+	FuncDecl(Id(countWaysUtil), IntegerType, [Param(Id(x), IntegerType), Param(Id(n), IntegerType), Param(Id(num), IntegerType)], None, BlockStmt([VarDecl(Id(val), IntegerType, BinExpr(-, Id(x), FuncCall(Id(pow), [Id(num), Id(n)]))), IfStmt(BinExpr(==, Id(val), IntegerLit(0)), ReturnStmt(IntegerLit(1))), IfStmt(BinExpr(<, Id(val), IntegerLit(0)), ReturnStmt(IntegerLit(0))), ReturnStmt(BinExpr(+, FuncCall(Id(countWaysUtil), [Id(val), Id(n), BinExpr(+, Id(num), IntegerLit(1))]), FuncCall(Id(countWaysUtil), [Id(x), Id(n), BinExpr(+, Id(num), IntegerLit(1))])))]))
+	FuncDecl(Id(countWaySumOfSquare), IntegerType, [Param(Id(x), IntegerType)], None, BlockStmt([ReturnStmt(FuncCall(Id(countWaysUtil), [Id(x), IntegerLit(2), IntegerLit(1)]))]))
+])

@@ -1,0 +1,6 @@
+Program([
+	FuncDecl(Id(left), IntegerType, [Param(Id(i), IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(+, BinExpr(*, IntegerLit(2), Id(i)), IntegerLit(1)))]))
+	FuncDecl(Id(right), IntegerType, [Param(Id(i), IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(+, BinExpr(*, IntegerLit(2), Id(i)), IntegerLit(2)))]))
+	FuncDecl(Id(parent), IntegerType, [Param(Id(i), IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(/, BinExpr(-, Id(i), IntegerLit(1)), IntegerLit(2)))]))
+	FuncDecl(Id(swap), VoidType, [Param(Id(x), IntegerType), Param(Id(y), IntegerType)], None, BlockStmt([VarDecl(Id(k), IntegerType, Id(x)), AssignStmt(Id(x), Id(y)), AssignStmt(Id(y), Id(k))]))
+])

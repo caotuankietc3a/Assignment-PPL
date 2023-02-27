@@ -18,6 +18,15 @@ class Symbol:
         self.value = value
 
 
+class Array(Type):
+    def __init__(self, val: int, lst: List[Type]) -> None:
+        self.val = val
+        self.lst = lst
+
+    def __str__(self):
+        return "Array({}, [{}])".format(str(self.val), ", ".join([str(exp) for exp in self.lst]))
+
+
 class TypeUtils:
     @staticmethod
     def isInListType(x, lst):
@@ -42,6 +51,14 @@ class TypeUtils:
     @staticmethod
     def isArrayType(x):
         return type(x) is ArrayType
+
+    @staticmethod
+    def isArray(x):
+        return type(x) is Array
+
+    @staticmethod
+    def isArrayLit(x):
+        return type(x) is ArrayLit
 
     @staticmethod
     def isStringType(x):
@@ -94,7 +111,6 @@ class StaticChecker(BaseVisitor, Utils):
     def visitVarDecl(self, ast: VarDecl, c):
         name = ast.name.name
         typ = ast.typ
-        print(typ)
         if name in self.envs[0]:
             raise Redeclared(Variable(), name)
 
@@ -103,7 +119,18 @@ class StaticChecker(BaseVisitor, Utils):
                 arr_dimensions = typ.dimensions
                 arr_type = typ.typ
                 init = self.visit(
-                    ast.init, {"type": arr_type, "dimensions": arr_dimensions, "flag": True})
+                    ast.init, {"type": arr_type, "dimensions": arr_dimensions})
+                print(init)
+                dimension_lst = reduce(lambda acc, el: acc +
+                                       [el["type"].val] if TypeUtils.isArray(el["type"]) else acc + [], init["type"].lst, [init["type"].val])
+                print(arr_dimensions)
+                print(dimension_lst)
+
+                for d1, d2 in zip(arr_dimensions, dimension_lst):
+                    if int(d1) < d2:
+                        print("SOMETHING WENT WRONG!!!")
+                    #     return
+
                 self.envs[0][name] = {
                     "type": typ, "kind": Variable()}
             else:
@@ -246,20 +273,18 @@ class StaticChecker(BaseVisitor, Utils):
         return {"type": BooleanType()}
 
     def visitArrayLit(self, ast: ArrayLit, c):
+        expr_list = ast.explist
 
-        # typ = c["type"]
-        # dimensions = c["dimensions"]
-        # expr_list = ast.exprlist
-        # if len(dimensions) > len(expr_list):
-        #     return
+        # Array(2, [Array(2, [IntType(), IntType()]), Array(2, [IntType(), IntType()])])
+        result = list(map(lambda exp: self.visit(exp, c), expr_list))
+        if len(result) != 0:
+            first_el_type = result[0]["type"]
+            for res in result:
+                if not TypeUtils.isTheSameType(res["type"], first_el_type):
+                    raise IllegalArrayLiteral(ast)
 
-        # for expr in expr_list:
-        #     if TypeUtils.isTheSameType(expr, ArrayLit()):
-        #         exp = self.visit(
-        #             expr, {"type": arr_type, "dimensions": arr_dimensions, "flag": False})
-        #     if not TypeUtils.isTheSameType(exp["type"], typ):
-        #         raise IllegalArrayLiteral(ast)
-        pass
+            return {"type": Array(len(expr_list), result)}
+        return {"type": Array(0, [])}
 
     def visitFuncCall(self, ast: FuncCall, c):
         pass

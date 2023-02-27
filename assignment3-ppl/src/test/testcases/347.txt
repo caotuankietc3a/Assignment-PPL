@@ -1,0 +1,23 @@
+
+isZero, no_count : boolean = 0, 0;
+printegerPattern: function void (n: integer, out isZero: boolean, out no_count: boolean) {
+  if (n <= 0)
+    isZero = 1;
+  if (isZero) {
+    no_count = no_count - 1;
+    if (no_count == -1)
+      return;
+    else {
+      printeger(" ");
+    }
+    printegerPattern(n + 5);
+  } else {
+    printeger(" ");
+    no_count = no_count + 1;
+    printegerPattern(n - 5);
+  }
+}
+
+main : function void () {
+    printegerPattern(10, isZero, no_count);
+}

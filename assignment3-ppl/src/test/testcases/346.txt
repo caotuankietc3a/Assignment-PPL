@@ -1,0 +1,18 @@
+
+printegerPattern: function void (n: integer) {
+  if (n <= 0)
+    isZero = 1;
+  if (isZero) {
+    no_count = no_count - 1;
+    if (no_count == -1)
+      return;
+    else {
+      printeger(" ");
+    }
+    printegerPattern(n + 5);
+  } else {
+    printeger(" ");
+    no_count = no_count + 1;
+    printegerPattern(n - 5);
+  }
+}
