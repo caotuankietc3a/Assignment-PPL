@@ -1,0 +1,3 @@
+
+    fact : function integer (n : integer, n : float) {}
+    main: function void(){}

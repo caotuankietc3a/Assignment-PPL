@@ -144,7 +144,7 @@ class CheckerSuite(unittest.TestCase):
     #     a : array [2] of integer = {-1.0, 3.0};
     # """
 
-    #         expect = "Type Mismatch In Statement: ArrayLit([UnExpr(-, FloatLit(1.0)), FloatLit(3.0)])"
+    #         expect = "Type Mismatch In Statement: VarDecl(Id(a), ArrayType([2], IntegerType), ArrayLit([UnExpr(-, FloatLit(1.0)), FloatLit(3.0)]))"
     #         self.assertTrue(TestChecker.test(input, expect, 415))
 
     #         def test_16(self):
@@ -192,7 +192,7 @@ class CheckerSuite(unittest.TestCase):
     #         e: array [2, 3] of integer = {{1.0}, {1, 2, 3}};
     # """
 
-    #         expect = "Type Mismatch In Statement: ArrayLit([FloatLit(1.0)])"
+    #         expect = "Type Mismatch In Statement: VarDecl(Id(e), ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([FloatLit(1.0)]), ArrayLit([IntegerLit(1), IntegerLit(2), IntegerLit(3)])]))"
     #         self.assertTrue(TestChecker.test(input, expect, 421))
 
     #     def test_22(self):
@@ -212,22 +212,25 @@ class CheckerSuite(unittest.TestCase):
     #         expect = "[]"
     #         self.assertTrue(TestChecker.test(input, expect, 423))
 
-    #     def test_24(self):
-    #         input = """
-    #     c : array [1] of integer = {1};
-    #     b : integer = 10;
-    #     a : array [2, 2] of integer = {{3, c[0]}, {b, 199}};
-    # """
+    def test_24(self):
+        input = """
+    // c : integer = 1;
+    c : array [1] of integer = {1};
+    b : integer = 10;
+    // a : array [2, 2] of integer = {{3, c[0.1 + 3]}, {b, 199}};
+    a : array [2, 2] of integer = {{3, c[1 + 3, 3 + 4]}, {b, 199}};
+    main: function void(){}
+"""
 
-    #         expect = "[]"
-    #         self.assertTrue(TestChecker.test(input, expect, 424))
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 424))
 
     #     def test_25(self):
     #         input = """
     #     a3 : array [2, 2] of boolean = {{3.3, 3.5}, {123.1, 199.10}};
     # """
 
-    #         expect = "Type Mismatch In Statement: ArrayLit([FloatLit(3.3), FloatLit(3.5)])"
+    #         expect = "Type Mismatch In Statement: VarDecl(Id(a3), ArrayType([2, 2], BooleanType), ArrayLit([ArrayLit([FloatLit(3.3), FloatLit(3.5)]), ArrayLit([FloatLit(123.1), FloatLit(199.10)])]))"
     #         self.assertTrue(TestChecker.test(input, expect, 425))
 
     #     def test_26(self):
@@ -235,7 +238,7 @@ class CheckerSuite(unittest.TestCase):
     #     a2 : array [2, 2] of integer = {{3.3, 3.5}, {123.1, 199.10}};
     # """
 
-    #         expect = "Type Mismatch In Statement: ArrayLit([FloatLit(3.3), FloatLit(3.5)])"
+    #         expect = "Type Mismatch In Statement: VarDecl(Id(a2), ArrayType([2, 2], IntegerType), ArrayLit([ArrayLit([FloatLit(3.3), FloatLit(3.5)]), ArrayLit([FloatLit(123.1), FloatLit(199.10)])]))"
     #         self.assertTrue(TestChecker.test(input, expect, 426))
 
     #     def test_27(self):
@@ -251,13 +254,82 @@ class CheckerSuite(unittest.TestCase):
     #     a : array [2, 2] of float = {{3, 3}, {123, 199, 123}, {123}};
     # """
 
-    #         expect = "[]"
+    #         expect = "Type Mismatch In Statement: VarDecl(Id(a), ArrayType([2, 2], FloatType), ArrayLit([ArrayLit([IntegerLit(3), IntegerLit(3)]), ArrayLit([IntegerLit(123), IntegerLit(199), IntegerLit(123)]), ArrayLit([IntegerLit(123)])]))"
     #         self.assertTrue(TestChecker.test(input, expect, 428))
 
-    def test_29(self):
-        input = """
-    a : array [2, 2] of float = {false};
-"""
+    #     def test_29(self):
+    #         input = """
+    #     a : array [2, 2] of float = {false};
+    # """
 
-        expect = "Type Mismatch In Statement: VarDecl(Id(a), ArrayType([2, 2], FloatType), ArrayLit([BooleanLit(True)]))"
-        self.assertTrue(TestChecker.test(input, expect, 429))
+    #         expect = "Type Mismatch In Statement: VarDecl(Id(a), ArrayType([2, 2], FloatType), ArrayLit([BooleanLit(True)]))"
+    #         self.assertTrue(TestChecker.test(input, expect, 429))
+
+    #     def test_30(self):
+    #         input = """
+    #     main: function void(){}
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 430))
+
+    #     def test_31(self):
+    #         input = """
+    #     fact : function integer (n : integer) {}
+    # """
+
+    #         expect = "No entry point"
+    #         self.assertTrue(TestChecker.test(input, expect, 431))
+
+    #     def test_32(self):
+    #         input = """
+    #     fact : function integer (n : integer) {}
+    #     main: function void(){}
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 432))
+
+    #     def test_33(self):
+    #         input = """
+    #     fact : function integer (n : integer, n : float) {}
+    #     main: function void(){}
+    # """
+
+    #         expect = "Redeclared Parameter: n"
+    #         self.assertTrue(TestChecker.test(input, expect, 433))
+
+    #     def test_34(self):
+    #         input = """
+    #     fact : function integer (n : integer) {}
+    #     fact : function float () {}
+    #     main: function void(){}
+    # """
+
+    #         expect = "Redeclared Function: fact"
+    #         self.assertTrue(TestChecker.test(input, expect, 434))
+
+    #     def test_35(self):
+    #         input = """
+    #     x: float = 3.0;
+    #     fact : function integer (n : integer) {
+    #         x: integer = 3;
+    #         x: boolean = false;
+    #     }
+    #     main: function void(){}
+    # """
+
+    #         expect = "Redeclared Variable: x"
+    #         self.assertTrue(TestChecker.test(input, expect, 435))
+
+    #     def test_36(self):
+    #         input = """
+    #     x: float = 3.0;
+    #     fact : function integer (n : integer) {
+    #         x: integer = 3;
+    #     }
+    #     main: function void(){}
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 436))

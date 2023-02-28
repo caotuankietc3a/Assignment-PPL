@@ -35,7 +35,7 @@ class Array(Type):
         arr_type = arr["type"]
         res = [arr_type.val]
         res1 = reduce(lambda acc, el: acc +
-                      Array.checkDimensions(el), arr_type.lst, [])
+                      Array.getDimensions(el), arr_type.lst, [])
         return (res + [max(res1)]) if len(res1) != 0 else res
 
     @staticmethod
@@ -84,6 +84,10 @@ class TypeUtils:
         return type(x) is StringType
 
     @ staticmethod
+    def isVoidType(x):
+        return type(x) is VoidType
+
+    @ staticmethod
     def isNone(x):
         return type(x) is type(None)
 
@@ -102,12 +106,17 @@ class TypeUtils:
 
 class Search:
     @ staticmethod
-    def search(name, lst, func) -> dict:
+    def search(name, lst, func):
         for x in lst:
             if name in x:
                 return x[name]
 
         func()
+
+    @staticmethod
+    def check(name, dic, func) -> None:
+        if name in dic:
+            func()
 
 
 class StaticChecker(BaseVisitor, Utils):
@@ -128,7 +137,6 @@ class StaticChecker(BaseVisitor, Utils):
     def __init__(self, ast):
         self.ast = ast
         self.envs = [{}]
-        self.illegal_array_lit = False
 
     def check(self):
         return self.visit(self.ast, StaticChecker.global_envi)
@@ -138,57 +146,90 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitProgram(self, ast: Program, c):
         print(ast)
-        reduce(lambda _, decl: self.visit(decl, c), ast.decls, [])
+        has_entry_point = False
+        for decl in ast.decls:
+            if type(decl) is FuncDecl:
+                name = decl.name.name
+                return_type = decl.return_type
+                params = decl.params
+                if type(decl) is FuncDecl and name == "main" and TypeUtils.isVoidType(return_type) and len(params) == 0:
+                    has_entry_point = True
+            self.visit(decl, self.envs)
+
+        if not has_entry_point:
+            self.raise_(NoEntryPoint())
+
         print(self.envs)
         return ""
 
     def visitVarDecl(self, ast: VarDecl, c):
         name = ast.name.name
         typ = ast.typ
-        if name in self.envs[0]:
-            raise Redeclared(Variable(), name)
+        Search.check(name, c[0], lambda: self.raise_(
+            Redeclared(Variable(), name)))
 
         if not TypeUtils.isNone(ast.init):
             if TypeUtils.isArrayType(typ):
                 arr_dimensions = typ.dimensions
                 arr_type = typ.typ
                 init = self.visit(
-                    ast.init, {"type": arr_type, "dimensions": arr_dimensions})
-                if self.illegal_array_lit:
-                    self.raise_(TypeMismatchInStatement(ast))
+                    ast.init, {"type": arr_type, "dimensions": arr_dimensions, "ast": ast})
                 dimension_lst = Array.getDimensions(init)
                 if Array.isDimensionsMatched(arr_dimensions, dimension_lst, lambda: self.raise_(TypeMismatchInStatement(ast))):
-                    self.envs[0][name] = {
-                        "type": typ, "kind": Variable()}
+                    c[0][name] = {
+                        "type": typ, "kind": Variable(), "dimensions": dimension_lst}
             else:
                 init = self.visit(ast.init, c)
                 init_type = init["type"]
                 if TypeUtils.isIntType(init_type) and TypeUtils.isFloatType(typ):
-                    self.envs[0][name] = {
+                    c[0][name] = {
                         "type": FloatType(), "kind": Variable()}
                     return
                 if not TypeUtils.isTheSameType(typ, init_type) and not TypeUtils.isAutoType(typ):
                     raise TypeMismatchInExpression(ast)
 
-                self.envs[0][name] = {"type": init_type if TypeUtils.isAutoType(
+                c[0][name] = {"type": init_type if TypeUtils.isAutoType(
                     typ) else typ, "kind": Variable()}
         else:
             if TypeUtils.isAutoType(typ):
                 raise Invalid(Variable(), name)
 
-            self.envs[0][name] = {"type": typ, "kind": Variable()}
+            c[0][name] = {"type": typ, "kind": Variable()}
 
     def visitParamDecl(self, ast: ParamDecl, c):
-        pass
+        name = ast.name.name
+        typ = ast.typ
+        inherit = ast.inherit
+        out = ast.out
+        Search.check(name, c[0], lambda: self.raise_(
+            Redeclared(Parameter(), name)))
+        res = {"type": typ, "kind": Parameter(),
+               "inherit": inherit, "out": out}
+        c[0][name] = res
+        return res
 
     def visitFuncDecl(self, ast: FuncDecl, c):
-        pass
+        name = ast.name.name
+        params = ast.params
+        return_type = ast.return_type
+        inherit = ast.inherit
+        body = ast.body
+        Search.check(name, c[0], lambda: self.raise_(
+            Redeclared(Function(), name)))
+        o = [{}] + c
+        print(o)
+
+        c[0][name] = {"type": return_type, "kind": Function(
+        ), "params": list(map(lambda el: self.visit(el, o), params))}
+
+        self.visit(body, o)
 
     def visitAssignStmt(self, ast: AssignStmt, c):
         pass
 
     def visitBlockStmt(self, ast: BlockStmt, c):
-        pass
+        print("block:", ast)
+        reduce(lambda _, el: self.visit(el, c), ast.body, [])
 
     def visitIfStmt(self, ast: IfStmt, c):
         pass
@@ -280,10 +321,17 @@ class StaticChecker(BaseVisitor, Utils):
             Undeclared(Identifier(), ast.name)))
 
     def visitArrayCell(self, ast: ArrayCell, c):
-        name = ast.name.name
-        var = Search.search(
-            name, self.envs, lambda: self.raise_(Undeclared(Identifier(), name)))
-        return {"type": var["type"].typ}
+        id = self.visit(ast.name, c)
+        print(id)
+        if not TypeUtils.isArrayType(id["type"]):
+            self.raise_(TypeMismatchInExpression(ast))
+
+        print(id["dimensions"])
+
+        reduce(lambda _, el: self.raise_(TypeMismatchInExpression(ast))
+               if not TypeUtils.isIntType(self.visit(el, c)["type"]) else None, ast.cell, [])
+
+        return {"type": id["type"].typ}
 
     def visitIntegerLit(self, ast: IntegerLit, c):
         return {"type": IntegerType()}
@@ -306,10 +354,9 @@ class StaticChecker(BaseVisitor, Utils):
             list(map(lambda res: self.raise_(IllegalArrayLiteral(
                 ast)) if not TypeUtils.isTheSameType(res["type"], first_el_type) else None, result))
 
-            for res in result:
-                if ((not TypeUtils.isTheSameType(c["type"], res["type"])) and (not (TypeUtils.isFloatType(c["type"]) and TypeUtils.isIntType(res["type"]))) and not TypeUtils.isArray(res["type"])):
-                    self.illegal_array_lit = True
-                    break
+            list(map(lambda res: self.raise_(TypeMismatchInStatement(
+                c["ast"])) if (not TypeUtils.isTheSameType(c["type"], res["type"])) and (not (TypeUtils.isFloatType(
+                    c["type"]) and TypeUtils.isIntType(res["type"]))) and not TypeUtils.isArray(res["type"]) else None, result))
             return {"type": Array(len(expr_list), result)}
         return {"type": Array(0, [])}
 
