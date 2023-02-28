@@ -141,10 +141,10 @@ class CheckerSuite(unittest.TestCase):
 
     #     def test_15(self):
     #         input = """
-    # a : array [2] of integer = {-1.0, 3.0};
+    #     a : array [2] of integer = {-1.0, 3.0};
     # """
 
-    #         expect = "Illegal Array Literal: ArrayLit([UnExpr(-, FloatLit(1.0)), FloatLit(3.0)])"
+    #         expect = "Type Mismatch In Statement: ArrayLit([UnExpr(-, FloatLit(1.0)), FloatLit(3.0)])"
     #         self.assertTrue(TestChecker.test(input, expect, 415))
 
     #         def test_16(self):
@@ -155,24 +155,109 @@ class CheckerSuite(unittest.TestCase):
     #             expect = "[]"
     #             self.assertTrue(TestChecker.test(input, expect, 416))
 
-    def test_17(self):
+    #     def test_17(self):
+    #         input = """
+    #         a: array [2] of integer = {1, 2};
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 417))
+
+    #     def test_18(self):
+    #         input = """
+    #         b: array [2, 3] of integer = {{}, {}};
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 418))
+
+    #     def test_19(self):
+    #         input = """
+    #         c: array [2, 3] of integer = {{1}, {1, 2, 3}};
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 419))
+
+    #     def test_20(self):
+    #         input = """
+    #         d: array [2, 3, 5] of integer = {{{1, 3, 4}, {5, 6}, {}}, {{1}, {2}, {1}}};
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 420))
+
+    #     def test_21(self):
+    #         input = """
+    #         e: array [2, 3] of integer = {{1.0}, {1, 2, 3}};
+    # """
+
+    #         expect = "Type Mismatch In Statement: ArrayLit([FloatLit(1.0)])"
+    #         self.assertTrue(TestChecker.test(input, expect, 421))
+
+    #     def test_22(self):
+    #         input = """
+    #         f: array [2, 3] of integer = {{1, 1}, {1.0, 2, 3}};
+    # """
+
+    #         expect = "Illegal Array Literal: ArrayLit([FloatLit(1.0), IntegerLit(2), IntegerLit(3)])"
+    #         self.assertTrue(TestChecker.test(input, expect, 422))
+
+    #     def test_23(self):
+    #         input = """
+    #         x, y, z: integer = 1, 2, 3;
+    #         a: array [3, 2] of integer = {{x + z}, {y, z}};
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 423))
+
+    #     def test_24(self):
+    #         input = """
+    #     c : array [1] of integer = {1};
+    #     b : integer = 10;
+    #     a : array [2, 2] of integer = {{3, c[0]}, {b, 199}};
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 424))
+
+    #     def test_25(self):
+    #         input = """
+    #     a3 : array [2, 2] of boolean = {{3.3, 3.5}, {123.1, 199.10}};
+    # """
+
+    #         expect = "Type Mismatch In Statement: ArrayLit([FloatLit(3.3), FloatLit(3.5)])"
+    #         self.assertTrue(TestChecker.test(input, expect, 425))
+
+    #     def test_26(self):
+    #         input = """
+    #     a2 : array [2, 2] of integer = {{3.3, 3.5}, {123.1, 199.10}};
+    # """
+
+    #         expect = "Type Mismatch In Statement: ArrayLit([FloatLit(3.3), FloatLit(3.5)])"
+    #         self.assertTrue(TestChecker.test(input, expect, 426))
+
+    #     def test_27(self):
+    #         input = """
+    #     a : array [2, 2] of float = {{3, 3}, {123, 199}};
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 427))
+
+    #     def test_28(self):
+    #         input = """
+    #     a : array [2, 2] of float = {{3, 3}, {123, 199, 123}, {123}};
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 428))
+
+    def test_29(self):
         input = """
-    b : integer = 10;
-    a3 : array [2, 2] of integer = {{1, 3, 4, 5}};
-    //a3 : array [2, 2] of integer = {{} , {}};
-    // a4 : array [2, 2] of integer = {{3, 199}, 1};
-    // a5 : array [2, 2] of integer = {3.0, 199, 1};
+    a : array [2, 2] of float = {false};
 """
 
-        expect = "[]"
-        self.assertTrue(TestChecker.test(input, expect, 417))
-
-#     def test_18(self):
-#         input = """
-#     c : array [1] of integer = {1}
-#     b : integer = 10;
-#     a : array [2, 2] of integer = {{b, c[1]}, {3, 199}};
-# """
-
-#         expect = "[]"
-#         self.assertTrue(TestChecker.test(input, expect, 418))
+        expect = "Type Mismatch In Statement: VarDecl(Id(a), ArrayType([2, 2], FloatType), ArrayLit([BooleanLit(True)]))"
+        self.assertTrue(TestChecker.test(input, expect, 429))

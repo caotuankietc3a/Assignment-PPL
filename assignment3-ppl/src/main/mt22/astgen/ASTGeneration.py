@@ -10,6 +10,7 @@ class ASTGeneration(MT22Visitor):
 
     # decls: decl decls | decl;
     def visitDecls(self, ctx: MT22Parser.DeclsContext):
+        print(ctx)
         return [*ctx.decl().accept(self), *ctx.decls().accept(self)] if ctx.getChildCount() == 2 else ctx.decl().accept(self)
 
     # decl: variable_decl | function_decl;
