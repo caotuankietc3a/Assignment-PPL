@@ -1,3 +1,4 @@
 
     x: string = "hello";
     y: auto = x == "Hiiii";
+    main: function void(){}

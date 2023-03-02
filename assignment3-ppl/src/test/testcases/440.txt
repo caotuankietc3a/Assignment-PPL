@@ -1,0 +1,12 @@
+
+    a : array [2] of integer;
+    // foo: function auto(){}
+    foo: function auto(x: integer){}
+    fact : function integer (n : integer) {
+        foo: float = 3.0;
+        b: integer;
+        // n1: integer = foo(foo(1.10)); // foo(int)
+        n1: float = foo(1) + 1;
+        // foo(): callstmt
+    }
+    main: function void(){}

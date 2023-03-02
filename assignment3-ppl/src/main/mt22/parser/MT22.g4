@@ -241,7 +241,7 @@ sign_expr
   ;
 
 index_expr
-  : index_expr index_operator
+  : ID index_operator
   | operand_expr
   ;
 

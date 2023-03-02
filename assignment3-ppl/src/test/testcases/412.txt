@@ -1,3 +1,4 @@
 
     x: integer = -100_999;
     y: float = x;
+    main: function void(){}
