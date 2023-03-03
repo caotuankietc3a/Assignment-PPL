@@ -137,7 +137,26 @@ class StaticChecker(BaseVisitor, Utils):
         self.ast = ast
         self.envs = [{}]
         self.illegal_array_literal = None
-        self.is_func_decl = False
+        self.func_decl = {"flag": False, "return_type": None, "name": None}
+        self.loop = {"flag": False, "ast": None}
+
+    def setLoop(self, flag, ast):
+        self.loop["flag"] = flag
+        self.loop["ast"] = ast
+
+    def resetLoop(self):
+        self.loop["flag"] = False
+        self.loop["ast"] = None
+
+    def setFunc_decl(self, flag, return_type, name):
+        self.func_decl["flag"] = flag
+        self.func_decl["return_type"] = return_type
+        self.func_decl["name"] = name
+
+    def resetFunc_decl(self):
+        self.func_decl["flag"] = False
+        self.func_decl["return_type"] = None
+        self.func_decl["name"] = None
 
     def check(self):
         return self.visit(self.ast, StaticChecker.global_envi)
@@ -146,6 +165,7 @@ class StaticChecker(BaseVisitor, Utils):
         raise ex
 
     def visitProgram(self, ast: Program, c):
+        print(ast)
         has_entry_point = False
         for decl in ast.decls:
             if type(decl) is FuncDecl:
@@ -214,12 +234,12 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitFuncDecl(self, ast: FuncDecl, c):
         (o, _) = c
-        self.is_func_decl = True
         name = ast.name.name
-        params = ast.params
         return_type = ast.return_type
+        params = ast.params
         inherit = ast.inherit
         body = ast.body
+        self.setFunc_decl(True, return_type, name)
         Search.check(name, o, lambda: self.raise_(
             Redeclared(Function(), name)))
         o1 = [{}] + o
@@ -228,30 +248,42 @@ class StaticChecker(BaseVisitor, Utils):
         ), "params": list(map(lambda el: self.visit(el, (o1, None)), params))}
 
         self.visit(body, (o1, None))
-        self.is_func_decl = False
+
+        self.resetFunc_decl()
 
     def visitAssignStmt(self, ast: AssignStmt, c):
-        (o, t) = c
-        lhs = self.visit(ast.lhs, c)
-
-        if TypeUtils.isArrayType(lhs["type"]) or TypeUtils.isVoidType(lhs["type"]):
-            self.raise_(TypeMismatchInStatement(ast))
-
-        rhs = self.visit(ast.rhs, c)
-        if TypeUtils.isAutoType(rhs["type"]):
-            # func = TypeUtils.inferType(name, c, lambda: self.raise_(
-            #     Undeclared(Function(), name)), Function)
-            pass
+        print(ast)
+        (o, _) = c
+        lhs_type = None
+        if self.loop["flag"]:
+            name = ast.lhs.name
+            id = Search.search(name, o, lambda: None, Variable)
+            if TypeUtils.isNone(id):
+                o[0][name] = {
+                    "type": IntegerType(), "kind": Variable()}
+                lhs_type = IntegerType()
+            else:
+                if not TypeUtils.isIntType(id["type"]):
+                    self.raise_(TypeMismatchInStatement(self.loop["ast"]))
+                lhs_type = id["type"]
 
         else:
-            if not (TypeUtils.isFloatType(lhs["type"]) and TypeUtils.isIntType(rhs["type"])):
-                if not TypeUtils.isTheSameType(lhs["type"], rhs["type"]):
-                    self.raise_(TypeMismatchInStatement(ast))
+            lhs_type = self.visit(ast.lhs, c)["type"]
+
+        if not self.loop["flag"]:
+            if TypeUtils.isArrayType(lhs_type) or TypeUtils.isVoidType(lhs_type):
+                self.raise_(TypeMismatchInStatement(ast))
+
+        rhs_type = self.visit(ast.rhs, (o, lhs_type))["type"]
+        if not (TypeUtils.isFloatType(lhs_type) and TypeUtils.isIntType(rhs_type)):
+            if not TypeUtils.isTheSameType(lhs_type, rhs_type):
+                self.raise_(TypeMismatchInStatement(
+                    ast if not self.loop["flag"] else self.loop["ast"]))
 
     def visitBlockStmt(self, ast: BlockStmt, c):
         (o, t) = c
         reduce(lambda _, el: self.visit(
-            el, (o if self.is_func_decl else [{}] + o, t)), ast.body, [])
+            el, (o if self.func_decl["flag"] or self.loop["flag"] else [{}] + o, t)), ast.body, [])
 
     def visitIfStmt(self, ast: IfStmt, c):
         condition = self.visit(ast.cond, c)
@@ -263,50 +295,121 @@ class StaticChecker(BaseVisitor, Utils):
             self.visit(ast.fstmt, c)
 
     def visitForStmt(self, ast: ForStmt, c):
-        # condition = self.visit(ast.cond, c)
-        # if not TypeUtils.isBoolType(condition["type"]):
-        #     self.raise_(TypeMismatchInStatement(ast))
+        (o, t) = c
+        self.setLoop(True, ast)
+        o1 = [{}] + o
+        self.visit(ast.init, (o1, t))
 
-        pass
+        condition_type = self.visit(ast.cond, (o1, t))["type"]
+        if not TypeUtils.isBoolType(condition_type):
+            self.raise_(TypeMismatchInStatement(ast))
+
+        upd_type = self.visit(ast.upd, (o1, t))["type"]
+        if not TypeUtils.isIntType(upd_type):
+            self.raise_(TypeMismatchInStatement(ast))
+
+        self.visit(ast.stmt, (o1, t))
+        self.resetLoop()
 
     def visitWhileStmt(self, ast: WhileStmt, c):
-        pass
+        self.loop["flag"] = True
+        condition_type = self.visit(ast.cond, c)["type"]
+        if not TypeUtils.isBoolType(condition_type):
+            self.raise_(TypeMismatchInStatement(ast))
+        self.visit(ast.stmt, c)
+        self.loop["flag"] = False
 
     def visitDoWhileStmt(self, ast: DoWhileStmt, c):
-        pass
+        self.loop["flag"] = True
+        condition_type = self.visit(ast.cond, c)["type"]
+        if not TypeUtils.isBoolType(condition_type):
+            self.raise_(TypeMismatchInStatement(ast))
+        self.visit(ast.stmt, c)
+        self.loop["flag"] = False
 
     def visitBreakStmt(self, ast: BreakStmt, c):
-        pass
+        if not self.loop["flag"]:
+            self.raise_(MustInLoop(ast))
 
     def visitContinueStmt(self, ast: ContinueStmt, c):
-        pass
+        if not self.loop["flag"]:
+            self.raise_(MustInLoop(ast))
 
     def visitReturnStmt(self, ast: ReturnStmt, c):
-        pass
+        (o, _) = c
+        expr_type = self.visit(ast.expr, c)["type"] if not TypeUtils.isNone(
+            ast.expr) else VoidType()
+
+        if self.func_decl["flag"]:
+            if not TypeUtils.isAutoType(self.func_decl["return_type"]) and not TypeUtils.isTheSameType(expr_type, self.func_decl["return_type"]):
+                self.raise_(TypeMismatchInStatement(ast))
+            self.func_decl["return_type"] = TypeUtils.inferType(
+                self.func_decl["name"], expr_type, o, Function)
 
     def visitCallStmt(self, ast: CallStmt, c):
-        pass
+        print(ast)
+        (o, t) = c
+        name = ast.name.name
+        func = Search.search(name, o, lambda: self.raise_(
+            Undeclared(Function(), name)), Function)
+        params = func["params"]
+        if TypeUtils.isAutoType(func["type"]):
+            func["type"] = VoidType()
+
+        if len(ast.args) != len(params) or not TypeUtils.isVoidType(func["type"]):
+            self.raise_(TypeMismatchInStatement(ast))
+
+        for el in zip(params, ast.args):
+            el_type = self.visit(el[1], (o, el[0]["type"]))["type"]
+
+            if not TypeUtils.isTheSameType(el[0]["type"], el_type):
+                self.raise_(TypeMismatchInExpression(ast))
+
+        if TypeUtils.isAutoType(func["type"]):
+            func["type"] = TypeUtils.inferType(name, t, o, Function)["type"]
+        print(c)
+        return {"type": func["type"]}
 
     def visitBinExpr(self, ast: BinExpr, c):
         (o, t) = c
-        left_expr = self.visit(ast.left, c)
-        right_expr = self.visit(ast.right, c)
-        left_type = left_expr["type"]
-        right_type = right_expr["type"]
+        left_type = None
+        right_type = None
         op = ast.op
 
-        if isinstance(ast.right, FuncCall) or isinstance(ast.left, FuncCall):
-            if TypeUtils.isAutoType(right_type) and TypeUtils.isAutoType(left_type):
-                right_type = TypeUtils.inferType(
-                    right_expr["name"], t, o, Function)["type"]
-                left_type = TypeUtils.inferType(
-                    left_expr["name"], t, o, Function)["type"]
-            elif TypeUtils.isAutoType(left_type):
-                left_type = TypeUtils.inferType(
-                    left_expr["name"], right_type, o, Function)["type"]
-            elif TypeUtils.isAutoType(right_type):
-                right_type = TypeUtils.inferType(
-                    right_expr["name"], left_type, o, Function)["type"]
+        if isinstance(ast.right, FuncCall) and isinstance(ast.left, FuncCall):
+            name_right = ast.right.name.name
+            func_right_type = Search.search(name_right, o, lambda: self.raise_(
+                Undeclared(Function(), name_right)), Function)["type"]
+            name_left = ast.left.name.name
+            func_left_type = Search.search(name_left, o, lambda: self.raise_(
+                Undeclared(Function(), name_left)), Function)["type"]
+
+            if TypeUtils.isAutoType(func_right_type) and TypeUtils.isAutoType(func_left_type):
+                left_type = self.visit(ast.left, c)["type"]
+                right_type = self.visit(ast.right, c)["type"]
+            elif TypeUtils.isAutoType(func_left_type):
+                left_type = self.visit(ast.left, (o, func_right_type))["type"]
+                right_type = func_right_type
+            elif TypeUtils.isAutoType(func_right_type):
+                right_type = self.visit(ast.right, (o, func_left_type))["type"]
+                left_type = func_left_type
+        elif isinstance(ast.right, FuncCall):
+            name_right = ast.right.name.name
+            func_right_type = Search.search(name_right, o, lambda: self.raise_(
+                Undeclared(Function(), name_right)), Function)["type"]
+            left_type = self.visit(ast.left, c)["type"]
+            right_type = self.visit(
+                ast.right, (o, left_type if TypeUtils.isAutoType(func_right_type) else t))["type"]
+        elif isinstance(ast.left, FuncCall):
+            name_left = ast.left.name.name
+            func_left_type = Search.search(name_left, o, lambda: self.raise_(
+                Undeclared(Function(), name_left)), Function)["type"]
+            right_type = self.visit(ast.right, c)["type"]
+            left_type = self.visit(
+                ast.left, (o, right_type if TypeUtils.isAutoType(func_left_type) else t))["type"]
+        else:
+            right_type = self.visit(ast.right, c)["type"]
+            left_type = self.visit(ast.left, c)["type"]
 
         if op in ["+", "-", "*", "/"]:
             if not TypeUtils.isInListType(left_type, [IntegerType, FloatType]) or not TypeUtils.isInListType(right_type, [IntegerType, FloatType]):
@@ -350,7 +453,6 @@ class StaticChecker(BaseVisitor, Utils):
             return {"type": BooleanType()}
 
     def visitUnExpr(self, ast: UnExpr, c):
-        (o, t) = c
         expr = self.visit(ast.val, c)
         op = ast.op
         typ = expr["type"]
@@ -365,7 +467,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitId(self, ast: Id, c):
         (o, _) = c
-        return Search.search(ast.name, o[0], lambda: self.raise_(
+        return Search.search(ast.name, o, lambda: self.raise_(
             Undeclared(Identifier(), ast.name)), Variable)
 
     def visitArrayCell(self, ast: ArrayCell, c):
@@ -376,7 +478,7 @@ class StaticChecker(BaseVisitor, Utils):
         reduce(lambda _, el: self.raise_(TypeMismatchInExpression(ast))
                if not TypeUtils.isIntType(self.visit(el, c)["type"]) else None, ast.cell, [])
 
-        return {"type": id["type"]}
+        return {"type": id["type"].typ}
 
     def visitIntegerLit(self, ast: IntegerLit, c):
         return {"type": IntegerType()}
@@ -413,30 +515,23 @@ class StaticChecker(BaseVisitor, Utils):
         return {"type": Array(0, [])}
 
     def visitFuncCall(self, ast: FuncCall, c):
-        print("============================= FuncCall")
         (o, t) = c
         name = ast.name.name
         func = Search.search(name, o, lambda: self.raise_(
             Undeclared(Function(), name)), Function)
         params = func["params"]
-        # args = list(map(lambda x: self.visit(x, c), ast.args))
         if len(ast.args) != len(params) or TypeUtils.isVoidType(func["type"]):
             self.raise_(TypeMismatchInExpression(ast))
-        # for el in zip(params, args):
+
         for el in zip(params, ast.args):
             el_type = self.visit(el[1], (o, el[0]["type"]))["type"]
 
-            # if TypeUtils.isAutoType(func_type):
-            #     func_type = TypeUtils.inferType(
-            #         name, el[1]["type"], o, Function)
             if not TypeUtils.isTheSameType(el[0]["type"], el_type):
                 self.raise_(TypeMismatchInExpression(ast))
-        # reduce(lambda _, el: self.raise_(TypeMismatchInExpression(ast)) if TypeUtils.isTheSameType(
-        #     el[0]["type"], el[1]["type"]) else None, zip(params, args), [])
+
         if TypeUtils.isAutoType(func["type"]):
             func["type"] = TypeUtils.inferType(name, t, o, Function)["type"]
-        print("======================= End FuncCall")
-        return {"type": func["type"], "name": name}
+        return {"type": func["type"]}
 
     def visitIntegerType(self, ast: IntegerType, c):
         return IntegerType()

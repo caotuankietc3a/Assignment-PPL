@@ -427,20 +427,133 @@ class CheckerSuite(unittest.TestCase):
     #         expect = "Type Mismatch In Statement: AssignStmt(Id(n), BinExpr(+, Id(b), IntegerLit(1)))"
     #         self.assertTrue(TestChecker.test(input, expect, 440))
 
-    def test_40(self):
+    #     def test_40(self):
+    #         input = """
+    #     a : array [2] of integer;
+    #     // foo: function auto(){}
+    #     foo: function auto(x: integer){}
+    #     // foo1: function auto(y: float){}
+    #     fact : function integer (n : integer) {
+    #         foo: float = 3.0;
+    #         b: integer;
+    #         // n1: float = foo(foo(1)); // foo(int)
+    #         // n1: float = foo(1) + foo1(foo(100)); // foo: float foo1: float
+    #         // n1: float = foo(1) + 1; // foo: int
+    #         //n1: float = !foo(1) + 1; // TypeMisMatch
+    #         n1: boolean = -foo(1) == true;
+    #         // n1: float = -foo(1) + 1; // foo: float
+    #     }
+    #     main: function void(){}
+    # """
+
+    #         expect = "Type Mismatch In Statement: AssignStmt(Id(n), BinExpr(+, Id(b), IntegerLit(1)))"
+    #         self.assertTrue(TestChecker.test(input, expect, 440))
+
+    #     def test_41(self):
+    #         input = """
+    #     foo: function auto(x: integer){}
+    #     foo1: function auto(x: float){}
+    #     fact : function integer (n : integer) {
+    #         // b: integer = 99;
+    #         // b = foo(100); // foo: int
+    #         // foo(19) = b // don't have this
+
+    #         a : array [2] of integer;
+    #         a[1] = (foo1(foo(1900)) + 1);
+    #         // a[0] = 19;
+    #         // a[2] = 10.1231;
+    #         // a[2] = false;
+
+    #         // foo: float = 3.0;
+    #         // foo = foo(100);
+
+    #         // n1: float = foo(foo(1)); // foo(int)
+    #         // n1: float = foo(1) + foo1(foo(100)); // foo: float foo1: float
+    #         // n1: float = foo(1) + 1; // foo: int
+    #         //n1: float = !foo(1) + 1; // TypeMisMatch
+    #         // n1: boolean = -foo(1) == true;
+    #         // n1: float = -foo(1) + 1; // foo: float
+    #     }
+    #     main: function void(){}
+    # """
+
+    #         expect = "Type Mismatch In Statement: AssignStmt(Id(n), BinExpr(+, Id(b), IntegerLit(1)))"
+    #         self.assertTrue(TestChecker.test(input, expect, 441))
+
+    #     def test_43(self):
+    #         input = """
+    #     // foo: function auto(){}
+    #     foo1: function auto(y: boolean){}
+    #     foo2: function boolean(){}
+    #     fact : function integer (n : integer) {
+    #         // if (foo1(foo()) == true){}
+    #         a : array [2] of integer;
+    #         // if (8 < 5){}
+    #         // if (8.0 < 5){}
+    #         // if (a[1, 2, 3] > 100){}
+    #         // if (a[1, 2, 3] > foo()){}
+    #         // if (!foo()){}
+    #         // if (!foo2()){}
+    #         i: float = 3;
+    #         for (i = 123, 9 > 8, i + 1){}
+    #     }
+    #     main: function void(){}
+    # """
+
+    #         expect = "Type Mismatch In Statement: AssignStmt(Id(n), BinExpr(+, Id(b), IntegerLit(1)))"
+    #         self.assertTrue(TestChecker.test(input, expect, 443))
+
+    #     def test_44(self):
+    #         input = """
+    #     // foo: function auto(){}
+    #     // foo1: function auto(y: boolean){}
+    #     foo2: function boolean(i: integer){}
+    #     /*fact : function integer () {
+    #         // a : array [2] of integer;
+    #         // i: float = 3;
+    #     }*/
+    #     main: function void(){
+
+    #         // i: integer = 3;
+    #         // for (i = 123, i > 8, i + 1){}
+
+    #         for (i = 123, i > 8, foo2(1)){}
+    #         // for (i = 123, i > 8, i + 1.4){}
+    #     }
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 444))
+
+    #     def test_45(self):
+    #         input = """
+    #     foo2: function auto(i: integer){
+    #         return 1;
+    #     }
+
+    #     main: function void(){}
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 445))
+
+    def test_46(self):
         input = """
-    a : array [2] of integer;
-    // foo: function auto(){}
-    foo: function auto(x: integer){}
-    fact : function integer (n : integer) {
-        foo: float = 3.0;
-        b: integer;
-        // n1: integer = foo(foo(1.10)); // foo(int)
-        n1: float = foo(1) + 1;
-        // foo(): callstmt
+
+    foo2: function integer(inherit i: integer){
+
     }
-    main: function void(){}
+
+    foo1: function float() inherit foo2{
+        super()
+        // i: integer = 4; error
+        return 1;
+    }
+
+    main: function void(){
+        foo2(foo1());
+    }
 """
 
-        expect = "Type Mismatch In Statement: AssignStmt(Id(n), BinExpr(+, Id(b), IntegerLit(1)))"
-        self.assertTrue(TestChecker.test(input, expect, 440))
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 446))

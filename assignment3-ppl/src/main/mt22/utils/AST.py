@@ -161,7 +161,7 @@ class FuncCall(Expr):
         self.args = args
 
     def __str__(self):
-        return "FuncCall({}, [{}])".format(self.name, ", ".join([str(expr) for expr in self.args]))
+        return "FuncCall({}, [{}])".format(str(self.name), ", ".join([str(expr) for expr in self.args]))
 
 
 # Statements
