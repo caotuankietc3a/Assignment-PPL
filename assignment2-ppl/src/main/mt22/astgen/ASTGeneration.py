@@ -33,7 +33,7 @@ class ASTGeneration(MT22Visitor):
 
     # function_decl: ID COLON FUNCTION (atomic_type | void_type | auto_type) LEFT_PAREN params_list? RIGHT_PAREN (INHERIT ID)? body;
     def visitFunction_decl(self, ctx: MT22Parser.Function_declContext):
-        return [FuncDecl(Id(ctx.ID(0).getText()), ctx.getChild(3).accept(self), ctx.params_list().accept(self) if ctx.params_list() else [], ctx.INHERIT().getText() if ctx.INHERIT() else ctx.INHERIT(), ctx.body().accept(self))]
+        return [FuncDecl(Id(ctx.ID(0).getText()), ctx.getChild(3).accept(self), ctx.params_list().accept(self) if ctx.params_list() else [], Id(ctx.ID(1).getText()) if ctx.INHERIT() else ctx.INHERIT(), ctx.body().accept(self))]
 
     # params_list : parameter_decl COMMA params_list | parameter_decl ;
     def visitParams_list(self, ctx: MT22Parser.Params_listContext):

@@ -339,7 +339,7 @@ lengthOfLastWord: function auto() inherit lengthOfFirstWord {
 """
         expect = r"""Program([
 	FuncDecl(Id(lengthOfFirstWord), AutoType, [], None, BlockStmt([ReturnStmt(StringLit())]))
-	FuncDecl(Id(lengthOfLastWord), AutoType, [], inherit, BlockStmt([ReturnStmt(StringLit(lengthOfLastWord))]))
+	FuncDecl(Id(lengthOfLastWord), AutoType, [], Id(lengthOfFirstWord), BlockStmt([ReturnStmt(StringLit(lengthOfLastWord))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 325))
 
@@ -611,7 +611,7 @@ main : function void () {
 """
         expect = r"""Program([
 	FuncDecl(Id(Test), VoidType, [Param(Id(i), IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(/, Id(i), IntegerLit(2)))]))
-	FuncDecl(Id(Recursive), VoidType, [InheritParam(Id(nums), ArrayType([100], IntegerType)), Param(Id(size), IntegerType), Param(Id(index), IntegerType), Param(Id(count), IntegerType), Param(Id(sum), IntegerType), Param(Id(minjump), IntegerType)], inherit, BlockStmt([IfStmt(BinExpr(>=, Id(sum), Id(size)), BlockStmt([IfStmt(BinExpr(>, Id(minjump), Id(count)), AssignStmt(Id(minjump), Id(count)))]), BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(1)), BinExpr(<=, Id(i), ArrayCell(Id(nums), [Id(index)])), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([CallStmt(Id(Recursive), Id(nums), BinExpr(+, Id(index), Id(i)), BinExpr(+, Id(count), IntegerLit(1)), BinExpr(+, Id(sum), Id(i)), Id(minjump))]))]))]))
+	FuncDecl(Id(Recursive), VoidType, [InheritParam(Id(nums), ArrayType([100], IntegerType)), Param(Id(size), IntegerType), Param(Id(index), IntegerType), Param(Id(count), IntegerType), Param(Id(sum), IntegerType), Param(Id(minjump), IntegerType)], Id(Test), BlockStmt([IfStmt(BinExpr(>=, Id(sum), Id(size)), BlockStmt([IfStmt(BinExpr(>, Id(minjump), Id(count)), AssignStmt(Id(minjump), Id(count)))]), BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(1)), BinExpr(<=, Id(i), ArrayCell(Id(nums), [Id(index)])), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([CallStmt(Id(Recursive), Id(nums), BinExpr(+, Id(index), Id(i)), BinExpr(+, Id(count), IntegerLit(1)), BinExpr(+, Id(sum), Id(i)), Id(minjump))]))]))]))
 	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(nums), ArrayType([100], IntegerType)), CallStmt(Id(Recursive), Id(nums), BinExpr(+, IntegerLit(1), IntegerLit(2)), BinExpr(/, IntegerLit(1), IntegerLit(2)), BinExpr(%, IntegerLit(1), IntegerLit(31)), IntegerLit(1), UnExpr(-, IntegerLit(1)))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 337))
