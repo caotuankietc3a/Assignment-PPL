@@ -540,20 +540,21 @@ class CheckerSuite(unittest.TestCase):
     def test_46(self):
         input = """
 
-    foo1: function auto(){}
+    foo1: function integer(){}
 
     // foo2: function float(inherit x: float) inherit foo1{
-    foo2: function float(inherit x: float){
+    foo2: function float(inherit x: boolean){
         // super(10);
         // i: integer = 4; error
         return 1;
     }
     // super: function integer(){} -> Redeclared
     // foo3: function float() inherit foo1{
-    foo3: function float() inherit foo2{
+    foo3: function float() inherit foo1{
     // foo3: function float(){
-        // printInteger(1);
-        super(foo1());
+        printInteger(1);
+        preventDefault();
+        // super();
         // preventDefault();
         // i: integer = 4; error
         // super(1, 322, 324); -> Invalid Statement In Function: foo3

@@ -1,1 +1,1 @@
-Type Mismatch In Statement: FuncCall(Id(foo1), [])
+Type Mismatch In Statement: CallStmt(Id(preventDefault), [])
