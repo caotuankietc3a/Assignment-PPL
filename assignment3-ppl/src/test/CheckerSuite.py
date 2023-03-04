@@ -537,34 +537,251 @@ class CheckerSuite(unittest.TestCase):
     #         expect = "[]"
     #         self.assertTrue(TestChecker.test(input, expect, 445))
 
-    def test_46(self):
+    #     def test_46(self):
+    #         input = """
+
+    #     foo1: function integer(){}
+
+    #     // foo2: function float(inherit x: float) inherit foo1{
+    #     foo2: function float(inherit x: boolean){
+    #         // super(10);
+    #         // i: integer = 4; error
+    #         return 1;
+    #     }
+    #     // super: function integer(){} -> Redeclared
+    #     // foo3: function float() inherit foo1{
+    #     foo3: function float() inherit foo1{
+    #     // foo3: function float(){
+    #         printInteger(1);
+    #         preventDefault();
+    #         // super();
+    #         // preventDefault();
+    #         // i: integer = 4; error
+    #         // super(1, 322, 324); -> Invalid Statement In Function: foo3
+    #         return 1.123;
+    #     }
+
+    #     main: function void(){
+    #         x: integer = readInteger();
+    #     }
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 446))
+
+    #     def test_47(self):
+    #         input = """
+
+    #     x: integer;
+    #     foo1: function integer(inherit x: float){}
+
+    #     foo2: function float(inherit y: float) inherit foo1{
+    #         //preventDefault();
+    #         super(10);
+    #         // x: float = 10.1; error
+    #         z: float = 10.1;
+
+    #         // i: integer = 4; error
+    #         return 1;
+    #     }
+    #     foo3: function float(out y: float) inherit foo2{
+    #         // preventDefault();
+    #         preventDefault();
+    #         super(1111);
+    #         printInteger(1);
+    #         return 1.123;
+    #     }
+
+    #     main: function void(){
+    #         x: integer = readInteger();
+    #     }
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 447))
+
+    #     def test_48(self):
+    #         input = """
+
+    #     x: integer;
+    #     foo1: function integer(inherit x: float){}
+
+    #     foo2: function float(inherit y: float){
+    #         super(10);
+    #         z: float = 10.1;
+    #         return 1;
+    #     }
+    #     foo3: function float(out y: float) inherit foo2{
+    #         // preventDefault();
+    #         preventDefault();
+    #         super(1111);
+    #         printInteger(1);
+    #         return 1.123;
+    #     }
+
+    #     main: function void(){
+    #         x: integer = readInteger();
+    #     }
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 448))
+
+    #     def test_49(self):
+    #         input = """
+
+    #     x: integer;
+    #     foo1: function integer(){}
+
+    #     foo2: function float(inherit y: float) inherit foo1{
+    #         z: float = 10.1;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         x: integer = readInteger();
+    #     }
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 449))
+
+    #     def test_50(self):
+    #         input = """
+
+    #     x: integer;
+    #     foo1: function integer(y: integer){}
+
+    #     foo2: function float(inherit y: float) inherit foo1{
+    #         super(10, 1.0);
+    #         z: float = 10.1;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         x: integer = readInteger();
+    #     }
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 450))
+
+    #     def test_51(self):
+    #         input = """
+
+    #     x: integer;
+    #     foo1: function integer(inherit y: integer){}
+
+    #     foo2: function float(inherit y: float) inherit foo1{
+    #         super(10);
+    #         z: float = 10.1;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         x: integer = readInteger();
+    #     }
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 451))
+
+    #     def test_52(self):
+    #         input = """
+
+    #     x: integer;
+    #     foo1: function integer(inherit y: integer){}
+
+    #     foo2: function float(inherit z: float) inherit foo1{
+    #         super(10);
+    #         y: float = 10.1;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         x: integer = readInteger();
+    #     }
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 452))
+
+    #     def test_53(self):
+    #         input = """
+
+    #     x: integer;
+    #     foo1: function integer(inherit y: integer){}
+
+    #     foo2: function float(inherit z: float) inherit foo1{
+    #         preventDefault();
+    #         y: float = 10.1;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         x: integer = readInteger();
+    #     }
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 453))
+
+    #     def test_54(self):
+    #         input = """
+
+    #     x: integer;
+    #     foo1: function integer(inherit y: integer){}
+
+    #     foo2: function float(inherit z: float) inherit foo1{
+    #         preventDefault(1, 2, 3);
+    #         y: float = 10.1;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         x: integer = readInteger();
+    #     }
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 454))
+
+    #     def test_55(self):
+    #         input = """
+
+    #     x: integer;
+    #     foo1: function auto(){}
+
+    #     foo2: function float(inherit z: float) inherit foo1{
+    #         // preventDefault(1, 2, 3);
+    #         super(1);
+    #         y: float = 10.1;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         x: integer = readInteger();
+    #     }
+    # """
+
+    #         expect = "[]"
+    #         self.assertTrue(TestChecker.test(input, expect, 455))
+
+    def test_56(self):
         input = """
-
-    foo1: function integer(){}
-
-    // foo2: function float(inherit x: float) inherit foo1{
-    foo2: function float(inherit x: boolean){
-        // super(10);
-        // i: integer = 4; error
-        return 1;
-    }
-    // super: function integer(){} -> Redeclared
-    // foo3: function float() inherit foo1{
-    foo3: function float() inherit foo1{
-    // foo3: function float(){
-        printInteger(1);
-        preventDefault();
-        // super();
-        // preventDefault();
-        // i: integer = 4; error
-        // super(1, 322, 324); -> Invalid Statement In Function: foo3
-        return 1.123;
-    }
-
-    main: function void(){
-        x: integer = readInteger();
-    }
-"""
-
+        x: integer = 65;
+        fact: function integer (n: integer) {
+            if (n == 0) return 1;
+            else return n * fact(n - 1);
+        }
+        inc: function void(out n: integer, delta: integer) {
+            n = n + delta;
+        }
+        main: function void() {
+            delta: integer = fact(3);
+            inc(x, delta);
+            printInteger(x);
+        }
+        """
         expect = "[]"
-        self.assertTrue(TestChecker.test(input, expect, 446))
+        self.assertTrue(TestChecker.test(input, expect, 456))
