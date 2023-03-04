@@ -137,7 +137,8 @@ class StaticChecker(BaseVisitor, Utils):
         self.ast = ast
         self.envs = [{}]
         self.illegal_array_literal = None
-        self.func_decl = {"flag": False, "return_type": None, "name": None}
+        self.func_decl = {"flag": False, "return_type": None,
+                          "name": None, "inherit": None}
         self.loop = {"flag": False, "ast": None}
 
     def setLoop(self, flag, ast):
@@ -157,6 +158,7 @@ class StaticChecker(BaseVisitor, Utils):
         self.func_decl["flag"] = False
         self.func_decl["return_type"] = None
         self.func_decl["name"] = None
+        self.func_decl["inherit"] = None
 
     def check(self):
         return self.visit(self.ast, StaticChecker.global_envi)
@@ -230,29 +232,47 @@ class StaticChecker(BaseVisitor, Utils):
         res = {"type": typ, "kind": Variable(),
                "inherit": inherit, "out": out}
         o[0][name] = res
+        res["name"] = name
         return res
 
     def visitFuncDecl(self, ast: FuncDecl, c):
+        print("===================== FuncDecl")
+        print(ast)
         (o, _) = c
         name = ast.name.name
-        return_type = ast.return_type
-        params = ast.params
-        inherit = ast.inherit
-        body = ast.body
-        self.setFunc_decl(True, return_type, name)
         Search.check(name, o, lambda: self.raise_(
             Redeclared(Function(), name)))
+        symbol = self.lookup(
+            name, StaticChecker.global_envi, lambda sym: sym.name)
+        if not TypeUtils.isNone(symbol):
+            self.raise_(Redeclared(Function(), name))
+
+        return_type = ast.return_type
+        inherit = ast.inherit
+        body = ast.body
         o1 = [{}] + o
+        # params = list(map(lambda el: self.visit(el, (o1, None)), ast.params))
+        self.setFunc_decl(True, return_type, name)
 
         o[0][name] = {"type": return_type, "kind": Function(
-        ), "params": list(map(lambda el: self.visit(el, (o1, None)), params))}
+        ), "params": list(map(lambda el: self.visit(el, (o1, None)), ast.params))}
+
+        if not TypeUtils.isNone(inherit):
+            first_stmt = body.body[0]
+            inherit_func = Search.search(inherit.name, o1, lambda: self.raise_(
+                Undeclared(Function(), inherit.name)), Function)
+            if len(inherit_func["params"]) != 0:
+                if not isinstance(first_stmt, CallStmt):
+                    self.raise_(InvalidStatementInFunction(name))
+                if first_stmt.name.name != "super" and first_stmt.name.name != "preventDefault":
+                    self.raise_(InvalidStatementInFunction(name))
+            self.func_decl["inherit"] = inherit_func
 
         self.visit(body, (o1, None))
-
+        print("===================== End FuncDecl")
         self.resetFunc_decl()
 
     def visitAssignStmt(self, ast: AssignStmt, c):
-        print(ast)
         (o, _) = c
         lhs_type = None
         if self.loop["flag"]:
@@ -266,7 +286,6 @@ class StaticChecker(BaseVisitor, Utils):
                 if not TypeUtils.isIntType(id["type"]):
                     self.raise_(TypeMismatchInStatement(self.loop["ast"]))
                 lhs_type = id["type"]
-
         else:
             lhs_type = self.visit(ast.lhs, c)["type"]
 
@@ -341,34 +360,85 @@ class StaticChecker(BaseVisitor, Utils):
             ast.expr) else VoidType()
 
         if self.func_decl["flag"]:
-            if not TypeUtils.isAutoType(self.func_decl["return_type"]) and not TypeUtils.isTheSameType(expr_type, self.func_decl["return_type"]):
-                self.raise_(TypeMismatchInStatement(ast))
-            self.func_decl["return_type"] = TypeUtils.inferType(
-                self.func_decl["name"], expr_type, o, Function)
+            print(self.func_decl["return_type"])
+            print(expr_type)
+            if TypeUtils.isAutoType(self.func_decl["return_type"]):
+                self.func_decl["return_type"] = TypeUtils.inferType(
+                    self.func_decl["name"], expr_type, o, Function)
+            else:
+                if not (TypeUtils.isFloatType(self.func_decl["return_type"]) and TypeUtils.isIntType(expr_type)):
+                    if not TypeUtils.isTheSameType(expr_type, self.func_decl["return_type"]):
+                        self.raise_(TypeMismatchInStatement(ast))
 
     def visitCallStmt(self, ast: CallStmt, c):
         print(ast)
         (o, t) = c
         name = ast.name.name
-        func = Search.search(name, o, lambda: self.raise_(
-            Undeclared(Function(), name)), Function)
-        params = func["params"]
-        if TypeUtils.isAutoType(func["type"]):
-            func["type"] = VoidType()
+        symbol = self.lookup(
+            name, StaticChecker.global_envi, lambda sym: sym.name)
+        params = None
+        func_type = None
+        func = dict()
+        if TypeUtils.isNone(symbol):
+            func = Search.search(name, o, lambda: self.raise_(
+                Undeclared(Function(), name)), Function)
+            func_type = func["type"]
+            params = func["params"]
 
-        if len(ast.args) != len(params) or not TypeUtils.isVoidType(func["type"]):
+            if TypeUtils.isAutoType(func_type):
+                func_type = VoidType()
+
+            # if len(ast.args) != len(params) or not TypeUtils.isVoidType(func_type):
+            #     self.raise_(TypeMismatchInStatement(ast))
+
+            # for el in zip(params, ast.args):
+            #     el_type = self.visit(el[1], (o, el[0]["type"]))["type"]
+
+            #     if not (TypeUtils.isFloatType(el[0]["type"]) and TypeUtils.isIntType(el_type)):
+            #         if not TypeUtils.isTheSameType(el[0]["type"], el_type):
+            #             self.raise_(TypeMismatchInExpression(ast))
+
+            # if TypeUtils.isAutoType(func_type):
+            #     func_type = TypeUtils.inferType(
+            #         name, t, o, Function)["type"]
+            #     func["type"] = func_type
+            # return {"type": func_type}
+        else:
+            if name == "super" or name == "preventDefault":
+                if self.func_decl["flag"] and TypeUtils.isNone(self.func_decl["inherit"]):
+                    self.raise_(TypeMismatchInStatement(ast))
+                params = self.func_decl["inherit"]["params"] if name == "super" else symbol.mtype.partype
+            else:
+                params = list(map(lambda par: self.visit(
+                    par, c), symbol.mtype.partype))
+            func_type = symbol.mtype.rettype
+            # if len(ast.args) != len(params) or not TypeUtils.isVoidType(func_type):
+            #     self.raise_(TypeMismatchInStatement(ast))
+
+            # for el in zip(params, ast.args):
+            #     el_type = self.visit(el[1], (o, el[0]["type"]))["type"]
+
+            #     if not (TypeUtils.isFloatType(el[0]["type"]) and TypeUtils.isIntType(el_type)):
+            #         if not TypeUtils.isTheSameType(el[0]["type"], el_type):
+            #             self.raise_(TypeMismatchInExpression(ast))
+            # return {"type": func_type}
+
+        if len(ast.args) != len(params) or not TypeUtils.isVoidType(func_type):
             self.raise_(TypeMismatchInStatement(ast))
 
         for el in zip(params, ast.args):
             el_type = self.visit(el[1], (o, el[0]["type"]))["type"]
 
-            if not TypeUtils.isTheSameType(el[0]["type"], el_type):
-                self.raise_(TypeMismatchInExpression(ast))
+            if not (TypeUtils.isFloatType(el[0]["type"]) and TypeUtils.isIntType(el_type)):
+                if not TypeUtils.isTheSameType(el[0]["type"], el_type):
+                    self.raise_(TypeMismatchInExpression(ast))
 
-        if TypeUtils.isAutoType(func["type"]):
-            func["type"] = TypeUtils.inferType(name, t, o, Function)["type"]
-        print(c)
-        return {"type": func["type"]}
+        if TypeUtils.isAutoType(func_type) and TypeUtils.isNone(symbol):
+            func_type = TypeUtils.inferType(
+                name, t, o, Function)["type"]
+            func["type"] = func_type
+
+        return {"type": func_type}
 
     def visitBinExpr(self, ast: BinExpr, c):
         (o, t) = c
@@ -515,35 +585,68 @@ class StaticChecker(BaseVisitor, Utils):
         return {"type": Array(0, [])}
 
     def visitFuncCall(self, ast: FuncCall, c):
+        print(ast)
         (o, t) = c
         name = ast.name.name
-        func = Search.search(name, o, lambda: self.raise_(
-            Undeclared(Function(), name)), Function)
-        params = func["params"]
-        if len(ast.args) != len(params) or TypeUtils.isVoidType(func["type"]):
-            self.raise_(TypeMismatchInExpression(ast))
+        symbol = self.lookup(
+            name, StaticChecker.global_envi, lambda sym: sym.name)
+        params = None
+        func_type = None
+        func = dict()
+        if TypeUtils.isNone(symbol):
+            func = Search.search(name, o, lambda: self.raise_(
+                Undeclared(Function(), name)), Function)
+            print(func)
+            func_type = func["type"]
+            params = func["params"]
+
+            # Need to test
+            if TypeUtils.isAutoType(func_type):
+                func_type = VoidType()
+        else:
+            if name == "super" or name == "preventDefault":
+                if self.func_decl["flag"] and TypeUtils.isNone(self.func_decl["inherit"]):
+                    self.raise_(TypeMismatchInStatement(ast))
+                params = self.func_decl["inherit"]["params"] if name == "super" else symbol.mtype.partype
+            else:
+                params = list(map(lambda par: self.visit(
+                    par, c), symbol.mtype.partype))
+            func_type = symbol.mtype.rettype
+
+        print(params)
+        print(ast.args)
+        if len(ast.args) != len(params) or TypeUtils.isVoidType(func_type):
+            self.raise_(TypeMismatchInStatement(ast))
 
         for el in zip(params, ast.args):
             el_type = self.visit(el[1], (o, el[0]["type"]))["type"]
+            # print(el_type)
+            # print(el[0]["type"])
 
-            if not TypeUtils.isTheSameType(el[0]["type"], el_type):
-                self.raise_(TypeMismatchInExpression(ast))
+            if not (TypeUtils.isFloatType(el[0]["type"]) and TypeUtils.isIntType(el_type)):
+                if not TypeUtils.isTheSameType(el[0]["type"], el_type):
+                    self.raise_(TypeMismatchInExpression(ast))
 
-        if TypeUtils.isAutoType(func["type"]):
-            func["type"] = TypeUtils.inferType(name, t, o, Function)["type"]
-        return {"type": func["type"]}
+        if TypeUtils.isAutoType(func_type) and TypeUtils.isNone(symbol):
+            print("Infer")
+            func_type = TypeUtils.inferType(
+                name, t, o, Function)["type"]
+            func["type"] = func_type
+
+        print("End ", ast)
+        return {"type": func_type}
 
     def visitIntegerType(self, ast: IntegerType, c):
-        return IntegerType()
+        return {"type": IntegerType()}
 
     def visitFloatType(self, ast: FloatType, c):
-        return FloatType()
+        return {"type": FloatType()}
 
     def visitStringType(self, ast: StringType, c):
-        return StringType()
+        return {"type": StringType()}
 
     def visitBooleanType(self, ast: BooleanType, c):
-        return BooleanType()
+        return {"type": BooleanType()}
 
     def visitArrayType(self, ast: ArrayType, c):
         return ast
