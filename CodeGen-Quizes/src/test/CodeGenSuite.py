@@ -37,6 +37,6 @@ class CheckCodeGenSuite(unittest.TestCase):
 
     def test_2(self):
         input = Program([VarDecl(Id("x"), FloatType()), VarDecl(Id("y"), IntType()), FuncDecl(Id("main"), [], VoidType(
-        ), Block([VarDecl(Id("a"), FloatType()), VarDecl(Id("b"), IntType()), VarDecl(Id("y"), IntType())], [Block([VarDecl(Id("z"), FloatType())], [Block([VarDecl(Id("z"), FloatType())], [])]), Block([VarDecl(Id("t"), FloatType())], [])]))])
-        expect = ""
+        ), Block([], [Assign(Id("x"), IntLiteral(10)), CallExpr(Id("putInt"), [Id("x")])]))])
+        expect = "10"
         self.assertTrue(TestCodeGen.test(input, expect, 503))

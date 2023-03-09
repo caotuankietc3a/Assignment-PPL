@@ -236,31 +236,40 @@ class CodeGenVisitor(BaseVisitor, Utils):
         return self.emit.emitPUSHFCONST(ast.value, o.frame), FloatType()
 
     # Quiz 3
-    # def visitBinExpr(self, ast, o):
-    #     e1 = self.visit(ast.e1, o)
-    #     self.emit.printout(e1[0])
-    #     e2 = self.visit(ast.e2, o)
-    #     self.emit.printout(e2[0])
-    #     op = ast.op
-    #     frame = o.frame
+    def visitBinExpr(self, ast, o):
+        e1 = self.visit(ast.e1, o)
+        self.emit.printout(e1[0])
+        e2 = self.visit(ast.e2, o)
+        self.emit.printout(e2[0])
+        op = ast.op
+        frame = o.frame
 
-    #     if op in ["+", "+."]:
-    #         return self.emit.emitADDOP("+", IntType() if op == "+" else FloatType(), frame), IntType() if op == "+" else FloatType()
-    #     if op in ["-", "-."]:
-    #         return self.emit.emitADDOP("-", IntType() if op == "-" else FloatType(), frame), IntType() if op == "-" else FloatType()
-    #     if op in ["*", "*."]:
-    #         return self.emit.emitMULOP("*", IntType() if op == "*" else FloatType(), frame), IntType() if op == "*" else FloatType()
-    #     if op in ["/", "/."]:
-    #         return self.emit.emitMULOP("/", IntType() if op == "/" else FloatType(), frame), IntType() if op == "/" else FloatType()
+        if op in ["+", "+."]:
+            return self.emit.emitADDOP("+", IntType() if op == "+" else FloatType(), frame), IntType() if op == "+" else FloatType()
+        if op in ["-", "-."]:
+            return self.emit.emitADDOP("-", IntType() if op == "-" else FloatType(), frame), IntType() if op == "-" else FloatType()
+        if op in ["*", "*."]:
+            return self.emit.emitMULOP("*", IntType() if op == "*" else FloatType(), frame), IntType() if op == "*" else FloatType()
+        if op in ["/", "/."]:
+            return self.emit.emitMULOP("/", IntType() if op == "/" else FloatType(), frame), IntType() if op == "/" else FloatType()
 
     # Quiz 4
+    # def visitId(self, ast, o):
+    #     frame = o.frame
+    #     symbol = self.lookup(ast.name, o.sym, lambda sym: sym.name)
+    #     if symbol is not None:
+    #         if type(symbol.value) is CName:
+    #             return self.emit.emitGETSTATIC(f"{symbol.value.value}.{symbol.name}", symbol.mtype, frame), symbol.mtype
+    #         return self.emit.emitREADVAR(symbol.name, symbol.mtype, symbol.value.value, frame), symbol.mtype
+
+    # Quiz 2 - Codegen 2
     def visitId(self, ast, o):
         frame = o.frame
         symbol = self.lookup(ast.name, o.sym, lambda sym: sym.name)
         if symbol is not None:
             if type(symbol.value) is CName:
-                return self.emit.emitGETSTATIC(f"{symbol.value.value}.{symbol.name}", symbol.mtype, frame), symbol.mtype
-            return self.emit.emitREADVAR(symbol.name, symbol.mtype, symbol.value.value, frame), symbol.mtype
+                return self.emit.emitGETSTATIC(f"{symbol.value.value}.{symbol.name}", symbol.mtype, frame) if not o.isLeft else self.emit.emitPUTSTATIC(f"{symbol.value.value}.{symbol.name}", symbol.mtype, frame), symbol.mtype
+            return self.emit.emitREADVAR(symbol.name, symbol.mtype, symbol.value.value, frame) if not o.isLeft else self.emit.emitWRITEVAR(symbol.name, symbol.mtype, symbol.value.value, frame), symbol.mtype
 
     # Quiz 5
     # def visitBinExpr(self, ctx, o):
@@ -328,6 +337,13 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 idx, id, typ, o.frame.getStartLabel(), o.frame.getEndLabel(), o.frame))
             return Symbol(id, typ, Index(idx))
 
+    def visitAssign(self, ast, o):
+        lhs, _ = self.visit(
+            ast.lhs, Access(o.frame, o.sym, True, False))
+        rhs, _ = self.visit(
+            ast.rhs, Access(o.frame, o.sym, False, False))
+        self.emit.printout(lhs + rhs)
+
     def visitBlock(self, ast, o):
         frame = o.frame
         glenv = o.sym
@@ -337,3 +353,44 @@ class CodeGenVisitor(BaseVisitor, Utils):
         list(map(lambda x: self.visit(x, SubBody(frame, glenv)), ast.stmt))
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
         frame.exitScope()
+
+    def visitIf(self, ast, o):
+        ctxt = o
+        frame = ctxt.frame
+        nenv = ctxt.sym
+        expCode, expType = self.visit(
+            ast.expr, Access(frame, nenv, False, False))
+        self.emit.printout(expCode)
+
+        labelF = frame.getNewLabel()  # eval is true
+        labelE = frame.getNewLabel()  # label end
+
+        self.emit.printout(self.emit.emitIFFALSE(labelF, frame))
+
+        self.visit(ast.tstmt, o)
+        self.emit.printout(self.emit.emitGOTO(labelE, frame))
+
+        self.emit.printout(self.emit.emitLABEL(labelF, frame))
+        if ast.estmt:
+            self.visit(ast.estmt, o)
+
+        self.emit.printout(self.emit.emitLABEL(labelE, frame))
+
+    def visitWhile(self, ast, o):
+        frame = o.frame
+        nenv = o.sym
+        expr, _ = self.visit(
+            ast.expr, Access(frame, nenv, False, False))
+        labelS = frame.getNewLabel()
+        frame.enterLoop()
+        self.emit.printout(self.emit.emitLABEL(labelS, frame) + expr)
+        self.emit.printout(self.emit.emitIFFALSE(frame.getBreakLabel(), frame))
+        self.visit(ast.stmt, o)
+        self.emit.printout(self.emit.emitGOTO(
+            labelS, frame))
+        self.emit.printout(self.emit.emitLABEL(
+            frame.getContinueLabel(), frame))
+
+        self.emit.printout(self.emit.emitLABEL(frame.getBreakLabel(), frame))
+
+        frame.exitLoop()

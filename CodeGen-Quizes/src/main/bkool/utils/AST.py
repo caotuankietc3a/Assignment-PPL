@@ -155,6 +155,31 @@ class Block(Stmt):
         return v.visitBlock(self, param)
 
 
+class If(Stmt):
+    def __init__(self, expr, tstmt, estmt):
+        self.expr = expr
+        self.tstmt = tstmt
+        self.estmt = estmt
+
+    def __str__(self):
+        return f"If({self.expr},{self.tstmt},{self.estmt})"
+
+    def accept(self, v, param):
+        return v.visitIf(self, param)
+
+
+class While(Stmt):
+    def __init__(self, expr, stmt):
+        self.expr = expr
+        self.stmt = stmt
+
+    def __str__(self):
+        return f"While({self.expr},{self.stmt})"
+
+    def accept(self, v, param):
+        return v.visitWhile(self, param)
+
+
 class Literal(Expr):
     __metaclass__ = ABCMeta
     pass
@@ -182,3 +207,15 @@ class FloatLiteral(Literal):
 
     def accept(self, v, param):
         return v.visitFloatLiteral(self, param)
+
+
+class Assign(Stmt):
+    def __init__(self, lhs, rhs) -> None:
+        self.lhs = lhs
+        self.rhs = rhs
+
+    def __str__(self) -> str:
+        return f"Assign({self.lhs},{self.rhs})"
+
+    def accept(self, v, param):
+        return v.visitAssign(self, param)

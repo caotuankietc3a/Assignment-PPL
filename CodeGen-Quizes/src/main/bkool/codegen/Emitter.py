@@ -457,7 +457,7 @@ class Emitter():
         frame.pop()
         if op == ">":
             result.append(self.jvm.emitIFICMPLE(falseLabel))
-            result.append(self.emitGOTO(trueLabel))
+            result.append(self.emitGOTO(trueLabel, frame))
         elif op == ">=":
             result.append(self.jvm.emitIFICMPLT(falseLabel))
         elif op == "<":
