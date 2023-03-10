@@ -198,7 +198,7 @@ class StaticChecker(BaseVisitor, Utils):
         (o, _) = c
         name = ast.name.name
         Search.check(name, o[0], lambda: self.raise_(
-            Redeclared(Parameter(), name)))
+            Redeclared(Variable(), name)))
         typ = ast.typ
         self.checkValidInherit(name, o, Variable())
 
@@ -253,7 +253,7 @@ class StaticChecker(BaseVisitor, Utils):
         (o, _) = c
         print(o)
         name = ast.name.name
-        Search.check(name, o, lambda: self.raise_(
+        Search.check(name, o[0], lambda: self.raise_(
             Redeclared(Function(), name)))
         symbol = self.lookup(
             name, StaticChecker.global_envi, lambda sym: sym.name)
