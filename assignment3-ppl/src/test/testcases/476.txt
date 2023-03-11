@@ -3,18 +3,7 @@
         c : integer = 2;
         d: float = c + 1;
         f : array [5] of string;
+        f[1] = d + 2.5;
         return f[1];
-    }           
-    bar: function void (inherit out a: float, inherit out b: string) inherit foo {
-        super("Hello", 123);
-        for (i = 1, i < 10, i + 1)
-        {
-            printFloat(a);
-        }
-        if (a==2)
-            return;
-        else
-            break;
-        // foo(1+2,x+1,true);
     }
     main: function void() {}

@@ -40,11 +40,11 @@ class ASTGeneration(MT22Visitor):
 
     # params_list : parameter_decl COMMA params_list | parameter_decl ;
     def visitParams_list(self, ctx: MT22Parser.Params_listContext):
-        return [ctx.parameter_decl().accept(self), *ctx.params_list().accept(self)] if ctx.getChildCount() == 3 else [ctx.parameter_decl().accept(self)]
+        return [*ctx.parameter_decl().accept(self), *ctx.params_list().accept(self)] if ctx.getChildCount() == 3 else ctx.parameter_decl().accept(self)
 
     # parameter_decl : INHERIT? OUT? ID COLON (atomic_type | array_type | auto_type) ;
     def visitParameter_decl(self, ctx: MT22Parser.Parameter_declContext):
-        return ParamDecl(Id(ctx.ID().getText()), ctx.getChild(ctx.getChildCount() - 1).accept(self), True if ctx.OUT() else False, True if ctx.INHERIT() else False)
+        return [ParamDecl(Id(ctx.ID().getText()), ctx.getChild(ctx.getChildCount() - 1).accept(self), True if ctx.OUT() else False, True if ctx.INHERIT() else False)]
 
     # body: block_stmt;
     def visitBody(self, ctx: MT22Parser.BodyContext):

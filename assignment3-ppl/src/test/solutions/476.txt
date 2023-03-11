@@ -1,1 +1,1 @@
-Type Mismatch In Expression: BinExpr(==, Id(a), IntegerLit(2))
+Type Mismatch In Statement: AssignStmt(ArrayCell(Id(f), [IntegerLit(1)]), BinExpr(+, Id(d), FloatLit(2.5)))

@@ -5,8 +5,8 @@
           return minjump;
         }
 
-        jump_: function float(inherit z: float) inherit jump {
-            preventDefault();
+        jump_: function float(ns: array[100] of integer, inherit z: float) inherit jump {
+            super(ns, 10);
             y: float = 10.1;
             return nums[0];
         }

@@ -1,11 +1,19 @@
 
-        x: integer;
-        inc: function auto(out n: integer, delta: integer) {
-            n = n + delta;
+    foo: function string (a: string, b: float) {
+        c : integer = 2;
+        d: float = c + 1;
+        f : array [5] of string;
+        return f[1];
+    }
+    bar: function void (inherit out a: float, inherit out b: string) inherit foo {
+        super("Hello", 123);
+        for (i = 1, i < 10, i + 1)
+        {
+            writeFloat(a);
         }
-        inc1: function auto() {}
-        main: function void() {
-            delta: integer = inc(inc(x, x), x);
-            y: integer = inc(x, delta) + inc1();
-        }
-        
+        if (a==2)
+            return;
+        else
+            break;
+    }
+    main: function void() {}
