@@ -1,5 +1,5 @@
 Program([
 	VarDecl(Id(x), IntegerType, IntegerLit(65))
 	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(arr), ArrayType([2, 3], IntegerType)), IfStmt(FuncCall(Id(check_prime), [IntegerLit(7)]), BlockStmt([AssignStmt(ArrayCell(Id(arr), [IntegerLit(1), IntegerLit(2)]), IntegerLit(10)), AssignStmt(ArrayCell(Id(arr), [ArrayCell(Id(arr), [IntegerLit(0), IntegerLit(1)]), IntegerLit(2)]), IntegerLit(10))]))]))
-	FuncDecl(Id(check_prime), BooleanType, [Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(<, Id(n), IntegerLit(2)), ReturnStmt(BooleanLit(True))), ForStmt(AssignStmt(Id(i), IntegerLit(2)), BinExpr(<=, Id(i), FuncCall(Id(sqrt), [Id(n)])), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, BinExpr(%, Id(n), Id(i)), IntegerLit(0)), ReturnStmt(BooleanLit(True)))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(check_prime), BooleanType, [Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(<, Id(n), IntegerLit(2)), ReturnStmt(BooleanLit(False))), ForStmt(AssignStmt(Id(i), IntegerLit(2)), BinExpr(<=, Id(i), FuncCall(Id(sqrt), [Id(n)])), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, BinExpr(%, Id(n), Id(i)), IntegerLit(0)), ReturnStmt(BooleanLit(False)))])), ReturnStmt(BooleanLit(True))]))
 ])

@@ -43,9 +43,9 @@ class ASTGenSuite(unittest.TestCase):
     def test_vardecls_4(self):
         input = r"""a, b, c : boolean = false, true, false;"""
         expect = r"""Program([
-	VarDecl(Id(a), BooleanType, BooleanLit(True))
+	VarDecl(Id(a), BooleanType, BooleanLit(False))
 	VarDecl(Id(b), BooleanType, BooleanLit(True))
-	VarDecl(Id(c), BooleanType, BooleanLit(True))
+	VarDecl(Id(c), BooleanType, BooleanLit(False))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 304))
 
@@ -113,9 +113,9 @@ a,   b,   c   : array [2, 3] of integer = {{1, 2, 3}, {0, 5, 6}}, {{}, {}}, {{2,
 a,   b,   c   : array [2, 3] of boolean = {{false, true, false}, {true, false, true}}, {{}, {}}, {{true, false}, {}};
 """
         expect = r"""Program([
-	VarDecl(Id(a), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(True), BooleanLit(True), BooleanLit(True)]), ArrayLit([BooleanLit(True), BooleanLit(True), BooleanLit(True)])]))
+	VarDecl(Id(a), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(False), BooleanLit(True), BooleanLit(False)]), ArrayLit([BooleanLit(True), BooleanLit(False), BooleanLit(True)])]))
 	VarDecl(Id(b), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([]), ArrayLit([])]))
-	VarDecl(Id(c), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(True), BooleanLit(True)]), ArrayLit([])]))
+	VarDecl(Id(c), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(True), BooleanLit(False)]), ArrayLit([])]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 310))
 
@@ -152,9 +152,9 @@ a4,   b4,   c4   : array [2, 3] of float = {{1.33333, .5555e1, 189.00000}, {157.
 	VarDecl(Id(a1), ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([IntegerLit(1), IntegerLit(2), IntegerLit(3)]), ArrayLit([IntegerLit(0), IntegerLit(5), IntegerLit(6)])]))
 	VarDecl(Id(b1), ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([]), ArrayLit([])]))
 	VarDecl(Id(c1), ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([IntegerLit(2), IntegerLit(3)]), ArrayLit([])]))
-	VarDecl(Id(a2), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(True), BooleanLit(True), BooleanLit(True)]), ArrayLit([BooleanLit(True), BooleanLit(True), BooleanLit(True)])]))
+	VarDecl(Id(a2), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(False), BooleanLit(True), BooleanLit(False)]), ArrayLit([BooleanLit(True), BooleanLit(False), BooleanLit(True)])]))
 	VarDecl(Id(b2), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([]), ArrayLit([])]))
-	VarDecl(Id(c2), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(True), BooleanLit(True)]), ArrayLit([])]))
+	VarDecl(Id(c2), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(True), BooleanLit(False)]), ArrayLit([])]))
 	VarDecl(Id(a3), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([StringLit(hello), StringLit(world), StringLit(!!!)]), ArrayLit([StringLit(test\n), StringLit(string\t)])]))
 	VarDecl(Id(b3), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([]), ArrayLit([])]))
 	VarDecl(Id(c3), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([StringLit(hahaha)]), ArrayLit([])]))
@@ -376,7 +376,7 @@ check_prime: function boolean (n : integer) {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(check_prime), BooleanType, [Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(<, Id(n), IntegerLit(2)), ReturnStmt(BooleanLit(True))), ForStmt(AssignStmt(Id(i), IntegerLit(2)), BinExpr(<=, Id(i), FuncCall(Id(sqrt), [Id(n)])), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, BinExpr(%, Id(n), Id(i)), IntegerLit(0)), ReturnStmt(BooleanLit(True)))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(check_prime), BooleanType, [Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(<, Id(n), IntegerLit(2)), ReturnStmt(BooleanLit(False))), ForStmt(AssignStmt(Id(i), IntegerLit(2)), BinExpr(<=, Id(i), FuncCall(Id(sqrt), [Id(n)])), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, BinExpr(%, Id(n), Id(i)), IntegerLit(0)), ReturnStmt(BooleanLit(False)))])), ReturnStmt(BooleanLit(True))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 327))
 
@@ -404,7 +404,7 @@ check_prime: function boolean (n : integer) {
         expect = r"""Program([
 	VarDecl(Id(x), IntegerType, IntegerLit(65))
 	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(arr), ArrayType([2, 3], IntegerType)), IfStmt(FuncCall(Id(check_prime), [IntegerLit(7)]), BlockStmt([AssignStmt(ArrayCell(Id(arr), [IntegerLit(1), IntegerLit(2)]), IntegerLit(10)), AssignStmt(ArrayCell(Id(arr), [ArrayCell(Id(arr), [IntegerLit(0), IntegerLit(1)]), IntegerLit(2)]), IntegerLit(10))]))]))
-	FuncDecl(Id(check_prime), BooleanType, [Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(<, Id(n), IntegerLit(2)), ReturnStmt(BooleanLit(True))), ForStmt(AssignStmt(Id(i), IntegerLit(2)), BinExpr(<=, Id(i), FuncCall(Id(sqrt), [Id(n)])), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, BinExpr(%, Id(n), Id(i)), IntegerLit(0)), ReturnStmt(BooleanLit(True)))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(check_prime), BooleanType, [Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(<, Id(n), IntegerLit(2)), ReturnStmt(BooleanLit(False))), ForStmt(AssignStmt(Id(i), IntegerLit(2)), BinExpr(<=, Id(i), FuncCall(Id(sqrt), [Id(n)])), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, BinExpr(%, Id(n), Id(i)), IntegerLit(0)), ReturnStmt(BooleanLit(False)))])), ReturnStmt(BooleanLit(True))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 328))
 
@@ -473,7 +473,7 @@ check_prime: function boolean (n : integer) {
 	VarDecl(Id(x), IntegerType, IntegerLit(65))
 	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(arr), ArrayType([2, 3], IntegerType)), IfStmt(FuncCall(Id(check_prime), [IntegerLit(7)]), BlockStmt([AssignStmt(ArrayCell(Id(arr), [IntegerLit(1), IntegerLit(2)]), FuncCall(Id(Fibonacci), [IntegerLit(10)]))]))]))
 	FuncDecl(Id(Fibonacci), IntegerType, [Param(Id(n), IntegerType)], None, BlockStmt([VarDecl(Id(f0), AutoType, IntegerLit(0)), VarDecl(Id(f1), AutoType, IntegerLit(1)), VarDecl(Id(fn), AutoType, IntegerLit(1)), IfStmt(BinExpr(<, Id(n), IntegerLit(0)), BlockStmt([ReturnStmt(UnExpr(-, IntegerLit(1)))])), IfStmt(BinExpr(||, BinExpr(==, Id(n), IntegerLit(0)), BinExpr(==, Id(n), IntegerLit(1))), BlockStmt([ReturnStmt(Id(n))]), BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(2)), BinExpr(<, Id(i), Id(n)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([AssignStmt(Id(f0), Id(f1)), AssignStmt(Id(f1), Id(fn)), AssignStmt(Id(fn), BinExpr(+, Id(f0), Id(f1)))]))])), ReturnStmt(Id(fn))]))
-	FuncDecl(Id(check_prime), BooleanType, [Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(<, Id(n), IntegerLit(2)), ReturnStmt(BooleanLit(True))), ForStmt(AssignStmt(Id(i), IntegerLit(2)), BinExpr(<=, Id(i), FuncCall(Id(sqrt), [Id(n)])), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, BinExpr(%, Id(n), Id(i)), IntegerLit(0)), ReturnStmt(BooleanLit(True)))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(check_prime), BooleanType, [Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(<, Id(n), IntegerLit(2)), ReturnStmt(BooleanLit(False))), ForStmt(AssignStmt(Id(i), IntegerLit(2)), BinExpr(<=, Id(i), FuncCall(Id(sqrt), [Id(n)])), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, BinExpr(%, Id(n), Id(i)), IntegerLit(0)), ReturnStmt(BooleanLit(False)))])), ReturnStmt(BooleanLit(True))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 330))
 
@@ -492,7 +492,7 @@ check_str_code: function boolean (code : string, size: integer) {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(check_str_code), BooleanType, [Param(Id(code), StringType), Param(Id(size), IntegerType)], None, BlockStmt([IfStmt(BinExpr(==, Id(code), StringLit()), ReturnStmt(BooleanLit(True))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(size)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(UnExpr(!, BinExpr(||, BinExpr(&&, BinExpr(>=, ArrayCell(Id(code), [Id(i)]), StringLit(a)), BinExpr(<=, ArrayCell(Id(code), [Id(i)]), StringLit(z))), BinExpr(&&, BinExpr(>=, ArrayCell(Id(code), [Id(i)]), StringLit(A)), BinExpr(<=, ArrayCell(Id(code), [Id(i)]), StringLit(Z))))), BlockStmt([ReturnStmt(BooleanLit(True))]))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(check_str_code), BooleanType, [Param(Id(code), StringType), Param(Id(size), IntegerType)], None, BlockStmt([IfStmt(BinExpr(==, Id(code), StringLit()), ReturnStmt(BooleanLit(False))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(size)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(UnExpr(!, BinExpr(||, BinExpr(&&, BinExpr(>=, ArrayCell(Id(code), [Id(i)]), StringLit(a)), BinExpr(<=, ArrayCell(Id(code), [Id(i)]), StringLit(z))), BinExpr(&&, BinExpr(>=, ArrayCell(Id(code), [Id(i)]), StringLit(A)), BinExpr(<=, ArrayCell(Id(code), [Id(i)]), StringLit(Z))))), BlockStmt([ReturnStmt(BooleanLit(False))]))])), ReturnStmt(BooleanLit(True))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 331))
 
@@ -510,7 +510,7 @@ check_str_code: function boolean (code : string, size: integer) {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(check_str_code), BooleanType, [Param(Id(code), StringType), Param(Id(size), IntegerType)], None, BlockStmt([IfStmt(BinExpr(==, Id(code), StringLit()), ReturnStmt(BooleanLit(True))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(size)), BinExpr(-, BinExpr(+, Id(i), IntegerLit(6)), IntegerLit(3)), BlockStmt([IfStmt(UnExpr(!, Id(i)), BlockStmt([BreakStmt()]))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(check_str_code), BooleanType, [Param(Id(code), StringType), Param(Id(size), IntegerType)], None, BlockStmt([IfStmt(BinExpr(==, Id(code), StringLit()), ReturnStmt(BooleanLit(False))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(size)), BinExpr(-, BinExpr(+, Id(i), IntegerLit(6)), IntegerLit(3)), BlockStmt([IfStmt(UnExpr(!, Id(i)), BlockStmt([BreakStmt()]))])), ReturnStmt(BooleanLit(True))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 332))
 
@@ -629,7 +629,7 @@ lookUp: function boolean (name: string) {
 } 
 """
         expect = r"""Program([
-	FuncDecl(Id(lookUp), BooleanType, [Param(Id(name), StringType)], None, BlockStmt([ForStmt(AssignStmt(Id(scopeFounded), IntegerLit(10)), BinExpr(>=, Id(scopeFounded), IntegerLit(0)), BinExpr(-, Id(scopeFounded), IntegerLit(1)), BlockStmt([IfStmt(FuncCall(Id(isExist), [Id(name), Id(scopeFounded)]), BlockStmt([ReturnStmt(BooleanLit(True))]))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(lookUp), BooleanType, [Param(Id(name), StringType)], None, BlockStmt([ForStmt(AssignStmt(Id(scopeFounded), IntegerLit(10)), BinExpr(>=, Id(scopeFounded), IntegerLit(0)), BinExpr(-, Id(scopeFounded), IntegerLit(1)), BlockStmt([IfStmt(FuncCall(Id(isExist), [Id(name), Id(scopeFounded)]), BlockStmt([ReturnStmt(BooleanLit(True))]))])), ReturnStmt(BooleanLit(False))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 338))
 
@@ -648,7 +648,7 @@ main : function void () {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(lookUp), BooleanType, [Param(Id(name), StringType)], None, BlockStmt([ForStmt(AssignStmt(Id(scopeFounded), IntegerLit(10)), BinExpr(>=, Id(scopeFounded), IntegerLit(0)), BinExpr(-, Id(scopeFounded), IntegerLit(1)), BlockStmt([IfStmt(FuncCall(Id(isExist), [Id(name), Id(scopeFounded)]), BlockStmt([ReturnStmt(BooleanLit(True))]))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(lookUp), BooleanType, [Param(Id(name), StringType)], None, BlockStmt([ForStmt(AssignStmt(Id(scopeFounded), IntegerLit(10)), BinExpr(>=, Id(scopeFounded), IntegerLit(0)), BinExpr(-, Id(scopeFounded), IntegerLit(1)), BlockStmt([IfStmt(FuncCall(Id(isExist), [Id(name), Id(scopeFounded)]), BlockStmt([ReturnStmt(BooleanLit(True))]))])), ReturnStmt(BooleanLit(False))]))
 	FuncDecl(Id(main), VoidType, [], None, BlockStmt([CallStmt(Id(lookUp), StringLit(test), IntegerLit(1))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 339))
@@ -966,7 +966,7 @@ consecutiveOnes: function boolean(nums : array [200] of integer, size: integer) 
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(consecutiveOnes), BooleanType, [Param(Id(nums), ArrayType([200], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([VarDecl(Id(found), BooleanType, BooleanLit(True)), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(size)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(nums), [Id(i)]), IntegerLit(1)), BlockStmt([IfStmt(Id(found), ReturnStmt(BooleanLit(True))), WhileStmt(BinExpr(<, Id(i), Id(size)), BlockStmt([IfStmt(BinExpr(!=, ArrayCell(Id(nums), [Id(i)]), IntegerLit(1)), BlockStmt([AssignStmt(Id(found), BooleanLit(True)), BreakStmt()])), AssignStmt(Id(i), BinExpr(+, Id(i), IntegerLit(1)))]))])), AssignStmt(Id(i), BinExpr(+, Id(i), IntegerLit(1)))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(consecutiveOnes), BooleanType, [Param(Id(nums), ArrayType([200], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([VarDecl(Id(found), BooleanType, BooleanLit(False)), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(size)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(nums), [Id(i)]), IntegerLit(1)), BlockStmt([IfStmt(Id(found), ReturnStmt(BooleanLit(False))), WhileStmt(BinExpr(<, Id(i), Id(size)), BlockStmt([IfStmt(BinExpr(!=, ArrayCell(Id(nums), [Id(i)]), IntegerLit(1)), BlockStmt([AssignStmt(Id(found), BooleanLit(True)), BreakStmt()])), AssignStmt(Id(i), BinExpr(+, Id(i), IntegerLit(1)))]))])), AssignStmt(Id(i), BinExpr(+, Id(i), IntegerLit(1)))])), ReturnStmt(BooleanLit(True))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 352))
 
@@ -1287,7 +1287,7 @@ containStr: function boolean (S1: string , S2: string, sizeS1: integer, sizeS2: 
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(containStr), BooleanType, [Param(Id(S1), StringType), Param(Id(S2), StringType), Param(Id(sizeS1), IntegerType), Param(Id(sizeS2), IntegerType)], None, BlockStmt([VarDecl(Id(b), ArrayType([1000], BooleanType)), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(sizeS2)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([VarDecl(Id(found), BooleanType, BooleanLit(True)), ForStmt(AssignStmt(Id(j), IntegerLit(0)), BinExpr(<, Id(j), Id(sizeS1)), BinExpr(+, Id(j), IntegerLit(1)), BlockStmt([IfStmt(UnExpr(!, ArrayCell(Id(b), [Id(j)])), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(S2), [Id(i)]), ArrayCell(Id(S1), [Id(j)])), BlockStmt([AssignStmt(Id(found), BooleanLit(True)), AssignStmt(ArrayCell(Id(b), [Id(j)]), BooleanLit(True))]))]))])), IfStmt(UnExpr(!, Id(found)), BlockStmt([ReturnStmt(BooleanLit(True))]))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(containStr), BooleanType, [Param(Id(S1), StringType), Param(Id(S2), StringType), Param(Id(sizeS1), IntegerType), Param(Id(sizeS2), IntegerType)], None, BlockStmt([VarDecl(Id(b), ArrayType([1000], BooleanType)), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(sizeS2)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([VarDecl(Id(found), BooleanType, BooleanLit(False)), ForStmt(AssignStmt(Id(j), IntegerLit(0)), BinExpr(<, Id(j), Id(sizeS1)), BinExpr(+, Id(j), IntegerLit(1)), BlockStmt([IfStmt(UnExpr(!, ArrayCell(Id(b), [Id(j)])), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(S2), [Id(i)]), ArrayCell(Id(S1), [Id(j)])), BlockStmt([AssignStmt(Id(found), BooleanLit(True)), AssignStmt(ArrayCell(Id(b), [Id(j)]), BooleanLit(True))]))]))])), IfStmt(UnExpr(!, Id(found)), BlockStmt([ReturnStmt(BooleanLit(False))]))])), ReturnStmt(BooleanLit(True))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 368))
 
@@ -1324,7 +1324,7 @@ Check: function boolean (nums: array[100] of integer, size: integer) {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(Check), BooleanType, [Param(Id(nums), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([VarDecl(Id(count), IntegerType, IntegerLit(0)), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(size)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(<, ArrayCell(Id(nums), [Id(i)]), IntegerLit(0)), AssignStmt(Id(count), BinExpr(+, Id(count), IntegerLit(1))))])), IfStmt(BinExpr(==, BinExpr(%, Id(count), IntegerLit(2)), IntegerLit(0)), ReturnStmt(BooleanLit(True)), ReturnStmt(BooleanLit(True)))]))
+	FuncDecl(Id(Check), BooleanType, [Param(Id(nums), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([VarDecl(Id(count), IntegerType, IntegerLit(0)), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(size)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(<, ArrayCell(Id(nums), [Id(i)]), IntegerLit(0)), AssignStmt(Id(count), BinExpr(+, Id(count), IntegerLit(1))))])), IfStmt(BinExpr(==, BinExpr(%, Id(count), IntegerLit(2)), IntegerLit(0)), ReturnStmt(BooleanLit(True)), ReturnStmt(BooleanLit(False)))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 370))
 
@@ -1343,7 +1343,7 @@ Checkzero: function boolean(nums: array[100] of integer, size: integer) {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(Checkzero), BooleanType, [Param(Id(nums), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([VarDecl(Id(found), BooleanType, BooleanLit(True)), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(&&, Id(size), UnExpr(!, Id(found)))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(nums), [Id(i)]), IntegerLit(0)), AssignStmt(Id(found), BooleanLit(True)))])), IfStmt(Id(found), ReturnStmt(BooleanLit(True)), ReturnStmt(BooleanLit(True)))]))
+	FuncDecl(Id(Checkzero), BooleanType, [Param(Id(nums), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([VarDecl(Id(found), BooleanType, BooleanLit(False)), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(&&, Id(size), UnExpr(!, Id(found)))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(nums), [Id(i)]), IntegerLit(0)), AssignStmt(Id(found), BooleanLit(True)))])), IfStmt(Id(found), ReturnStmt(BooleanLit(True)), ReturnStmt(BooleanLit(False)))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 371))
 
@@ -1381,7 +1381,7 @@ search: function integer(nums: array[100] of integer, size: integer, target: int
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(search), IntegerType, [Param(Id(nums), ArrayType([100], IntegerType)), Param(Id(size), IntegerType), Param(Id(target), IntegerType)], None, BlockStmt([VarDecl(Id(left), IntegerType, IntegerLit(0)), VarDecl(Id(right), IntegerType, BinExpr(-, Id(size), IntegerLit(1))), VarDecl(Id(index), IntegerType, UnExpr(-, IntegerLit(1))), VarDecl(Id(found), BooleanType, BooleanLit(True)), WhileStmt(BinExpr(<=, Id(left), BinExpr(&&, Id(right), UnExpr(!, Id(found)))), BlockStmt([VarDecl(Id(mid), IntegerType, BinExpr(/, BinExpr(+, Id(left), Id(right)), IntegerLit(2))), IfStmt(BinExpr(==, ArrayCell(Id(nums), [Id(mid)]), Id(target)), BlockStmt([AssignStmt(Id(found), BooleanLit(True)), AssignStmt(Id(index), Id(mid))])), IfStmt(BinExpr(>=, ArrayCell(Id(nums), [Id(mid)]), ArrayCell(Id(nums), [Id(left)])), BlockStmt([IfStmt(BinExpr(>, ArrayCell(Id(nums), [Id(mid)]), Id(target)), BlockStmt([IfStmt(BinExpr(<, Id(target), ArrayCell(Id(nums), [Id(left)])), AssignStmt(Id(left), BinExpr(+, Id(mid), IntegerLit(1))), AssignStmt(Id(right), BinExpr(-, Id(mid), IntegerLit(1))))]), AssignStmt(Id(left), BinExpr(+, Id(mid), IntegerLit(1))))]), BlockStmt([IfStmt(BinExpr(>, Id(target), ArrayCell(Id(nums), [Id(mid)])), BlockStmt([IfStmt(BinExpr(>, Id(target), ArrayCell(Id(nums), [Id(right)])), AssignStmt(Id(right), BinExpr(-, Id(mid), IntegerLit(1))), AssignStmt(Id(left), BinExpr(+, Id(mid), IntegerLit(1))))]), AssignStmt(Id(right), BinExpr(-, Id(mid), IntegerLit(1))))]))])), ReturnStmt(Id(index))]))
+	FuncDecl(Id(search), IntegerType, [Param(Id(nums), ArrayType([100], IntegerType)), Param(Id(size), IntegerType), Param(Id(target), IntegerType)], None, BlockStmt([VarDecl(Id(left), IntegerType, IntegerLit(0)), VarDecl(Id(right), IntegerType, BinExpr(-, Id(size), IntegerLit(1))), VarDecl(Id(index), IntegerType, UnExpr(-, IntegerLit(1))), VarDecl(Id(found), BooleanType, BooleanLit(False)), WhileStmt(BinExpr(<=, Id(left), BinExpr(&&, Id(right), UnExpr(!, Id(found)))), BlockStmt([VarDecl(Id(mid), IntegerType, BinExpr(/, BinExpr(+, Id(left), Id(right)), IntegerLit(2))), IfStmt(BinExpr(==, ArrayCell(Id(nums), [Id(mid)]), Id(target)), BlockStmt([AssignStmt(Id(found), BooleanLit(True)), AssignStmt(Id(index), Id(mid))])), IfStmt(BinExpr(>=, ArrayCell(Id(nums), [Id(mid)]), ArrayCell(Id(nums), [Id(left)])), BlockStmt([IfStmt(BinExpr(>, ArrayCell(Id(nums), [Id(mid)]), Id(target)), BlockStmt([IfStmt(BinExpr(<, Id(target), ArrayCell(Id(nums), [Id(left)])), AssignStmt(Id(left), BinExpr(+, Id(mid), IntegerLit(1))), AssignStmt(Id(right), BinExpr(-, Id(mid), IntegerLit(1))))]), AssignStmt(Id(left), BinExpr(+, Id(mid), IntegerLit(1))))]), BlockStmt([IfStmt(BinExpr(>, Id(target), ArrayCell(Id(nums), [Id(mid)])), BlockStmt([IfStmt(BinExpr(>, Id(target), ArrayCell(Id(nums), [Id(right)])), AssignStmt(Id(right), BinExpr(-, Id(mid), IntegerLit(1))), AssignStmt(Id(left), BinExpr(+, Id(mid), IntegerLit(1))))]), AssignStmt(Id(right), BinExpr(-, Id(mid), IntegerLit(1))))]))])), ReturnStmt(Id(index))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 372))
 
@@ -1423,7 +1423,7 @@ completeNum: function boolean(N: integer) {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(completeNum), BooleanType, [Param(Id(N), IntegerType)], None, BlockStmt([VarDecl(Id(sum), IntegerType, IntegerLit(0)), ForStmt(AssignStmt(Id(i), IntegerLit(1)), BinExpr(<, Id(i), Id(N)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, BinExpr(%, Id(N), Id(i)), IntegerLit(0)), BlockStmt([AssignStmt(Id(sum), BinExpr(+, Id(sum), Id(i)))]))])), IfStmt(BinExpr(==, Id(sum), Id(N)), BlockStmt([ReturnStmt(BooleanLit(True))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(completeNum), BooleanType, [Param(Id(N), IntegerType)], None, BlockStmt([VarDecl(Id(sum), IntegerType, IntegerLit(0)), ForStmt(AssignStmt(Id(i), IntegerLit(1)), BinExpr(<, Id(i), Id(N)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, BinExpr(%, Id(N), Id(i)), IntegerLit(0)), BlockStmt([AssignStmt(Id(sum), BinExpr(+, Id(sum), Id(i)))]))])), IfStmt(BinExpr(==, Id(sum), Id(N)), BlockStmt([ReturnStmt(BooleanLit(True))])), ReturnStmt(BooleanLit(False))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 374))
 
@@ -1501,7 +1501,7 @@ isPalindrome: function boolean(str: array[100] of string, strSize: integer) {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(isPalindrome), BooleanType, [Param(Id(str), ArrayType([100], StringType)), Param(Id(strSize), IntegerType)], None, BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(/, Id(strSize), IntegerLit(2))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(!=, ArrayCell(Id(str), [Id(i)]), ArrayCell(Id(str), [BinExpr(-, BinExpr(-, Id(strSize), Id(i)), IntegerLit(1))])), BlockStmt([ReturnStmt(BooleanLit(True))]))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(isPalindrome), BooleanType, [Param(Id(str), ArrayType([100], StringType)), Param(Id(strSize), IntegerType)], None, BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(/, Id(strSize), IntegerLit(2))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(!=, ArrayCell(Id(str), [Id(i)]), ArrayCell(Id(str), [BinExpr(-, BinExpr(-, Id(strSize), Id(i)), IntegerLit(1))])), BlockStmt([ReturnStmt(BooleanLit(False))]))])), ReturnStmt(BooleanLit(True))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 379))
 
@@ -1520,7 +1520,7 @@ checkElementsUniqueness: function boolean (arr: array[100] of integer, n: intege
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(checkElementsUniqueness), BooleanType, [Param(Id(arr), ArrayType([100], IntegerType)), Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(||, BinExpr(>, Id(n), IntegerLit(1000)), BinExpr(<, Id(n), IntegerLit(0))), ReturnStmt(BooleanLit(True))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(-, Id(n), IntegerLit(1))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([ForStmt(AssignStmt(Id(j), BinExpr(+, Id(i), IntegerLit(1))), BinExpr(<, Id(j), Id(n)), BinExpr(+, Id(j), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(arr), [Id(i)]), ArrayCell(Id(arr), [Id(j)])), ReturnStmt(BooleanLit(True)))]))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(checkElementsUniqueness), BooleanType, [Param(Id(arr), ArrayType([100], IntegerType)), Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(||, BinExpr(>, Id(n), IntegerLit(1000)), BinExpr(<, Id(n), IntegerLit(0))), ReturnStmt(BooleanLit(False))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(-, Id(n), IntegerLit(1))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([ForStmt(AssignStmt(Id(j), BinExpr(+, Id(i), IntegerLit(1))), BinExpr(<, Id(j), Id(n)), BinExpr(+, Id(j), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(arr), [Id(i)]), ArrayCell(Id(arr), [Id(j)])), ReturnStmt(BooleanLit(False)))]))])), ReturnStmt(BooleanLit(True))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 380))
 
@@ -1545,7 +1545,7 @@ main: function void() {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(checkElementsUniqueness), BooleanType, [Param(Id(arr), ArrayType([100], IntegerType)), Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(||, BinExpr(>, Id(n), IntegerLit(1000)), BinExpr(<, Id(n), IntegerLit(0))), ReturnStmt(BooleanLit(True))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(-, Id(n), IntegerLit(1))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([ForStmt(AssignStmt(Id(j), BinExpr(+, Id(i), IntegerLit(1))), BinExpr(<, Id(j), Id(n)), BinExpr(+, Id(j), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(arr), [Id(i)]), ArrayCell(Id(arr), [Id(j)])), ReturnStmt(BooleanLit(True)))]))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(checkElementsUniqueness), BooleanType, [Param(Id(arr), ArrayType([100], IntegerType)), Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(||, BinExpr(>, Id(n), IntegerLit(1000)), BinExpr(<, Id(n), IntegerLit(0))), ReturnStmt(BooleanLit(False))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(-, Id(n), IntegerLit(1))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([ForStmt(AssignStmt(Id(j), BinExpr(+, Id(i), IntegerLit(1))), BinExpr(<, Id(j), Id(n)), BinExpr(+, Id(j), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(arr), [Id(i)]), ArrayCell(Id(arr), [Id(j)])), ReturnStmt(BooleanLit(False)))]))])), ReturnStmt(BooleanLit(True))]))
 	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(arr), ArrayType([6], IntegerType), ArrayLit([IntegerLit(1), IntegerLit(91), IntegerLit(0), UnExpr(-, IntegerLit(100)), IntegerLit(100), IntegerLit(200)])), IfStmt(FuncCall(Id(checkElementsUniqueness), [Id(arr), IntegerLit(6)]), CallStmt(Id(printString), StringLit(Correct!)), CallStmt(Id(printString), StringLit(Wrong!)))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 381))
@@ -1614,7 +1614,7 @@ isSymmetry: function boolean(head: array[100] of integer, tail: array[100] of in
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(isSymmetry), BooleanType, [Param(Id(head), ArrayType([100], IntegerType)), Param(Id(tail), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(/, Id(size), IntegerLit(2))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(!=, ArrayCell(Id(head), [Id(i)]), ArrayCell(Id(tail), [Id(i)])), ReturnStmt(BooleanLit(True)))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(isSymmetry), BooleanType, [Param(Id(head), ArrayType([100], IntegerType)), Param(Id(tail), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(/, Id(size), IntegerLit(2))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(!=, ArrayCell(Id(head), [Id(i)]), ArrayCell(Id(tail), [Id(i)])), ReturnStmt(BooleanLit(False)))])), ReturnStmt(BooleanLit(True))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 385))
 
@@ -1633,7 +1633,7 @@ checkElements: function boolean (arr: array[100] of integer, n: integer) {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(checkElements), BooleanType, [Param(Id(arr), ArrayType([100], IntegerType)), Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(||, BinExpr(>, Id(n), IntegerLit(1000)), BinExpr(<, Id(n), IntegerLit(0))), ReturnStmt(BooleanLit(True))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(-, Id(n), IntegerLit(1))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([ForStmt(AssignStmt(Id(j), BinExpr(+, Id(i), IntegerLit(1))), BinExpr(<, Id(j), Id(n)), BinExpr(+, Id(j), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(arr), [Id(i)]), ArrayCell(Id(arr), [Id(j)])), ReturnStmt(BooleanLit(True)))]))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(checkElements), BooleanType, [Param(Id(arr), ArrayType([100], IntegerType)), Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(||, BinExpr(>, Id(n), IntegerLit(1000)), BinExpr(<, Id(n), IntegerLit(0))), ReturnStmt(BooleanLit(False))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(-, Id(n), IntegerLit(1))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([ForStmt(AssignStmt(Id(j), BinExpr(+, Id(i), IntegerLit(1))), BinExpr(<, Id(j), Id(n)), BinExpr(+, Id(j), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(arr), [Id(i)]), ArrayCell(Id(arr), [Id(j)])), ReturnStmt(BooleanLit(False)))]))])), ReturnStmt(BooleanLit(True))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 386))
 
@@ -1806,7 +1806,7 @@ main: function void() {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(checkElements), BooleanType, [Param(Id(arr), ArrayType([100], IntegerType)), Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(||, BinExpr(>, Id(n), IntegerLit(1000)), BinExpr(<, Id(n), IntegerLit(0))), ReturnStmt(BooleanLit(True))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(-, Id(n), IntegerLit(1))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([ForStmt(AssignStmt(Id(j), BinExpr(+, Id(i), IntegerLit(1))), BinExpr(<, Id(j), Id(n)), BinExpr(+, Id(j), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(arr), [Id(i)]), ArrayCell(Id(arr), [Id(j)])), ReturnStmt(BooleanLit(True)))]))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(checkElements), BooleanType, [Param(Id(arr), ArrayType([100], IntegerType)), Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(||, BinExpr(>, Id(n), IntegerLit(1000)), BinExpr(<, Id(n), IntegerLit(0))), ReturnStmt(BooleanLit(False))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(-, Id(n), IntegerLit(1))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([ForStmt(AssignStmt(Id(j), BinExpr(+, Id(i), IntegerLit(1))), BinExpr(<, Id(j), Id(n)), BinExpr(+, Id(j), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, ArrayCell(Id(arr), [Id(i)]), ArrayCell(Id(arr), [Id(j)])), ReturnStmt(BooleanLit(False)))]))])), ReturnStmt(BooleanLit(True))]))
 	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(arr), ArrayType([5], IntegerType), ArrayLit([IntegerLit(1), IntegerLit(91), IntegerLit(0), UnExpr(-, IntegerLit(100)), IntegerLit(100)])), CallStmt(Id(checkElements), Id(arr), IntegerLit(0))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 395))
@@ -1826,7 +1826,7 @@ main: function void() {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(isSymmetry), BooleanType, [Param(Id(head), ArrayType([100], IntegerType)), Param(Id(tail), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(/, Id(size), IntegerLit(2))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(!=, ArrayCell(Id(head), [Id(i)]), ArrayCell(Id(tail), [Id(i)])), ReturnStmt(BooleanLit(True)))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(isSymmetry), BooleanType, [Param(Id(head), ArrayType([100], IntegerType)), Param(Id(tail), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(/, Id(size), IntegerLit(2))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(!=, ArrayCell(Id(head), [Id(i)]), ArrayCell(Id(tail), [Id(i)])), ReturnStmt(BooleanLit(False)))])), ReturnStmt(BooleanLit(True))]))
 	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(head), ArrayType([5], IntegerType), ArrayLit([IntegerLit(1), IntegerLit(91), IntegerLit(0), UnExpr(-, IntegerLit(100)), IntegerLit(100)])), VarDecl(Id(tail), ArrayType([5], IntegerType), ArrayLit([IntegerLit(10), IntegerLit(1), IntegerLit(1000), UnExpr(-, IntegerLit(100)), IntegerLit(100)])), CallStmt(Id(isSymmetry), Id(head), Id(tail), IntegerLit(5))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 396))
@@ -1907,7 +1907,7 @@ main: function void() {
 }
 """
         expect = r"""Program([
-	FuncDecl(Id(isPalindrome), BooleanType, [Param(Id(strs), ArrayType([100], StringType)), Param(Id(strSize), IntegerType)], None, BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(/, Id(strSize), IntegerLit(2))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(!=, ArrayCell(Id(strs), [Id(i)]), ArrayCell(Id(strs), [BinExpr(-, BinExpr(-, Id(strSize), Id(i)), IntegerLit(1))])), BlockStmt([ReturnStmt(BooleanLit(True))]))])), ReturnStmt(BooleanLit(True))]))
+	FuncDecl(Id(isPalindrome), BooleanType, [Param(Id(strs), ArrayType([100], StringType)), Param(Id(strSize), IntegerType)], None, BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(/, Id(strSize), IntegerLit(2))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(!=, ArrayCell(Id(strs), [Id(i)]), ArrayCell(Id(strs), [BinExpr(-, BinExpr(-, Id(strSize), Id(i)), IntegerLit(1))])), BlockStmt([ReturnStmt(BooleanLit(False))]))])), ReturnStmt(BooleanLit(True))]))
 	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(strs), ArrayType([5], StringType), ArrayLit([StringLit(hello), StringLit(world), StringLit(!!!), StringLit(), StringLit(test\n)])), IfStmt(FuncCall(Id(isPalindrome), [Id(strs), IntegerLit(5)]), CallStmt(Id(printString), StringLit(Correct!!!)), CallStmt(Id(printString), StringLit(Wrong!!!)))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 399))
