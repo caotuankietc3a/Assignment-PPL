@@ -1,0 +1,11 @@
+
+        x: integer;
+        inc: function auto(out n: integer, delta: integer) {
+            n = n + delta;
+            return 1;
+        }
+        main: function void() {
+            delta: integer = 1;
+            n1: float = -inc(x, delta) + 1; // inc: integer
+        }
+        

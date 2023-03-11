@@ -124,7 +124,7 @@ class StaticChecker(BaseVisitor, Utils):
         Symbol("readInteger", MType([], IntegerType())),
         Symbol("printInteger", MType([IntegerType()], VoidType())),
         Symbol("readFloat", MType([], FloatType())),
-        Symbol("printFloat", MType([FloatType()], VoidType())),
+        Symbol("writeFloat", MType([FloatType()], VoidType())),
         Symbol("readBoolean", MType([], BooleanType())),
         Symbol("printBoolean", MType([BooleanType()], VoidType())),
         Symbol("readString", MType([], StringType())),
@@ -140,6 +140,36 @@ class StaticChecker(BaseVisitor, Utils):
         self.func_decl = {"flag": False, "return_type": None,
                           "name": None, "inherit": {"func": None, "super_or_preventDefault": None}, }
         self.loop = {"flag": False, "ast": None}
+        self.for_loop = []
+        self.while_loop = []
+        self.do_while_loop = []
+
+    def addElToForLoop(self, el):
+        self.for_loop.append(el)
+
+    def addElToWhileLoop(self, el):
+        self.while_loop.append(el)
+
+    def addElToDoWhileLoop(self, el):
+        self.do_while_loop.append(el)
+
+    def removeElFromForLoop(self):
+        self.for_loop.pop()
+
+    def removeElFromWhileLoop(self):
+        self.while_loop.pop()
+
+    def removeElFromDoWhileLoop(self):
+        self.do_while_loop.pop()
+
+    def getSizeForLoop(self):
+        return len(self.for_loop)
+
+    def getSizeWhileLoop(self):
+        return len(self.while_loop)
+
+    def getSizeDoWhileLoop(self):
+        return len(self.do_while_loop)
 
     def setLoop(self, flag, ast):
         self.loop["flag"] = flag
@@ -210,10 +240,10 @@ class StaticChecker(BaseVisitor, Utils):
                     "type": arr_type, "dimensions": arr_dimensions, "ast": ast}
                 init = self.visit(ast.init, (o, typ))
                 dimension_lst = Array.getDimensions(init)
-                if Array.isDimensionsMatched(arr_dimensions, dimension_lst, lambda: self.raise_(TypeMismatchInStatement(ast))):
-                    o[0][name] = {
-                        "type": typ, "kind": Variable(), "dimensions": dimension_lst}
-                    self.illegal_array_literal = None
+                # if Array.isDimensionsMatched(arr_dimensions, dimension_lst, lambda: self.raise_(TypeMismatchInStatement(ast))):
+                o[0][name] = {
+                    "type": typ, "kind": Variable(), "dimensions": dimension_lst}
+                self.illegal_array_literal = None
             else:
                 init = self.visit(ast.init, (o, typ))
                 init_type = init["type"]
@@ -240,6 +270,8 @@ class StaticChecker(BaseVisitor, Utils):
         typ = ast.typ
         inherit = ast.inherit
         out = ast.out
+        if not self.func_decl["flag"]:
+            self.raise_(Invalid(Parameter(), name))
         self.checkValidInherit(name, o, Parameter())
 
         res = {"type": typ, "kind": Variable(),
@@ -251,7 +283,6 @@ class StaticChecker(BaseVisitor, Utils):
     def visitFuncDecl(self, ast: FuncDecl, c):
         print(ast)
         (o, _) = c
-        print(o)
         name = ast.name.name
         Search.check(name, o[0], lambda: self.raise_(
             Redeclared(Function(), name)))
@@ -264,7 +295,7 @@ class StaticChecker(BaseVisitor, Utils):
         inherit = ast.inherit
         body = ast.body
         o1 = [{}] + o
-        self.setFunc_decl(True, return_type, name)
+        self.setFunc_decl(True, {"type": return_type}, name)
 
         if not TypeUtils.isNone(inherit):
             first_stmt = body.body[0]
@@ -296,10 +327,12 @@ class StaticChecker(BaseVisitor, Utils):
         o[0][name] = {"type": return_type, "kind": Function(
         ), "params": params, "params_inherit": params_inherit}
 
+        print("End FuncDecl ================")
         self.visit(body, (o1, None))
         self.resetFunc_decl()
 
     def visitAssignStmt(self, ast: AssignStmt, c):
+        print(ast)
         (o, _) = c
         lhs_type = None
         if self.loop["flag"]:
@@ -315,10 +348,10 @@ class StaticChecker(BaseVisitor, Utils):
                 lhs_type = id["type"]
         else:
             lhs_type = self.visit(ast.lhs, c)["type"]
-
-        if not self.loop["flag"]:
             if TypeUtils.isArrayType(lhs_type) or TypeUtils.isVoidType(lhs_type):
                 self.raise_(TypeMismatchInStatement(ast))
+
+        print("------------------------")
 
         rhs_type = self.visit(ast.rhs, (o, lhs_type))["type"]
         if not (TypeUtils.isFloatType(lhs_type) and TypeUtils.isIntType(rhs_type)):
@@ -341,10 +374,14 @@ class StaticChecker(BaseVisitor, Utils):
             self.visit(ast.fstmt, c)
 
     def visitForStmt(self, ast: ForStmt, c):
+        print(ast)
         (o, t) = c
         self.setLoop(True, ast)
+        self.addElToForLoop(True)
         o1 = [{}] + o
+
         self.visit(ast.init, (o1, t))
+        self.resetLoop()
 
         condition_type = self.visit(ast.cond, (o1, t))["type"]
         if not TypeUtils.isBoolType(condition_type):
@@ -354,31 +391,32 @@ class StaticChecker(BaseVisitor, Utils):
         if not TypeUtils.isIntType(upd_type):
             self.raise_(TypeMismatchInStatement(ast))
 
+        print("+++++++++++++++++=")
         self.visit(ast.stmt, (o1, t))
-        self.resetLoop()
+        self.removeElFromForLoop()
 
     def visitWhileStmt(self, ast: WhileStmt, c):
-        self.loop["flag"] = True
+        self.addElToWhileLoop(True)
         condition_type = self.visit(ast.cond, c)["type"]
         if not TypeUtils.isBoolType(condition_type):
             self.raise_(TypeMismatchInStatement(ast))
         self.visit(ast.stmt, c)
-        self.loop["flag"] = False
+        self.removeElFromWhileLoop()
 
     def visitDoWhileStmt(self, ast: DoWhileStmt, c):
-        self.loop["flag"] = True
+        self.addElToDoWhileLoop(True)
+        self.visit(ast.stmt, c)
         condition_type = self.visit(ast.cond, c)["type"]
         if not TypeUtils.isBoolType(condition_type):
             self.raise_(TypeMismatchInStatement(ast))
-        self.visit(ast.stmt, c)
-        self.loop["flag"] = False
+        self.removeElFromDoWhileLoop()
 
     def visitBreakStmt(self, ast: BreakStmt, c):
-        if not self.loop["flag"]:
+        if self.getSizeForLoop() == 0 and self.getSizeWhileLoop() == 0 and self.getSizeDoWhileLoop() == 0:
             self.raise_(MustInLoop(ast))
 
     def visitContinueStmt(self, ast: ContinueStmt, c):
-        if not self.loop["flag"]:
+        if self.getSizeForLoop() == 0 and self.getSizeWhileLoop() == 0 and self.getSizeDoWhileLoop() == 0:
             self.raise_(MustInLoop(ast))
 
     def visitReturnStmt(self, ast: ReturnStmt, c):
@@ -387,16 +425,18 @@ class StaticChecker(BaseVisitor, Utils):
             ast.expr) else VoidType()
 
         if self.func_decl["flag"]:
-            if TypeUtils.isAutoType(self.func_decl["return_type"]):
+            func_type = self.func_decl["return_type"]["type"]
+            if TypeUtils.isAutoType(func_type):
                 self.func_decl["return_type"] = TypeUtils.inferType(
                     self.func_decl["name"], expr_type, o, Function)
             else:
-                if not (TypeUtils.isFloatType(self.func_decl["return_type"]) and TypeUtils.isIntType(expr_type)):
-                    if not TypeUtils.isTheSameType(expr_type, self.func_decl["return_type"]):
+                if not (TypeUtils.isFloatType(func_type) and TypeUtils.isIntType(expr_type)):
+                    if not TypeUtils.isTheSameType(expr_type, func_type):
                         self.raise_(TypeMismatchInStatement(ast))
 
     def visitCallStmt(self, ast: CallStmt, c):
-        (o, t) = c
+        print(ast)
+        (o, _) = c
         name = ast.name.name
         symbol = self.lookup(
             name, StaticChecker.global_envi, lambda sym: sym.name)
@@ -410,10 +450,10 @@ class StaticChecker(BaseVisitor, Utils):
             params = func["params"]
 
             if TypeUtils.isAutoType(func_type):
-                func_type = VoidType()
+                func["type"] = func_type = VoidType()
         else:
             if name == "super" or name == "preventDefault":
-                if (self.func_decl["flag"] and TypeUtils.isNone(self.func_decl["inherit"]["func"])) or not TypeUtils.isNone(self.func_decl["inherit"]["super_or_preventDefault"]):
+                if (self.func_decl["flag"] and TypeUtils.isNone(self.func_decl["inherit"]["func"])) or TypeUtils.isNone(self.func_decl["inherit"]["super_or_preventDefault"]):
                     self.raise_(InvalidStatementInFunction(
                         self.func_decl["name"]))
                 params = self.func_decl["inherit"]["func"]["params"] if name == "super" else symbol.mtype.partype
@@ -431,7 +471,8 @@ class StaticChecker(BaseVisitor, Utils):
 
             if not (TypeUtils.isFloatType(el[0]["type"]) and TypeUtils.isIntType(el_type)):
                 if not TypeUtils.isTheSameType(el[0]["type"], el_type):
-                    self.raise_(TypeMismatchInExpression(ast))
+                    self.raise_(TypeMismatchInStatement(ast) if not (name == "super" or name == "preventDefault") else InvalidStatementInFunction(
+                        self.func_decl["name"]))
         return {"type": func_type}
 
     def visitBinExpr(self, ast: BinExpr, c):
@@ -442,11 +483,18 @@ class StaticChecker(BaseVisitor, Utils):
 
         if isinstance(ast.right, FuncCall) and isinstance(ast.left, FuncCall):
             name_right = ast.right.name.name
+            symbol_right = self.lookup(
+                name_right, StaticChecker.global_envi, lambda sym: sym.name)
             func_right_type = Search.search(name_right, o, lambda: self.raise_(
-                Undeclared(Function(), name_right)), Function)["type"]
+                Undeclared(Function(), name_right)), Function)["type"] if TypeUtils.isNone(symbol_right) else symbol_right.mtype.rettype
+
             name_left = ast.left.name.name
+            func_left_type = None
+            symbol_left = self.lookup(
+                name_left, StaticChecker.global_envi, lambda sym: sym.name)
+
             func_left_type = Search.search(name_left, o, lambda: self.raise_(
-                Undeclared(Function(), name_left)), Function)["type"]
+                Undeclared(Function(), name_left)), Function)["type"] if TypeUtils.isNone(symbol_left) else symbol_left.mtype.rettype
 
             if TypeUtils.isAutoType(func_right_type) and TypeUtils.isAutoType(func_left_type):
                 left_type = self.visit(ast.left, c)["type"]
@@ -459,15 +507,21 @@ class StaticChecker(BaseVisitor, Utils):
                 left_type = func_left_type
         elif isinstance(ast.right, FuncCall):
             name_right = ast.right.name.name
+            symbol_right = self.lookup(
+                name_right, StaticChecker.global_envi, lambda sym: sym.name)
             func_right_type = Search.search(name_right, o, lambda: self.raise_(
-                Undeclared(Function(), name_right)), Function)["type"]
+                Undeclared(Function(), name_right)), Function)["type"] if TypeUtils.isNone(symbol_right) else symbol_right.mtype.rettype
             left_type = self.visit(ast.left, c)["type"]
             right_type = self.visit(
                 ast.right, (o, left_type if TypeUtils.isAutoType(func_right_type) else t))["type"]
         elif isinstance(ast.left, FuncCall):
             name_left = ast.left.name.name
+            func_left_type = None
+            symbol_left = self.lookup(
+                name_left, StaticChecker.global_envi, lambda sym: sym.name)
+
             func_left_type = Search.search(name_left, o, lambda: self.raise_(
-                Undeclared(Function(), name_left)), Function)["type"]
+                Undeclared(Function(), name_left)), Function)["type"] if TypeUtils.isNone(symbol_left) else symbol_left.mtype.rettype
             right_type = self.visit(ast.right, c)["type"]
             left_type = self.visit(
                 ast.left, (o, right_type if TypeUtils.isAutoType(func_left_type) else t))["type"]
@@ -579,6 +633,7 @@ class StaticChecker(BaseVisitor, Utils):
         return {"type": Array(0, [])}
 
     def visitFuncCall(self, ast: FuncCall, c):
+        print(ast)
         (o, t) = c
         name = ast.name.name
         symbol = self.lookup(
@@ -586,6 +641,7 @@ class StaticChecker(BaseVisitor, Utils):
         params = None
         func_type = None
         func = dict()
+        print(name)
         if TypeUtils.isNone(symbol):
             func = Search.search(name, o, lambda: self.raise_(
                 Undeclared(Function(), name)), Function)
@@ -595,7 +651,8 @@ class StaticChecker(BaseVisitor, Utils):
         else:
             if name == "super" or name == "preventDefault":
                 if self.func_decl["flag"] and TypeUtils.isNone(self.func_decl["inherit"]["func"]):
-                    self.raise_(TypeMismatchInStatement(ast))
+                    self.raise_(InvalidStatementInFunction(
+                        self.func_decl["name"]))
                 params = self.func_decl["inherit"]["func"]["params"] if name == "super" else symbol.mtype.partype
             else:
                 params = list(map(lambda par: self.visit(
@@ -603,7 +660,7 @@ class StaticChecker(BaseVisitor, Utils):
             func_type = symbol.mtype.rettype
 
         if len(ast.args) != len(params) or TypeUtils.isVoidType(func_type):
-            self.raise_(TypeMismatchInStatement(ast))
+            self.raise_(TypeMismatchInExpression(ast))
 
         for el in zip(params, ast.args):
             el_type = self.visit(el[1], (o, el[0]["type"]))["type"]

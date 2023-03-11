@@ -60,6 +60,7 @@ decls
 decl
   : variable_decl 
   | function_decl
+  | parameter_decl
   ;
 
 

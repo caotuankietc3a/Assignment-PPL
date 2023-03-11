@@ -1,0 +1,6 @@
+
+
+    foo1: function auto(inherit x: boolean){}
+    main: function void(){
+        x: integer = readInteger();
+    }

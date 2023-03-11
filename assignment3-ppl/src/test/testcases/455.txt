@@ -4,7 +4,6 @@
     foo1: function auto(){}
 
     foo2: function float(inherit z: float) inherit foo1{
-        // preventDefault(1, 2, 3);
         super(1);
         y: float = 10.1;
         return 1;

@@ -4,6 +4,8 @@
     foo1: function integer(){}
 
     foo2: function float(inherit y: float) inherit foo1{
+        // super();
+        preventDefault();
         z: float = 10.1;
         return 1;
     }

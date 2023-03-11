@@ -2,4 +2,5 @@
     foo2: function auto(i: integer){
         return 1;
     }
+
     main: function void(){}

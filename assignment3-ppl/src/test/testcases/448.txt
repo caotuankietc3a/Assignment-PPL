@@ -2,20 +2,11 @@
 
     x: integer;
     foo1: function integer(inherit x: float){}
-
     foo2: function float(inherit y: float){
         super(10);
         z: float = 10.1;
         return 1;
     }
-    foo3: function float(out y: float) inherit foo2{
-        // preventDefault();
-        preventDefault();
-        super(1111);
-        printInteger(1);
-        return 1.123;
-    }
-
     main: function void(){
         x: integer = readInteger();
     }

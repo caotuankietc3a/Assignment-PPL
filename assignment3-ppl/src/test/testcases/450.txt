@@ -1,5 +1,4 @@
 
-
     x: integer;
     foo1: function integer(y: integer){}
 

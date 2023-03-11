@@ -4,6 +4,9 @@ from AST import *
 
 
 class ASTGeneration(MT22Visitor):
+    def toBool(self, x: str):
+        return x.lower() == "true"
+
     # program: decls EOF ;
     def visitProgram(self, ctx: MT22Parser.ProgramContext):
         return Program(ctx.decls().accept(self))
@@ -119,7 +122,7 @@ class ASTGeneration(MT22Visitor):
             return StringLit(ctx.getChild(0).getText())
 
         if ctx.BOOLEAN_LIT():
-            return BooleanLit(ctx.getChild(0).getText())
+            return BooleanLit(self.toBool(ctx.getChild(0).getText()))
 
         if ctx.array_lit():
             return ctx.getChild(0).accept(self)
@@ -193,7 +196,7 @@ class ASTGeneration(MT22Visitor):
 
     # return_stmt: RETURN expr? SEMI_COLON;
     def visitReturn_stmt(self, ctx: MT22Parser.Return_stmtContext):
-        return ReturnStmt(ctx.expr().accept(self) if ctx.expr() else ctx.expr())
+        return ReturnStmt(ctx.expr().accept(self) if ctx.expr() else None)
 
     # call_stmt: func_call SEMI_COLON;
     def visitCall_stmt(self, ctx: MT22Parser.Call_stmtContext):
