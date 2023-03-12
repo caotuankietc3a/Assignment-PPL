@@ -1,0 +1,7 @@
+
+    //b: boolean = false;
+    z: integer =  110;
+    main: function void(){
+        //printBoolean(b);
+        // printInteger(z);
+    }

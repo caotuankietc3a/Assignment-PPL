@@ -1,0 +1,9 @@
+
+    y: float = 10.123;
+    main: function void(){
+        x: integer = 10;
+        printInteger(x);
+        writeFloat(y);
+        printInteger(z);
+    }
+    z: integer =  110;

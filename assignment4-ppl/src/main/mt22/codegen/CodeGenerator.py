@@ -40,6 +40,10 @@ class TypeUtils:
         return type(x) is type(None)
 
     @staticmethod
+    def isTheSameType(x, y):
+        return type(x) is y
+
+    @staticmethod
     def retrieveType(originType):
         if TypeUtils.isArrayType(originType):
             return ArrayPointerType(originType.typ)
@@ -112,13 +116,14 @@ class ClassType(Type):
 
 
 class SubBody():
-    def __init__(self, frame, sym, isGlobal=False):
+    def __init__(self, frame, sym, isGlobal=False, isBlockStmt=False):
         # frame: Frame
         # sym: List[Symbol]
 
         self.frame = frame
         self.sym = sym
         self.isGlobal = isGlobal
+        self.isBlockStmt = isBlockStmt
 
 
 class Access():
@@ -164,23 +169,9 @@ class CodeGenVisitor(BaseVisitor, Utils):
         self.className = "MT22Class"
         self.path = dir_
         self.emit = Emitter(self.path + "/" + self.className + ".j")
+        self.var_decl_codes = []
 
-    def visitProgram(self, ast, c):
-        # ast: Program
-        # c: Any
-
-        self.emit.printout(self.emit.emitPROLOG(
-            self.className, "java.lang.Object"))
-        e = SubBody(None, self.env)
-        for x in ast.decl:
-            e = self.visit(x, e)
-        # generate default constructor
-        self.genMETHOD(FuncDecl(Id("<init>"), list(), None, Block(
-            list(), list())), c, Frame("<init>", VoidType))
-        self.emit.emitEPILOG()
-        return c
-
-    def genMETHOD(self, decl: FuncDecl, o, frame: Frame):
+    def genMETHOD(self, decl: FuncDecl, o, frame: Frame, global_vardecl_codes: list or None):
         # decl: FuncDecl
         # o: Any
         # frame: Frame
@@ -211,7 +202,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
             self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "args", ArrayPointerType(
                 StringType()), frame.getStartLabel(), frame.getEndLabel(), frame))
 
-        body = decl.body
+        block = decl.body
         self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
 
         # Generate code for statements
@@ -220,18 +211,40 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 "this", ClassType(self.className), 0, frame))
             self.emit.printout(self.emit.emitINVOKESPECIAL(frame))
 
-        list(map(lambda x: self.visit(x, SubBody(frame, glenv)), body.body))
+            # self.emit.printout(self.emit.emitINVOKESPECIAL(frame))
+            # if not TypeUtils.isNone(global_vardecl_codes):
+            #     list(map(lambda var_code: self.emit.printout(
+            #         var_code[0] + self.emit.emitPUTSTATIC(var_code[1], var_code[2], frame)), global_vardecl_codes))
+
+        if isMain:
+            if not TypeUtils.isNone(global_vardecl_codes):
+                # var_code = (jcode, MT22Class.<atr_name>, Type)
+                list(map(lambda var_code: self.emit.printout(
+                    var_code[0] + self.emit.emitPUTSTATIC(var_code[1], var_code[2], frame)), global_vardecl_codes))
+
+        self.visit(block, SubBody(frame, glenv, isInit))
 
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
-
-        if TypeUtils.isVoidType(returnType):
-            self.emit.printout(self.emit.emitRETURN(VoidType(), frame))
 
         if isProc:
             self.emit.printout(self.emit.emitRETURN(VoidType(), frame))
 
         self.emit.printout(self.emit.emitENDMETHOD(frame))
         frame.exitScope()
+
+    def handelCall(self, ast: FuncCall or CallStmt, frame, symbols, isStmt=False):
+        func_name = ast.name.name
+        symbol = self.lookup(func_name, symbols, lambda sym: sym.name)
+        cname = symbol.value.value
+        ctype = symbol.mtype
+        params_code = ""
+        for p in ast.args:
+            params_code += self.visit(p, Access(frame,
+                                      symbols, False, True))[0]
+
+        if isStmt:
+            self.emit.printout(params_code + self.emit.emitINVOKESTATIC(
+                cname + "/" + func_name, ctype, frame))
 
     # def visitCallExpr(self, ast, o):
     #     # ast: CallExpr
@@ -262,18 +275,28 @@ class CodeGenVisitor(BaseVisitor, Utils):
     #     return self.emit.emitPUSHICONST(ast.value, frame), IntType()
 
     def visitProgram(self, ast: Program, c):
-        print(ast)
         self.emit.printout(self.emit.emitPROLOG(
             self.className, "java.lang.Object"))
-        e = SubBody(None, self.env, True)
+        frame_init = Frame("<init>", VoidType)
+        e = SubBody(frame_init, self.env, True)
+
+        # var_decl_codes = []
         for x in ast.decls:
-            e = self.visit(x, e)
+            if not TypeUtils.isTheSameType(x, FuncDecl):
+                e, jcode_0, var = self.visit(x, e)
+                self.emit.printout(jcode_0)
+                if not TypeUtils.isNone(var):
+                    self.var_decl_codes.append(var)
 
         # generate default constructor
         self.genMETHOD(FuncDecl(Id("<init>"), None, list(), None,
-                       BlockStmt(list())), c, Frame("<init>", VoidType))
+                       BlockStmt(list())), e.sym, frame_init, None)
+
+        for x in ast.decls:
+            if TypeUtils.isTheSameType(x, FuncDecl):
+                e = self.visit(x, e)
+
         self.emit.emitEPILOG()
-        print(e)
         return c
 
     def visitVarDecl(self, ast: VarDecl, c: SubBody):
@@ -281,19 +304,28 @@ class CodeGenVisitor(BaseVisitor, Utils):
         frame = c.frame
         sym = c.sym
         isGlobal = c.isGlobal
-        print(isGlobal)
         var_name = ast.name.name
         var_type = ast.typ
 
+        # init = (jcode, Type, value)
+        init = self.visit(ast.init, Access(
+            frame, sym, False, False)) if not TypeUtils.isNone(ast.init) else None
+
         if isGlobal:
-            self.emit.printout(self.emit.emitATTRIBUTE(
-                var_name, TypeUtils.retrieveType(var_type)))
-            return SubBody(None, [Symbol(var_name, MType([], var_type), CName(self.className))] + sym, True)
+            return SubBody(frame, [Symbol(var_name, var_type, CName(self.className))] + sym, True), self.emit.emitATTRIBUTE(
+                var_name, TypeUtils.retrieveType(var_type), False), (init[0], f"{self.className}.{var_name}", TypeUtils.retrieveType(var_type)) if not TypeUtils.isNone(init) else None
 
         idx = frame.getNewIndex()
-        self.emit.printout(self.emit.emitREADVAR(
-            var_name, var_type, idx, frame))
-        return SubBody(None, [Symbol(var_name, MType([], TypeUtils.retrieveType(var_type)), Index(idx))] + sym)
+
+        self.emit.printout(self.emit.emitVAR(
+            idx, var_name, TypeUtils.retrieveType(var_type), frame.getStartLabel(), frame.getEndLabel(), frame))
+
+        new_sym = [Symbol(var_name, var_type, Index(idx))] + sym
+        id = self.visit(ast.name, Access(frame, new_sym, True, False))
+        if not TypeUtils.isNone(init):
+            self.emit.printout(init[0] + id[0])
+
+        return SubBody(frame,  new_sym)
 
     def visitParamDecl(self, ast: ParamDecl, c: SubBody):
         pass
@@ -301,10 +333,12 @@ class CodeGenVisitor(BaseVisitor, Utils):
     def visitFuncDecl(self, ast: FuncDecl, c: SubBody):
         print(ast)
         sym = c.sym
-        frame = Frame(ast.name, ast.return_type)
         name = ast.name.name
-        self.genMETHOD(ast, sym, frame)
-        return SubBody(None, [Symbol(name, MType(list(), ast.return_type), CName(self.className))] + sym)
+        isMain = name == "main"
+        frame = Frame(name, ast.return_type) if not isMain else c.frame
+        self.genMETHOD(ast, sym, frame,
+                       self.var_decl_codes if name == "main" else None)
+        return SubBody(frame, [Symbol(name, MType(list(), ast.return_type), CName(self.className))] + sym)
 
     def visitAssignStmt(self, ast: AssignStmt, c):
         pass
@@ -312,11 +346,20 @@ class CodeGenVisitor(BaseVisitor, Utils):
     def visitBlockStmt(self, ast: BlockStmt, c: SubBody):
         frame = c.frame
         glenv = c.sym
-        frame.enterScope(False)
-        self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
-        list(map(lambda x: self.visit(x, SubBody(frame, glenv)), ast.body))
-        self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
-        frame.exitScope()
+        isBlockStmt = c.isBlockStmt
+        if isBlockStmt:
+            frame.enterScope(False)
+            self.emit.printout(self.emit.emitLABEL(
+                frame.getStartLabel(), frame))
+        sub_body = SubBody(frame, glenv)
+        for s in ast.body:
+            if TypeUtils.isTheSameType(s, VarDecl):
+                sub_body = self.visit(s, sub_body)
+            else:  # Statements
+                self.visit(s, sub_body)
+        if isBlockStmt:
+            self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
+            frame.exitScope()
 
     def visitIfStmt(self, ast: IfStmt, c):
         pass
@@ -339,8 +382,10 @@ class CodeGenVisitor(BaseVisitor, Utils):
     def visitReturnStmt(self, ast: ReturnStmt, c):
         pass
 
-    def visitCallStmt(self, ast: CallStmt, c):
-        pass
+    def visitCallStmt(self, ast: CallStmt, c: SubBody):
+        frame = c.frame
+        symbols = c.sym
+        self.handelCall(ast, frame, symbols, True)
 
     def visitBinExpr(self, ast: BinExpr, c):
         pass
@@ -348,23 +393,35 @@ class CodeGenVisitor(BaseVisitor, Utils):
     def visitUnExpr(self, ast: UnExpr, c):
         pass
 
-    def visitId(self, ast: Id, c):
-        pass
+    def visitId(self, ast: Id, c: Access):
+        print(ast)
+        frame = c.frame
+        symbol = self.lookup(ast.name, c.sym, lambda sym: sym.name)
+        sym_type = TypeUtils.retrieveType(symbol.mtype)
+        if symbol is not None:
+            if type(symbol.value) is CName:
+                return self.emit.emitGETSTATIC(f"{symbol.value.value}.{symbol.name}", sym_type, frame) if not c.isLeft else self.emit.emitPUTSTATIC(f"{symbol.value.value}.{symbol.name}", sym_type, frame), sym_type
+
+            return self.emit.emitREADVAR(symbol.name, sym_type, symbol.value.value, frame) if not c.isLeft else self.emit.emitWRITEVAR(symbol.name, sym_type, symbol.value.value, frame), sym_type
 
     def visitArrayCell(self, ast: ArrayCell, c):
         pass
 
-    def visitIntegerLit(self, ast: IntegerLit, c):
-        pass
+    def visitIntegerLit(self, ast: IntegerLit, c: Access):
+        frame = c.frame
+        return self.emit.emitPUSHICONST(ast.val, frame), IntegerType(), ast.val
 
-    def visitFloatLit(self, ast: FloatLit, c):
-        pass
+    def visitFloatLit(self, ast: FloatLit, c: Access):
+        frame = c.frame
+        return self.emit.emitPUSHFCONST(str(ast.val), frame), FloatType(), ast.val
 
-    def visitStringLit(self, ast: StringLit, c):
-        pass
+    def visitStringLit(self, ast: StringLit, c: Access):
+        frame = c.frame
+        return self.emit.emitPUSHCONST(ast.val, StringType(), frame), StringType(), ast.val
 
-    def visitBooleanLit(self, ast: BooleanLit, c):
-        pass
+    def visitBooleanLit(self, ast: BooleanLit, c: Access):
+        frame = c.frame
+        return self.emit.emitPUSHICONST(str(ast.val).lower(), frame), BooleanType(), ast.val
 
     def visitArrayLit(self, ast: ArrayLit, c):
         pass

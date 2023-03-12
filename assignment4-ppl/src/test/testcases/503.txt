@@ -1,0 +1,6 @@
+
+    x, y, z, t: integer = 10, 1023, 32, 123;
+    g: float;
+    main: function void(){
+        x: integer = 3;
+    }
