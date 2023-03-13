@@ -1,24 +1,17 @@
 .source MT22Class.java
 .class public MT22Class
 .super java.lang.Object
+.field static b Z
 
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-.var 1 is x I from Label0 to Label1
-	bipush 10
-	istore_1
-	iload_1
-	invokestatic io/printInteger(I)V
-.var 2 is y F from Label0 to Label1
-	ldc 10.123
-	fstore_2
-	fload_2
-	invokestatic io/writeFloat(F)V
+	getstatic MT22Class.b Z
+	invokestatic io/printBoolean(Z)V
 Label1:
 	return
-.limit stack 2
-.limit locals 3
+.limit stack 1
+.limit locals 1
 .end method
 
 .method public <init>()V
@@ -34,8 +27,10 @@ Label1:
 
 .method public static <clinit>()V
 Label0:
+	iconst_0
+	putstatic MT22Class.b Z
 Label1:
 	return
-.limit stack 0
+.limit stack 2
 .limit locals 0
 .end method

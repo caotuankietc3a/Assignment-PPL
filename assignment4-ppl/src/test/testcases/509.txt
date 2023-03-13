@@ -1,0 +1,5 @@
+
+    t: float = 129.12;
+    main: function void(){
+        writeFloat(t);
+    }

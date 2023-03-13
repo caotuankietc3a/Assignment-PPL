@@ -168,7 +168,7 @@ public class io {
 
   public static void writeFloat(float f) { System.out.print(f + ""); }
 
-  public static boolean readBool() {
+  public static boolean readBoolean() {
     String tmp = "";
     try {
       tmp = input.readLine();
@@ -183,7 +183,7 @@ public class io {
     return false;
   }
 
-  public static void printBool(boolean b) { System.out.print(b + ""); }
+  public static void printBoolean(boolean b) { System.out.print(b + ""); }
 
   public static void printString(String a) { System.out.print(a); }
 

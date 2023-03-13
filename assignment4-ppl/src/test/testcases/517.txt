@@ -1,0 +1,7 @@
+
+    main: function void(){
+        printString("Hello"::" World!");
+        printString(("Hello"::" World!")::"KietCaoC3a");
+        printString("KietCaoC3a"::("Hello"::" World!"));
+        printString(("Kiet"::"CaoC3a")::("Hello"::" World!"));
+    }

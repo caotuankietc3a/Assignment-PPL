@@ -1,0 +1,7 @@
+
+    main: function void(){
+        printBoolean((12 > 20) && (50 <= 100));
+        printBoolean((12 < 20) && (50 <= 100));
+        printBoolean((12 <= 12) && (50 > 100));
+        printBoolean((12 == 12) || (50 != 100));
+    }

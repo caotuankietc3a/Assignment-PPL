@@ -1,0 +1,5 @@
+
+    main: function void(){
+        printInteger(1000 % 2);
+        printInteger(1001 % 2);
+    }

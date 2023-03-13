@@ -1,0 +1,6 @@
+
+    main: function void(){
+        printBoolean(!(!false && true));
+        printInteger(-(1+3));
+        printInteger(-1+3);
+    }

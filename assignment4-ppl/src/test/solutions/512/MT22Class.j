@@ -5,20 +5,28 @@
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-.var 1 is x I from Label0 to Label1
-	bipush 10
-	istore_1
-	iload_1
-	invokestatic io/printInteger(I)V
-.var 2 is y F from Label0 to Label1
-	ldc 10.123
-	fstore_2
-	fload_2
+	iconst_1
+	i2f
+	ldc 2.2
+	fadd
 	invokestatic io/writeFloat(F)V
+	ldc 2.2
+	iconst_1
+	i2f
+	fadd
+	invokestatic io/writeFloat(F)V
+	ldc 2.2
+	ldc 2.2
+	fadd
+	invokestatic io/writeFloat(F)V
+	iconst_1
+	iconst_2
+	iadd
+	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 2
-.limit locals 3
+.limit stack 6
+.limit locals 1
 .end method
 
 .method public <init>()V
