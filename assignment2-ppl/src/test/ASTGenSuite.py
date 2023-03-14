@@ -135,9 +135,9 @@ a1,   b1,   c1   : array [2, 3] of string = {{"hello", "world", "!!!"}, {"test\n
 a2,   b2,   c2   : array [2, 3] of float = {{1.33333, .5555e1, 189.00000}, {157., 1_2_3_4., 1_2_3_56.1234}}, {{}, {}}, {{0.33E-3, 12e8}, {}};
 """
         expect = r"""Program([
-	VarDecl(Id(a2), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(1.33333), FloatLit(.5555e1), FloatLit(189.00000)]), ArrayLit([FloatLit(157.), FloatLit(1234.), FloatLit(12356.1234)])]))
+	VarDecl(Id(a2), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(1.33333), FloatLit(5.555), FloatLit(189.0)]), ArrayLit([FloatLit(157.0), FloatLit(1234.0), FloatLit(12356.1234)])]))
 	VarDecl(Id(b2), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([]), ArrayLit([])]))
-	VarDecl(Id(c2), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(0.33E-3), FloatLit(12e8)]), ArrayLit([])]))
+	VarDecl(Id(c2), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(0.00033), FloatLit(1200000000.0)]), ArrayLit([])]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 312))
 
@@ -158,9 +158,9 @@ a4,   b4,   c4   : array [2, 3] of float = {{1.33333, .5555e1, 189.00000}, {157.
 	VarDecl(Id(a3), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([StringLit(hello), StringLit(world), StringLit(!!!)]), ArrayLit([StringLit(test\n), StringLit(string\t)])]))
 	VarDecl(Id(b3), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([]), ArrayLit([])]))
 	VarDecl(Id(c3), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([StringLit(hahaha)]), ArrayLit([])]))
-	VarDecl(Id(a4), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(1.33333), FloatLit(.5555e1), FloatLit(189.00000)]), ArrayLit([FloatLit(157.), FloatLit(1234.), FloatLit(12356.1234)])]))
+	VarDecl(Id(a4), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(1.33333), FloatLit(5.555), FloatLit(189.0)]), ArrayLit([FloatLit(157.0), FloatLit(1234.0), FloatLit(12356.1234)])]))
 	VarDecl(Id(b4), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([]), ArrayLit([])]))
-	VarDecl(Id(c4), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(0.33E-3), FloatLit(12e8)]), ArrayLit([])]))
+	VarDecl(Id(c4), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(0.00033), FloatLit(1200000000.0)]), ArrayLit([])]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 313))
 

@@ -30,11 +30,15 @@ class Emitter():
         elif typeIn is cgen.ClassType:
             return "L" + inType.cname + ";"
 
-    def getFullType(inType):
+    def getFullType(self, inType):
         typeIn = type(inType)
         if typeIn is IntegerType:
             return "int"
-        elif typeIn is StringType:
+        elif typeIn is FloatType:
+            return "float"
+        elif typeIn is BooleanType:
+            return "boolean"
+        elif typeIn is cgen.StringType:
             return "java/lang/String"
         elif typeIn is VoidType:
             return "void"
@@ -84,6 +88,8 @@ class Emitter():
         # frame: Frame
         if type(typ) is IntegerType:
             return self.emitPUSHICONST(in_, frame)
+        elif type(typ) is FloatType:
+            return self.emitPUSHFCONST(in_, frame)
         elif type(typ) is StringType:
             frame.push()
             return self.jvm.emitLDC(f"\"{in_}\"")
@@ -100,6 +106,8 @@ class Emitter():
         frame.pop()
         if type(in_) is IntegerType:
             return self.jvm.emitIALOAD()
+        elif type(in_) is FloatType:
+            return self.jvm.emitFALOAD()
         elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
             return self.jvm.emitAALOAD()
         else:
@@ -115,6 +123,8 @@ class Emitter():
         frame.pop()
         if type(in_) is IntegerType:
             return self.jvm.emitIASTORE()
+        elif type(in_) is FloatType:
+            return self.jvm.emitFASTORE()
         elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
             return self.jvm.emitAASTORE()
         else:
@@ -215,8 +225,6 @@ class Emitter():
         # in_: Type
         # isFinal: Boolean
         # value: String
-        print(lexeme)
-        print(in_)
 
         return self.jvm.emitSTATICFIELD(lexeme, self.getJVMType(in_), isFinal)
 
@@ -692,3 +700,44 @@ class Emitter():
 
     def clearBuff(self):
         self.buff.clear()
+
+    # def emitInitNewStaticArray(self, name, size, eleType, frame):
+    #     result = []
+    #     result.append(self.emitPUSHICONST(size, frame))
+    #     frame.pop()
+    #     if type(eleType) is StringType:
+    #         result.append(self.jvm.emitANEWARRAY(self.getFullType(eleType)))
+    #     else:
+    #         result.append(self.jvm.emitNEWARRAY(self.getFullType(eleType)))
+    #     result.append(self.jvm.emitPUTSTATIC(name, self.getJVMType(cgen.ArrayPointerType(eleType))))
+    #     return ''.join(result)
+
+    # def emitInitNewLocalArray(self, addressIndex, size, eleType, frame):
+    #     result = []
+    #     result.append(self.emitPUSHICONST(size, frame))
+    #     frame.pop()
+    #     if type(eleType) is StringType:
+    #         result.append(self.jvm.emitANEWARRAY(self.getFullType(eleType)))
+    #     else:
+    #         result.append(self.jvm.emitNEWARRAY(self.getFullType(eleType)))
+    #     result.append(self.jvm.emitASTORE(addressIndex))
+    #     return ''.join(result)
+
+    def emitInitNewArray(self, ob: dict, size: int, eleType: Type, frame, arr_code: str = ""):
+        result = []
+        result.append(self.emitPUSHICONST(size, frame))
+        if type(eleType) is StringType:
+            result.append(self.jvm.emitANEWARRAY(self.getFullType(eleType)))
+        else:
+            result.append(self.jvm.emitNEWARRAY(self.getFullType(eleType)))
+        # print(func_call(frame))
+        result.append(arr_code)
+        if "isStatic" in ob:
+            result.append(self.jvm.emitPUTSTATIC(
+                ob["name"], self.getJVMType(cgen.ArrayPointerType(eleType))))
+        else:  # local
+            result.append(self.jvm.emitASTORE(ob["idx"]))
+        frame.pop()
+        # print(''.join(result))
+
+        return ''.join(result)

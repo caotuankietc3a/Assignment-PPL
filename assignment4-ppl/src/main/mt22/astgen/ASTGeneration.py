@@ -113,10 +113,10 @@ class ASTGeneration(MT22Visitor):
     # literal : INTEGER_LIT | FLOAT_LIT | BOOLEAN_LIT | STRING_LIT | array_lit ;
     def visitLiteral(self, ctx: MT22Parser.LiteralContext):
         if ctx.INTEGER_LIT():
-            return IntegerLit(ctx.getChild(0).getText())
+            return IntegerLit(int(ctx.getChild(0).getText()))
 
         if ctx.FLOAT_LIT():
-            return FloatLit(ctx.getChild(0).getText())
+            return FloatLit(float(ctx.getChild(0).getText()))
 
         if ctx.STRING_LIT():
             return StringLit(ctx.getChild(0).getText())
@@ -241,7 +241,7 @@ class ASTGeneration(MT22Visitor):
 
     # dimensions: INTEGER_LIT (COMMA INTEGER_LIT)* ;
     def visitDimensions(self, ctx: MT22Parser.DimensionsContext):
-        return [str(x.getText()) for x in ctx.INTEGER_LIT()]
+        return [int(x.getText()) for x in ctx.INTEGER_LIT()]
 
     # atomic_type : boolean_type | int_type | float_type | string_type ;
     def visitAtomic_type(self, ctx: MT22Parser.Atomic_typeContext):
