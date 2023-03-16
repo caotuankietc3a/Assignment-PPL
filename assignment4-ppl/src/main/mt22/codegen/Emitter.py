@@ -13,7 +13,7 @@ class Emitter():
 
     def getJVMType(self, inType):
         typeIn = type(inType)
-        if typeIn is IntegerType:
+        if typeIn is cgen.IntegerType:
             return "I"
         elif typeIn is FloatType:
             return "F"
@@ -32,7 +32,7 @@ class Emitter():
 
     def getFullType(self, inType):
         typeIn = type(inType)
-        if typeIn is IntegerType:
+        if typeIn is cgen.IntegerType:
             return "int"
         elif typeIn is FloatType:
             return "float"
@@ -56,6 +56,7 @@ class Emitter():
                 return self.jvm.emitBIPUSH(i)
             elif i >= -32768 and i <= 32767:
                 return self.jvm.emitSIPUSH(i)
+            return self.jvm.emitLDC(str(i))
         elif type(in_) is str:
             if in_ == "true":
                 return self.emitPUSHICONST(1, frame)
@@ -86,7 +87,7 @@ class Emitter():
         # in_: String
         # typ: Type
         # frame: Frame
-        if type(typ) is IntegerType:
+        if type(typ) is cgen.IntegerType:
             return self.emitPUSHICONST(in_, frame)
         elif type(typ) is FloatType:
             return self.emitPUSHFCONST(in_, frame)
@@ -104,7 +105,7 @@ class Emitter():
         # ..., arrayref, index, value -> ...
 
         frame.pop()
-        if type(in_) is IntegerType:
+        if type(in_) is cgen.IntegerType:
             return self.jvm.emitIALOAD()
         elif type(in_) is FloatType:
             return self.jvm.emitFALOAD()
@@ -121,7 +122,7 @@ class Emitter():
         frame.pop()
         frame.pop()
         frame.pop()
-        if type(in_) is IntegerType:
+        if type(in_) is cgen.IntegerType:
             return self.jvm.emitIASTORE()
         elif type(in_) is FloatType:
             return self.jvm.emitFASTORE()
@@ -156,7 +157,7 @@ class Emitter():
         # ... -> ..., value
 
         frame.push()
-        if type(inType) in [IntegerType, BooleanType]:
+        if type(inType) in [cgen.IntegerType, BooleanType]:
             return self.jvm.emitILOAD(index)
         elif type(inType) is FloatType:
             return self.jvm.emitFLOAD(index)
@@ -192,7 +193,7 @@ class Emitter():
 
         frame.pop()
 
-        if type(inType) in [IntegerType, BooleanType]:
+        if type(inType) in [cgen.IntegerType, BooleanType]:
             return self.jvm.emitISTORE(index)
         elif type(inType) is FloatType:
             return self.jvm.emitFSTORE(index)
@@ -324,7 +325,7 @@ class Emitter():
         # frame: Frame
         # ..., value -> ..., result
 
-        if type(in_) is IntegerType:
+        if type(in_) is cgen.IntegerType:
             return self.jvm.emitINEG()
         else:
             return self.jvm.emitFNEG()
@@ -360,12 +361,12 @@ class Emitter():
 
         frame.pop()
         if lexeme == "+":
-            if type(in_) is IntegerType:
+            if type(in_) is cgen.IntegerType:
                 return self.jvm.emitIADD()
             else:
                 return self.jvm.emitFADD()
         else:
-            if type(in_) is IntegerType:
+            if type(in_) is cgen.IntegerType:
                 return self.jvm.emitISUB()
             else:
                 return self.jvm.emitFSUB()
@@ -384,12 +385,12 @@ class Emitter():
 
         frame.pop()
         if lexeme == "*":
-            if type(in_) is IntegerType:
+            if type(in_) is cgen.IntegerType:
                 return self.jvm.emitIMUL()
             else:
                 return self.jvm.emitFMUL()
         else:
-            if type(in_) is IntegerType:
+            if type(in_) is cgen.IntegerType:
                 return self.jvm.emitIDIV()
             else:
                 return self.jvm.emitFDIV()
@@ -475,12 +476,12 @@ class Emitter():
             else:
                 result.append(self.jvm.emitIFICMPNE(labelF))
 
-        result.append(self.emitPUSHCONST("1", IntegerType(), frame))
+        result.append(self.emitPUSHCONST("1", cgen.IntegerType(), frame))
 
         frame.pop()
         result.append(self.emitGOTO(labelO, frame))
         result.append(self.emitLABEL(labelF, frame))
-        result.append(self.emitPUSHCONST("0", IntegerType(), frame))
+        result.append(self.emitPUSHCONST("0", cgen.IntegerType(), frame))
         result.append(self.emitLABEL(labelO, frame))
         return ''.join(result)
 
@@ -541,7 +542,7 @@ class Emitter():
     def getConst(self, ast):
         # ast: Literal
         if type(ast) is IntLiteral:
-            return (str(ast.value), IntegerType())
+            return (str(ast.value), cgen.IntegerType())
 
     '''   generate code to initialize a local array variable.<p>
     *   @param index the index of the local variable.
@@ -619,7 +620,7 @@ class Emitter():
 
     ''' generate code to return.
     *   <ul>
-    *   <li>ireturn if the type is IntegerType or BooleanType
+    *   <li>ireturn if the type is cgen.IntegerType or BooleanType
     *   <li>freturn if the type is RealType
     *   <li>return if the type is null
     *   </ul>
@@ -630,7 +631,7 @@ class Emitter():
         # in_: Type
         # frame: Frame
 
-        if type(in_) is IntegerType:
+        if type(in_) is cgen.IntegerType:
             frame.pop()
             return self.jvm.emitIRETURN()
         elif type(in_) is VoidType:
@@ -700,28 +701,6 @@ class Emitter():
 
     def clearBuff(self):
         self.buff.clear()
-
-    # def emitInitNewStaticArray(self, name, size, eleType, frame):
-    #     result = []
-    #     result.append(self.emitPUSHICONST(size, frame))
-    #     frame.pop()
-    #     if type(eleType) is StringType:
-    #         result.append(self.jvm.emitANEWARRAY(self.getFullType(eleType)))
-    #     else:
-    #         result.append(self.jvm.emitNEWARRAY(self.getFullType(eleType)))
-    #     result.append(self.jvm.emitPUTSTATIC(name, self.getJVMType(cgen.ArrayPointerType(eleType))))
-    #     return ''.join(result)
-
-    # def emitInitNewLocalArray(self, addressIndex, size, eleType, frame):
-    #     result = []
-    #     result.append(self.emitPUSHICONST(size, frame))
-    #     frame.pop()
-    #     if type(eleType) is StringType:
-    #         result.append(self.jvm.emitANEWARRAY(self.getFullType(eleType)))
-    #     else:
-    #         result.append(self.jvm.emitNEWARRAY(self.getFullType(eleType)))
-    #     result.append(self.jvm.emitASTORE(addressIndex))
-    #     return ''.join(result)
 
     def emitInitNewArray(self, ob: dict, size: int, eleType: Type, frame, arr_code: str = ""):
         result = []

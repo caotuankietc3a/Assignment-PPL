@@ -37,14 +37,9 @@ Label4:
 	iconst_3
 	iadd
 	invokestatic io/printInteger(I)V
-	iload_1
-	i2f
-	fload_2
-	fadd
-	invokestatic io/writeFloat(F)V
 Label1:
 	return
-.limit stack 15
+.limit stack 12
 .limit locals 3
 .end method
 

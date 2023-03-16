@@ -1,61 +1,187 @@
 .source MT22Class.java
 .class public MT22Class
-.super java/lang/Object
-.field static arr3 [[I
+.super java.lang.Object
+.field static arr [I
+.field static arr1 [I
+.field static arr3 [I
 
 .method public static main([Ljava/lang/String;)V
-    .limit stack 10
-    .limit locals 1
-
-    getstatic MT22Class/arr3 [[I ; load the 2-dimensional array
-    ldc 1                       ; index of first dimension
-    ldc 2                       ; index of second dimension
-    iaload                      ; load the value at index [1][2]
-    invokestatic java/lang/System/out.println(I)V ; print the value to the console
-
-    return
+.var 0 is args [Ljava/lang/String; from Label0 to Label1
+Label0:
+	getstatic MT22Class.arr [I
+	iconst_0
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr [I
+	iconst_1
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr1 [I
+	iconst_0
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr1 [I
+	iconst_1
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr1 [I
+	iconst_2
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr1 [I
+	iconst_3
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	iconst_0
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	iconst_1
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	iconst_2
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	iconst_3
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	iconst_4
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	iconst_5
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	bipush 6
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	bipush 7
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	bipush 8
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	bipush 9
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	bipush 10
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	bipush 11
+	iaload
+	invokestatic io/printInteger(I)V
+Label1:
+	return
+.limit stack 48
+.limit locals 1
 .end method
 
 .method public <init>()V
-    aload_0
-    invokenonvirtual java/lang/Object/<init>()V
-    return
+.var 0 is this LMT22Class; from Label0 to Label1
+Label0:
+	aload_0
+	invokespecial java/lang/Object/<init>()V
+Label1:
+	return
+.limit stack 1
+.limit locals 1
 .end method
 
 .method public static <clinit>()V
-    .limit stack 10
-    .limit locals 2
-
-    ldc 3                       ; size of first dimension
-    anewarray [I                ; create a new integer array of size 3 for the first dimension
-
-    ; initialize each element in the first dimension with a new integer array of size 4 for the second dimension
-    dup                         ; duplicate the first dimension array reference on the stack
-    iconst_0                    ; index of the first element in the first dimension
-    ldc 4                       ; size of the second dimension
-    newarray int                ; create a new integer array of size 4 for the second dimension
-    aastore                     ; store the second dimension array in the first dimension array
-    dup                         ; duplicate the first dimension array reference on the stack
-    iconst_1                    ; index of the second element in the first dimension
-    ldc 4                       ; size of the second dimension
-    newarray int                ; create a new integer array of size 4 for the second dimension
-    aastore                     ; store the second dimension array in the first dimension array
-    dup                         ; duplicate the first dimension array reference on the stack
-    iconst_2                    ; index of the third element in the first dimension
-    ldc 4                       ; size of the second dimension
-    newarray int                ; create a new integer array of size 4 for the second dimension
-    aastore                     ; store the second dimension array in the first dimension array
-
-    ; assign value to one element
-    getstatic MT22Class/arr3 [[I ; load the 2-dimensional array
-    dup                         ; duplicate the array reference on the stack
-    ldc 1                       ; index of first dimension
-    aaload                      ; load the array at index 1
-    ldc 2                       ; index of second dimension
-    iconst_5                    ; value to assign to the element
-    iastore                     ; store the value in the array
-
-    putstatic MT22Class/arr3 [[I ; store the 2-dimensional array in the field
-
-    return
+Label0:
+	iconst_2
+	newarray int
+	dup
+	iconst_0
+	iconst_0
+	iastore
+	dup
+	iconst_1
+	iconst_1
+	iastore
+	putstatic MT22Class.arr [I
+	iconst_4
+	newarray int
+	dup
+	iconst_0
+	iconst_1
+	iastore
+	dup
+	iconst_1
+	iconst_3
+	iastore
+	dup
+	iconst_2
+	bipush 123
+	iastore
+	dup
+	iconst_3
+	sipush 1238
+	iastore
+	putstatic MT22Class.arr1 [I
+	bipush 12
+	newarray int
+	dup
+	iconst_0
+	iconst_1
+	iastore
+	dup
+	iconst_1
+	iconst_3
+	iastore
+	dup
+	iconst_2
+	bipush 12
+	iastore
+	dup
+	iconst_3
+	bipush 13
+	iastore
+	dup
+	iconst_4
+	bipush 123
+	iastore
+	dup
+	iconst_5
+	sipush 321
+	iastore
+	dup
+	bipush 6
+	iconst_2
+	iastore
+	dup
+	bipush 7
+	bipush 41
+	iastore
+	dup
+	bipush 8
+	bipush 123
+	iastore
+	dup
+	bipush 9
+	bipush 123
+	iastore
+	dup
+	bipush 10
+	sipush 923
+	iastore
+	dup
+	bipush 11
+	bipush 32
+	iastore
+	putstatic MT22Class.arr3 [I
+Label1:
+	return
+.limit stack 14
+.limit locals 0
 .end method

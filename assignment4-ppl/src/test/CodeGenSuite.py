@@ -6,11 +6,11 @@ from AST import *
 class CheckCodeGenSuite(unittest.TestCase):
     #     def test_1(self):
     #         input = r"""
-    #     x, y, z, t: integer;
-    #     arr : array [2] of integer;
-    #     main: function void(){
-    #     }
-    # """
+    #         x, y, z, t: integer;
+    #         arr : array [2] of integer;
+    #         main: function void(){
+    #         }
+    #     """
     #         expect = ""
     #         self.assertTrue(TestCodeGen.test(input, expect, 501))
 
@@ -54,17 +54,17 @@ class CheckCodeGenSuite(unittest.TestCase):
     #         expect = "10"
     #         self.assertTrue(TestCodeGen.test(input, expect, 505))
 
-    # def test_6(self):
-    #     input = r"""
-    #     main: function void(){
-    #         x: integer = 10;
-    #         printInteger(x);
-    #         y: float = 10.123;
-    #         writeFloat(y);
-    #     }
-    # """
-    #     expect = "1010.123"
-    #     self.assertTrue(TestCodeGen.test(input, expect, 506))
+    #     def test_6(self):
+    #         input = r"""
+    #         main: function void(){
+    #             x: integer = 10;
+    #             printInteger(x);
+    #             y: float = 10.123;
+    #             writeFloat(y);
+    #         }
+    #     """
+    #         expect = "1010.123"
+    #         self.assertTrue(TestCodeGen.test(input, expect, 506))
 
     #     def test_7(self):
     #         input = r"""
@@ -218,7 +218,6 @@ class CheckCodeGenSuite(unittest.TestCase):
     #         printBoolean(!(!false && true));
     #         printInteger(-(1+3));
     #         printInteger(-1+3);
-    #         writeFloat(false-4220.119999);
     #     }
     # """
     #         expect = "false-42"
@@ -256,13 +255,29 @@ class CheckCodeGenSuite(unittest.TestCase):
 
     def test_23(self):
         input = r"""
-    //arr : array [2] of integer = {0, 1};
+    arr : array [2] of integer = {0, 1};
     arr1 : array [2, 2] of integer = {{1, 3}, {123, 1238}};
-    // arr2 : array [3, 2] of integer = {{1}, {123, 1238}, {5, 0}};
-    // arr3 : array [2, 3, 2] of integer = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
+    arr3 : array [2, 3, 2] of integer = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
     main: function void(){
-        printInteger(arr1[1 -1 + 1, 1]);
+        printInteger(arr[0]);
+        printInteger(arr[1]);
+        printInteger(arr1[0, 0]);
+        printInteger(arr1[0, 1]);
+        printInteger(arr1[1, 0]);
+        printInteger(arr1[1, 1]);
+        printInteger(arr3[0, 0, 0]);
+        printInteger(arr3[0, 0, 1]);
+        printInteger(arr3[0, 1, 0]);
+        printInteger(arr3[0, 1, 1]);
+        printInteger(arr3[0, 2, 0]);
+        printInteger(arr3[0, 2, 1]);
+        printInteger(arr3[1, 0, 0]);
+        printInteger(arr3[1, 0, 1]);
+        printInteger(arr3[1, 1, 0]);
+        printInteger(arr3[1, 1, 1]);
+        printInteger(arr3[1, 2, 0]);
+        printInteger(arr3[1, 2, 1]);
     }
 """
-        expect = ""
+        expect = "1238"
         self.assertTrue(TestCodeGen.test(input, expect, 523))

@@ -1,8 +1,5 @@
 
     main: function void(){
-        // writeFloat(100 * 20.2);
-        // writeFloat(100 / 20);
-        // printInteger(100 % 20);
         writeFloat(1 + 2.2);
         writeFloat(2.2 + 1);
         writeFloat(2.2 + 2.2);
