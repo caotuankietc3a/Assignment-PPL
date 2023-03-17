@@ -1,9 +1,10 @@
 from Utils import *
 
+
 class Frame():
     def __init__(self, name, returnType):
-        #name: String
-        #returnType: Type
+        # name: String
+        # returnType: Type
 
         self.name = name
         self.returnType = returnType
@@ -22,7 +23,7 @@ class Frame():
         return self.currIndex
 
     def setCurrIndex(self, index):
-        #index: Int
+        # index: Int
 
         self.currIndex = index
 
@@ -30,6 +31,7 @@ class Frame():
     *   return a new label in the method.
     *   @return an integer representing the label.
     '''
+
     def getNewLabel(self):
         tmp = self.currentLabel
         self.currentLabel = self.currentLabel + 1
@@ -38,6 +40,7 @@ class Frame():
     '''
     *   simulate an instruction that pushes a value onto operand stack.
     '''
+
     def push(self):
         self.currOpStackSize = self.currOpStackSize + 1
         if self.maxOpStackSize < self.currOpStackSize:
@@ -46,6 +49,7 @@ class Frame():
     '''
     *   simulate an instruction that pops a value out of operand stack.
     '''
+
     def pop(self):
         self.currOpStackSize = self.currOpStackSize - 1
         if self.currOpStackSize < 0:
@@ -58,6 +62,7 @@ class Frame():
     *   return the maximum size of the operand stack that the method needs to use.
     *   @return an integer that represent the maximum stack size
     '''
+
     def getMaxOpStackSize(self):
         return self.maxOpStackSize
 
@@ -65,6 +70,7 @@ class Frame():
     *   check if the operand stack is empty or not.
     *   @throws IllegalRuntimeException if the operand stack is not empty.
     '''
+
     def checkOpStack(self):
         if self.currOpStackSize != 0:
             raise IllegalRuntimeException("Stack not empty")
@@ -78,7 +84,7 @@ class Frame():
     '''
 
     def enterScope(self, isProc):
-        #isProc: Boolean
+        # isProc: Boolean
         start = self.getNewLabel()
         end = self.getNewLabel()
         self.startLabel.append(start)
@@ -93,6 +99,7 @@ class Frame():
     *   This method will pop the starting and ending labels of this scope
     *   and restore the current index
     '''
+
     def exitScope(self):
         if not self.startLabel or not self.endLabel or not self.indexLocal:
             raise IllegalRuntimeException("Error when exit scope")
@@ -104,6 +111,7 @@ class Frame():
     *   return the starting label of the current scope.
     *   @return an integer representing the starting label
     '''
+
     def getStartLabel(self):
         if not self.startLabel:
             raise IllegalRuntimeException("None start label")
@@ -113,6 +121,7 @@ class Frame():
     *   return the ending label of the current scope.
     *   @return an integer representing the ending label
     '''
+
     def getEndLabel(self):
         if not self.endLabel:
             raise IllegalRuntimeException("None end label")
@@ -122,6 +131,7 @@ class Frame():
     *   return a new index for a local variable declared in a scope. 
     *   @return an integer that represents the index of the local variable
     '''
+
     def getNewIndex(self):
         tmp = self.currIndex
         self.currIndex = self.currIndex + 1
@@ -133,6 +143,7 @@ class Frame():
     *   return the maximum index used in generating code for the current method
     *   @return an integer representing the maximum index
     '''
+
     def getMaxIndex(self):
         return self.maxIndex
 
@@ -141,6 +152,7 @@ class Frame():
     *   This method creates 2 new labels that represent the starting and ending label of the loop.<p>
     *   These labels are pushed onto corresponding stacks and are retrieved by getBeginLoopLabel() and getEndLoopLabel().
     '''
+
     def enterLoop(self):
         con = self.getNewLabel()
         brk = self.getNewLabel()
@@ -151,6 +163,7 @@ class Frame():
     *   invoked when parsing out of a loop statement.
     *   This method will take 2 labels representing the starting and ending labels of the current loop out of its stacks.
     '''
+
     def exitLoop(self):
         if not self.conLabel or not self.brkLabel:
             raise IllegalRuntimeException("Error when exit loop")
@@ -161,6 +174,7 @@ class Frame():
     *   return the label of the innest enclosing loop to which continue statement would jump
     *   @return an integer representing the continue label
     '''
+
     def getContinueLabel(self):
         if not self.conLabel:
             raise IllegalRuntimeException("None continue label")
@@ -170,7 +184,8 @@ class Frame():
     *   return the label of the innest enclosing loop to which break statement would jump
     *   @return an integer representing the break label
     '''
+
     def getBreakLabel(self):
-        if not brkLabel:
+        if not self.brkLabel:
             raise IllegalRuntimeException("None break label")
         return self.brkLabel[-1]

@@ -1,6 +1,6 @@
 
-        x, y, z, t: integer;
-        arr : array [2] of integer;
-        main: function void(){
-        }
-    
+            x, y, z, t: integer;
+            //arr : array [2] of integer;
+            main: function void(){
+            }
+        

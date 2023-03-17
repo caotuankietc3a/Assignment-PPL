@@ -6,53 +6,64 @@
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
 .var 1 is i I from Label0 to Label1
-	iconst_5
+	iconst_0
 	istore_1
-.var 2 is x [I from Label0 to Label1
-	bipush 100
-	newarray int
-	dup
-	iconst_0
-	bipush 101
-	iastore
-	dup
-	iconst_1
-	sipush 202
-	iastore
-	dup
-	bipush 10
-	iload_1
-	iastore
-	astore_2
-	aload_2
-	bipush 10
-	iaload
-	invokestatic io/printInteger(I)V
-	iload_1
-	iconst_2
-	irem
-	iconst_0
-	if_icmpeq Label2
-	iconst_1
-	goto Label3
 Label2:
+.var 2 is j I from Label0 to Label1
 	iconst_0
-Label3:
-	ifle Label4
-	aload_2
-	bipush 50
-	iload_1
-	iastore
-	goto Label5
-Label4:
+	istore_2
+Label7:
+	iload_2
+	bipush 20
+	if_icmpge Label5
+	iconst_1
+	goto Label6
 Label5:
-	aload_2
-	bipush 50
-	iaload
+	iconst_0
+Label6:
+	ifle Label9
+	iload_1
+	iload_2
+	iadd
+	bipush 20
+	if_icmplt Label10
+	iconst_1
+	goto Label11
+Label10:
+	iconst_0
+Label11:
+	ifle Label12
+	goto Label9
+	goto Label13
+Label12:
+	iload_2
+	iconst_1
+	iadd
+	istore_2
+Label13:
+	goto Label7
+Label8:
+Label9:
+	iload_2
 	invokestatic io/printInteger(I)V
+	iload_1
+	iconst_1
+	iadd
+	istore_1
+	iload_1
+	bipush 10
+	if_icmpge Label14
+	iconst_1
+	goto Label15
+Label14:
+	iconst_0
+Label15:
+	ifgt Label2
+Label3:
+Label4:
 Label1:
 	return
-.limit stack 11
+.limit stack 9
 .limit locals 3
 .end method
 
