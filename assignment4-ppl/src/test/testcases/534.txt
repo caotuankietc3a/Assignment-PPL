@@ -1,0 +1,15 @@
+
+        main: function void() {
+            i: integer = 1;
+            x: array[10, 10] of integer;
+            //x[i, 0] = i;
+            //printInteger(x[i, 0]);
+            if (i % 2 == 0) {
+                x[i, 0] = i;
+                printInteger(x[i, 0]);
+            } else {
+                x[0, i] = i + 1;
+                printInteger(x[0, i]);
+            }
+        }
+        

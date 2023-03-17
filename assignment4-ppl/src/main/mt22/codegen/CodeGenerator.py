@@ -61,7 +61,7 @@ class TypeUtils:
         if TypeUtils.isArrayType(originType):
             # return ArrayPointerType(originType.typ) if not TypeUtils.isIntType(originType.typ) else IntegerType(val)
             return ArrayPointerType(TypeUtils.retrieveType(originType.typ), lst)
-        if TypeUtils.isIntType(originType):
+        if TypeUtils.isIntType(originType) or TypeUtils.isTheSameType(originType, IntegerType):
             return IntegerType(val)
         return originType
 
@@ -337,42 +337,54 @@ class CodeGenVisitor(BaseVisitor, Utils):
         init_code, init_type = "", None
 
         dimens = []
+        val = 0
         idx = frame.getNewIndex() if not isGlobal else 0
-        if not TypeUtils.isNone(ast.init):
-            if TypeUtils.isArrayType(var_type):
-                # init = (jcode, Type)
-
-                dimens_size, dimens, arr_return_type = self.visit(
-                    var_type, None)
+        isArrayType = TypeUtils.isArrayType(var_type)
+        if isArrayType:
+            # init = (jcode, Type)
+            dimens_size, dimens, arr_return_type = self.visit(
+                var_type, None)
+            arr_list_codes = []
+            if not TypeUtils.isNone(ast.init):
                 cur_dimen = 0
                 arr = [dimens, cur_dimen]
                 arr_list_codes = self.visit(
                     ast.init, Access(frame, sym, False, False, arr))
-                self.arr_idx_global = 0
-                init_code = reduce(lambda acc, el: acc + self.emit.emitDUP(frame) + self.emit.emitPUSHICONST(
-                    el[1], frame) + el[0] + (self.emit.emitI2F(frame) if TypeUtils.isFloatType(arr_return_type) else "") + self.emit.emitASTORE(TypeUtils.retrieveType(arr_return_type),  frame), arr_list_codes, init_code)
 
-                ob = {"idx": idx, "isStatic": False} if not isGlobal else {
-                    "name": self.className+"."+var_name, "isStatic": True}
-                init_code = self.emit.emitInitNewArray(
-                    ob, dimens_size, TypeUtils.retrieveType(arr_return_type), frame,  init_code)
-            else:
-                init_code, init_type = self.visit(
-                    ast.init, Access(frame, sym, False, False))
+            self.arr_idx_global = 0
+
+            init_code = reduce(lambda acc, el: acc + self.emit.emitDUP(frame) + self.emit.emitPUSHICONST(
+                el[1], frame) + el[0] + (self.emit.emitI2F(frame) if TypeUtils.isFloatType(arr_return_type) and TypeUtils.isTheSameType(el[2], IntegerType) else "") + self.emit.emitASTORE(TypeUtils.retrieveType(arr_return_type),  frame), arr_list_codes, init_code)
+
+            ob = {"idx": idx, "isStatic": False} if not isGlobal else {
+                "name": self.className+"."+var_name, "isStatic": True}
+
+            init_code = self.emit.emitInitNewArray(
+                ob, dimens_size, TypeUtils.retrieveType(arr_return_type), frame,  init_code)
+        else:
+            init_code, init_type = self.visit(
+                ast.init, Access(frame, sym, False, False))
+
+            init_code += (self.emit.emitI2F(frame)
+                          if TypeUtils.isFloatType(var_type) and TypeUtils.isTheSameType(init_type, IntegerType) else "")
+            if TypeUtils.isTheSameType(init_type, IntegerType):
+                val = init_type.val
 
         if isGlobal:
-            return SubBody(frame, [Symbol(var_name, var_type, CName(self.className))] + sym, True), self.emit.emitATTRIBUTE(
+            return SubBody(frame, [Symbol(var_name, var_type if isArrayType else TypeUtils.retrieveType(var_type, val=val, lst=dimens), CName(self.className))] + sym, True), self.emit.emitATTRIBUTE(
                 var_name, TypeUtils.retrieveType(var_type, lst=dimens), False), (init_code, f"{self.className}.{var_name}", TypeUtils.retrieveType(var_type)) if not TypeUtils.isNone(ast.init) else None
 
-        # idx = frame.getNewIndex()
         self.emit.printout(self.emit.emitVAR(
             idx, var_name, TypeUtils.retrieveType(var_type), frame.getStartLabel(), frame.getEndLabel(), frame))
 
-        new_sym = [Symbol(var_name, var_type, Index(idx))] + sym
-        id = self.visit(ast.name, Access(frame, new_sym, True, False))
+        new_sym = [Symbol(var_name, var_type if isArrayType else TypeUtils.retrieveType(
+            var_type, val=val, lst=dimens), Index(idx))] + sym
         if not TypeUtils.isNone(ast.init):
+            id = self.visit(ast.name, Access(frame, new_sym, True, False))
             self.emit.printout(
                 init_code + (id[0] if not TypeUtils.isArrayType(var_type) else ""))
+        else:
+            self.emit.printout(init_code)
 
         return SubBody(frame,  new_sym)
 
@@ -420,8 +432,28 @@ class CodeGenVisitor(BaseVisitor, Utils):
             self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
             frame.exitScope()
 
-    def visitIfStmt(self, ast: IfStmt, c):
-        pass
+    def visitIfStmt(self, ast: IfStmt, c: SubBody):
+        ctxt = c
+        frame = ctxt.frame
+        nenv = ctxt.sym
+        expCode, expType = self.visit(
+            ast.cond, Access(frame, nenv, False, False))
+        self.emit.printout(expCode)
+
+        labelF = frame.getNewLabel()
+        labelE = frame.getNewLabel()
+
+        self.emit.printout(self.emit.emitIFFALSE(labelF, frame))
+
+        self.visit(ast.tstmt, c)
+
+        self.emit.printout(self.emit.emitGOTO(labelE, frame))
+
+        self.emit.printout(self.emit.emitLABEL(labelF, frame))
+        if ast.fstmt:
+            self.visit(ast.fstmt, c)
+
+        self.emit.printout(self.emit.emitLABEL(labelE, frame))
 
     def visitForStmt(self, ast: ForStmt, c):
         pass
@@ -447,6 +479,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         self.handleCall(ast, frame, symbols, True)
 
     def visitBinExpr(self, ast: BinExpr, c):
+        print(ast)
         frame = c.frame
         op = ast.op
         l_code, l_type = self.visit(ast.left, c)
@@ -493,7 +526,8 @@ class CodeGenVisitor(BaseVisitor, Utils):
             isArrayType = TypeUtils.isArrayType(symbol.mtype)
 
             arr_dimens = [] if not isArrayType else symbol.mtype.dimensions
-            sym_type = TypeUtils.retrieveType(symbol.mtype, lst=arr_dimens)
+            sym_type = TypeUtils.retrieveType(symbol.mtype, val=symbol.mtype.val if TypeUtils.isTheSameType(
+                symbol.mtype, IntegerType) else 0, lst=arr_dimens)
             if not isFirst and isLeft:
                 frame.push()
             elif isFirst and not isLeft:
@@ -514,15 +548,19 @@ class CodeGenVisitor(BaseVisitor, Utils):
 
         cell_dimens = reduce(lambda acc, el: acc + [self.visit(
             el, c)[1].val], ast.cell[1:], [self.visit(ast.cell[0], c)[1].val])
+
         value = 0
         for i, d in enumerate(cell_dimens[:-1]):
             value += reduce(lambda acc, el: el * acc, arr_type.lst[i + 1:], d)
         value += cell_dimens[-1]
+
+        mtype = TypeUtils.retrieveType(arr_type.eleType, value)
+
         arr_code = arr_code + self.emit.emitPUSHICONST(value, frame)
         if isLeft:
             return [arr_code,  self.emit.emitASTORE(
-                arr_type.eleType, frame)], arr_type.eleType
-        return arr_code + self.emit.emitALOAD(arr_type.eleType, frame), arr_type.eleType
+                arr_type.eleType, frame)], mtype
+        return arr_code + self.emit.emitALOAD(arr_type.eleType, frame), mtype
 
     def visitIntegerLit(self, ast: IntegerLit, c: Access):
         frame = c.frame
@@ -548,7 +586,9 @@ class CodeGenVisitor(BaseVisitor, Utils):
             lst = []
             idx = 0
             for exp in ast.explist:
-                lst.append([self.visit(exp, c)[0], self.arr_idx_global])
+                expr_code, expr_type = self.visit(exp, c)
+                # [[expr_code, idx, type], ...]
+                lst.append([expr_code, self.arr_idx_global, expr_type])
                 idx += 1
                 self.arr_idx_global += 1
 

@@ -72,29 +72,36 @@ Label0:
 	i2f
 	fastore
 	astore_1
-	aload_1
+	getstatic MT22Class.arr [I
 	iconst_1
-	getstatic MT22Class.y F
+	getstatic MT22Class.x I
+	iastore
+	aload_1
+	iconst_3
+	getstatic MT22Class.arr [I
+	iconst_1
+	iaload
+	i2f
 	fastore
 	aload_1
 	iconst_1
 	faload
-	aload_1
-	iconst_3
-	faload
-	fadd
 	invokestatic io/writeFloat(F)V
 	aload_1
 	iconst_1
 	faload
+	invokestatic io/writeFloat(F)V
+	aload_1
+	iconst_1
+	faload
+	invokestatic io/writeFloat(F)V
 	aload_1
 	iconst_3
 	faload
-	fadd
 	invokestatic io/writeFloat(F)V
 Label1:
 	return
-.limit stack 21
+.limit stack 22
 .limit locals 2
 .end method
 

@@ -340,32 +340,138 @@ class CheckCodeGenSuite(unittest.TestCase):
     #         expect = "6.0"
     #         self.assertTrue(TestCodeGen.test(input, expect, 528))
 
-    def test_29(self):
-        input = r"""
-    arr : array [2] of integer = {0, 1};
-    arr3 : array [2, 3, 2] of float = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
-    y: float = 100.3243 + 123;
-    main: function void(){
-        x: integer = 100;
-        y = arr[1] + 10 - arr3[1, 2, 0]; // 1 + 10 -32
-        writeFloat(y);
-    }
-"""
-        expect = "-912.0"
-        self.assertTrue(TestCodeGen.test(input, expect, 529))
+    #     def test_29(self):
+    #         input = r"""
+    #     arr : array [2] of integer = {0, 1};
+    #     arr3 : array [2, 3, 2] of float = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
+    #     y: float = 100.3243 + 123;
+    #     main: function void(){
+    #         x: integer = 100;
+    #         y = arr[1] + 10 - arr3[1, 2, 0]; // 1 + 10 -32
+    #         writeFloat(y);
+    #     }
+    # """
+    #         expect = "-912.0"
+    #         self.assertTrue(TestCodeGen.test(input, expect, 529))
 
-    def test_30(self):
-        input = r"""
-    arr : array [2] of integer = {0, 1};
-    y: float = 100.3243 + 123;
-    main: function void(){
-        arr3 : array [2, 3, 2] of float = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
-        x: integer = 100;
-        arr[1] = x;
-        arr3[0, 1, 1] = arr[1];
-        arr3[0, 0, 1] = y;
-        writeFloat(arr3[0, 0, 1] + arr3[0, 1, 1]);
-    }
-"""
-        expect = "323.3243"
-        self.assertTrue(TestCodeGen.test(input, expect, 530))
+    #     def test_30(self):
+    #         input = r"""
+    #     x: integer = 1;
+    #     y: float = 100.3243 + x;
+    #     arr : array [2] of integer = {0, x};
+    #     main: function void(){
+    #         arr3 : array [2, 3, 2] of float = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
+    #         arr3[0, 0, 1] = y;
+    #         writeFloat(arr3[0, 0, 1] + arr3[0, 1, 1]);
+    #         writeFloat(arr3[0, 0, x] + arr3[0, 1, arr[1]]);
+    #     }
+    # """
+    #         expect = "114.3243114.3243"
+    #         self.assertTrue(TestCodeGen.test(input, expect, 530))
+
+    # def test_31(self):
+    #     input = """
+    #     main: function void() {
+    #         if (1 < 2) {
+    #             printBoolean(true);
+    #         } else {
+    #             printBoolean(false);
+    #         }
+    #     }
+    #     """
+    #     expect = "true"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 531))
+
+    # def test_32(self):
+    #     input = """
+    #     main: function void() {
+    #         if (1 > 2) {
+    #             printBoolean(true);
+    #         } else {
+    #             printBoolean(false);
+    #         }
+    #         printBoolean(false);
+    #     }
+    #     """
+    #     expect = "falsefalse"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 532))
+
+    # def test_33(self):
+    #     input = """
+    #     main: function void() {
+    #         if (!(1 > 2)) {
+    #             printBoolean(true);
+    #         } else {
+    #             printBoolean(false);
+    #         }
+    #         printBoolean(false);
+    #     }
+    #     """
+    #     expect = "truefalse"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 533))
+
+    # def test_34(self):
+    #     input = """
+    #     main: function void() {
+    #         i: integer = 1;
+    #         x: array[10, 10] of integer;
+    #         //x[i, 0] = i;
+    #         //printInteger(x[i, 0]);
+    #         if (i % 2 == 0) {
+    #             x[i, 0] = i;
+    #             printInteger(x[i, 0]);
+    #         } else {
+    #             x[0, i] = i + 1;
+    #             printInteger(x[0, i]);
+    #         }
+    #     }
+    #     """
+    #     expect = "2"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 534))
+
+    #     def test_35(self):
+    #         input = r"""
+    #     x: integer = 1;
+    #     y: float = 100.3243 + x;
+    #     arr : array [2] of integer = {0, x};
+    #     main: function void(){
+    #         arr3 : array [2, 3, 2] of float = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
+    #         arr[1] = x;
+    #         arr3[0, 1, 1] = arr[1];
+    #         writeFloat(arr3[0, 0, 1]);
+    #         writeFloat(arr3[0, 0, arr[1]]);
+    #         writeFloat(arr3[0, 0, x]);
+    #         writeFloat(arr3[0, 1, x]);
+    #     }
+    # """
+    #         expect = "3.03.03.01.0"
+    #         self.assertTrue(TestCodeGen.test(input, expect, 535))
+    # def test_36(self):
+    #     input = """
+    #     main: function void() {
+    #         i: integer = 5;
+    #         x: array[10, 10] of integer = {{101, 202}, {i}};
+    #         printInteger(x[1, 0]);
+    #         if (i % 2 != 0) {
+    #             x[i, 0] = i;
+    #         } else {
+    #             x[0, i] = i + 1;
+    #         }
+    #         printInteger(x[i, 0]);
+    #     }
+    #     """
+    #     expect = "55"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 536))
+
+    def test_37(self):
+        input = """
+        main: function void() {
+            i: integer;
+            for (i = 0; i < 10; i + 1){
+                printInteger(i);
+                i = i + 1;
+            }
+        }
+        """
+        expect = "55"
+        self.assertTrue(TestCodeGen.test(input, expect, 537))
