@@ -711,7 +711,7 @@ class Emitter():
             result.append(self.jvm.emitNEWARRAY(self.getFullType(eleType)))
         # print(func_call(frame))
         result.append(arr_code)
-        if "isStatic" in ob:
+        if ob["isStatic"]:
             result.append(self.jvm.emitPUTSTATIC(
                 ob["name"], self.getJVMType(cgen.ArrayPointerType(eleType))))
         else:  # local

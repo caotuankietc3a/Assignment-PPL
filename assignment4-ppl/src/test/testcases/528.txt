@@ -1,0 +1,13 @@
+
+    x: integer = 3 + 100;
+    y: float = 100.3243 + 123;
+    main: function void(){
+        /*printInteger(x);
+        writeFloat(y);
+        y = 10000;
+        printInteger(x);
+        writeFloat(y);*/
+        x = 6;
+        y = x;
+        writeFloat(y);
+    }

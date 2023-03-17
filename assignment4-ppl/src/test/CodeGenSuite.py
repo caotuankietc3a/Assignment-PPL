@@ -253,31 +253,106 @@ class CheckCodeGenSuite(unittest.TestCase):
     #         expect = "falsetruetruefalsetruetrue"
     #         self.assertTrue(TestCodeGen.test(input, expect, 522))
 
-    def test_23(self):
+    #     def test_23(self):
+    #         input = r"""
+    #     arr : array [2] of integer = {0, 1};
+    #     main: function void(){
+    #         printInteger(arr[0]);
+    #         printInteger(arr[1]);
+    #     }
+    # """
+    #         expect = "01"
+    #         self.assertTrue(TestCodeGen.test(input, expect, 523))
+
+    #     def test_24(self):
+    #         input = r"""
+    #     main: function void(){
+    #         arr : array [2] of integer = {0, 1};
+    #         printInteger(arr[0]);
+    #         printInteger(arr[1]);
+    #     }
+    # """
+    #         expect = "01"
+    #         self.assertTrue(TestCodeGen.test(input, expect, 524))
+
+    #     def test_25(self):
+    #         input = r"""
+    #     arr1 : array [2, 2] of integer = {{1, 3}, {123, 1238}};
+    #     main: function void(){
+    #         printInteger(arr1[0, 0]);
+    #         printInteger(arr1[0, 1]);
+    #         printInteger(arr1[1, 0]);
+    #         printInteger(arr1[1, 1]);
+    #     }
+    # """
+    #         expect = "131231238"
+    #         self.assertTrue(TestCodeGen.test(input, expect, 525))
+
+    #     def test_26(self):
+    #         input = r"""
+    #     main: function void(){
+    #         arr1 : array [2, 2] of integer = {{1, 3}, {123, 1238}};
+    #         printInteger(arr1[0, 0]);
+    #         printInteger(arr1[0, 1]);
+    #         printInteger(arr1[1, 0]);
+    #         printInteger(arr1[1, 1]);
+    #     }
+    # """
+    #         expect = "131231238"
+    #         self.assertTrue(TestCodeGen.test(input, expect, 526))
+
+    #     def test_27(self):
+    #         input = r"""
+    #     arr3 : array [2, 3, 2] of integer = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
+    #     main: function void(){
+    #         printInteger(arr3[0, 0, 0]);
+    #         printInteger(arr3[0, 0, 1]);
+    #         printInteger(arr3[0, 1, 0]);
+    #         printInteger(arr3[0, 1, 1]);
+    #         printInteger(arr3[0, 2, 0]);
+    #         printInteger(arr3[0, 2, 1]);
+    #         printInteger(arr3[1, 0, 0]);
+    #         printInteger(arr3[1, 0, 1]);
+    #         printInteger(arr3[1, 1, 0]);
+    #         printInteger(arr3[1, 1, 1]);
+    #         printInteger(arr3[1, 2, 0]);
+    #         printInteger(arr3[1, 2, 1]);
+    #     }
+    # """
+    #         expect = "13121312332124112312392332"
+    #         self.assertTrue(TestCodeGen.test(input, expect, 527))
+
+    #     def test_28(self):
+    #         input = r"""
+    #     x: integer = 3 + 100;
+    #     y: float = 100.3243 + 123;
+    #     main: function void(){
+    #         /*printInteger(x);
+    #         writeFloat(y);
+    #         y = 10000;
+    #         printInteger(x);
+    #         writeFloat(y);*/
+    #         x = 6;
+    #         y = x;
+    #         writeFloat(y);
+    #     }
+    # """
+    #         expect = "6.0"
+    #         self.assertTrue(TestCodeGen.test(input, expect, 528))
+
+    def test_29(self):
         input = r"""
     arr : array [2] of integer = {0, 1};
-    arr1 : array [2, 2] of integer = {{1, 3}, {123, 1238}};
     arr3 : array [2, 3, 2] of integer = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
+    y: float = 100.3243 + 123;
     main: function void(){
+        // printInteger(arr[0]);
+        // printInteger(arr[1]);
+        //y = arr[1] + 10 - arr3[1, 2, 0]; // 1 + 10 -32
+        arr[0] = 999;
+        //writeFloat(y);
         printInteger(arr[0]);
-        printInteger(arr[1]);
-        printInteger(arr1[0, 0]);
-        printInteger(arr1[0, 1]);
-        printInteger(arr1[1, 0]);
-        printInteger(arr1[1, 1]);
-        printInteger(arr3[0, 0, 0]);
-        printInteger(arr3[0, 0, 1]);
-        printInteger(arr3[0, 1, 0]);
-        printInteger(arr3[0, 1, 1]);
-        printInteger(arr3[0, 2, 0]);
-        printInteger(arr3[0, 2, 1]);
-        printInteger(arr3[1, 0, 0]);
-        printInteger(arr3[1, 0, 1]);
-        printInteger(arr3[1, 1, 0]);
-        printInteger(arr3[1, 1, 1]);
-        printInteger(arr3[1, 2, 0]);
-        printInteger(arr3[1, 2, 1]);
     }
 """
-        expect = "1238"
-        self.assertTrue(TestCodeGen.test(input, expect, 523))
+        expect = "999"
+        self.assertTrue(TestCodeGen.test(input, expect, 529))

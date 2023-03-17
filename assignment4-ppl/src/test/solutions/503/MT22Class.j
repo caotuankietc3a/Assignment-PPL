@@ -15,7 +15,7 @@ Label0:
 	istore_1
 Label1:
 	return
-.limit stack 1
+.limit stack 2
 .limit locals 2
 .end method
 

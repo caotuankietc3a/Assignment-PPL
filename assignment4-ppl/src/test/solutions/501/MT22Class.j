@@ -5,7 +5,7 @@
 .field static y I
 .field static z I
 .field static t I
-.field static arr I
+.field static arr [I
 
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1

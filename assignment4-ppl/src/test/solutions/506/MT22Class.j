@@ -17,7 +17,7 @@ Label0:
 	invokestatic io/writeFloat(F)V
 Label1:
 	return
-.limit stack 1
+.limit stack 3
 .limit locals 3
 .end method
 

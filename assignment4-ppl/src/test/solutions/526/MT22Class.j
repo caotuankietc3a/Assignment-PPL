@@ -1,23 +1,50 @@
 .source MT22Class.java
 .class public MT22Class
 .super java.lang.Object
-.field static arr [I
 
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-	getstatic MT22Class.arr [I
+.var 1 is arr1 [I from Label0 to Label1
+	iconst_4
+	newarray int
+	dup
+	iconst_0
+	iconst_1
+	iastore
+	dup
+	iconst_1
+	iconst_3
+	iastore
+	dup
+	iconst_2
+	bipush 123
+	iastore
+	dup
+	iconst_3
+	sipush 1238
+	iastore
+	astore_1
+	aload_1
 	iconst_0
 	iaload
 	invokestatic io/printInteger(I)V
-	getstatic MT22Class.arr [I
+	aload_1
 	iconst_1
+	iaload
+	invokestatic io/printInteger(I)V
+	aload_1
+	iconst_2
+	iaload
+	invokestatic io/printInteger(I)V
+	aload_1
+	iconst_3
 	iaload
 	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 4
-.limit locals 1
+.limit stack 12
+.limit locals 2
 .end method
 
 .method public <init>()V
@@ -33,19 +60,8 @@ Label1:
 
 .method public static <clinit>()V
 Label0:
-	iconst_2
-	newarray int
-	dup
-	iconst_0
-	iconst_0
-	iastore
-	dup
-	iconst_1
-	iconst_1
-	iastore
-	putstatic MT22Class.arr [I
 Label1:
 	return
-.limit stack 4
+.limit stack 0
 .limit locals 0
 .end method
