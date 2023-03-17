@@ -2,58 +2,12 @@
 .class public MT22Class
 .super java.lang.Object
 .field static arr [I
-.field static arr3 [F
 .field static y F
 
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-.var 1 is x I from Label0 to Label1
-	bipush 100
-	istore_1
-	getstatic MT22Class.arr [I
-	iconst_1
-	iaload
-	bipush 10
-	iadd
-	i2f
-	getstatic MT22Class.arr3 [F
-	bipush 10
-	faload
-	fsub
-	putstatic MT22Class.y F
-	getstatic MT22Class.y F
-	invokestatic io/writeFloat(F)V
-Label1:
-	return
-.limit stack 8
-.limit locals 2
-.end method
-
-.method public <init>()V
-.var 0 is this LMT22Class; from Label0 to Label1
-Label0:
-	aload_0
-	invokespecial java/lang/Object/<init>()V
-Label1:
-	return
-.limit stack 1
-.limit locals 1
-.end method
-
-.method public static <clinit>()V
-Label0:
-	iconst_2
-	newarray int
-	dup
-	iconst_0
-	iconst_0
-	iastore
-	dup
-	iconst_1
-	iconst_1
-	iastore
-	putstatic MT22Class.arr [I
+.var 1 is arr3 [F from Label0 to Label1
 	bipush 12
 	newarray float
 	dup
@@ -116,7 +70,63 @@ Label0:
 	bipush 32
 	i2f
 	fastore
-	putstatic MT22Class.arr3 [F
+	astore_1
+.var 2 is x I from Label0 to Label1
+	bipush 100
+	istore_2
+	getstatic MT22Class.arr [I
+	iconst_1
+	iload_2
+	iastore
+	aload_1
+	iconst_3
+	getstatic MT22Class.arr [I
+	iconst_1
+	iaload
+	i2f
+	fastore
+	aload_1
+	iconst_1
+	getstatic MT22Class.y F
+	fastore
+	aload_1
+	iconst_1
+	faload
+	aload_1
+	iconst_3
+	faload
+	fadd
+	invokestatic io/writeFloat(F)V
+Label1:
+	return
+.limit stack 20
+.limit locals 3
+.end method
+
+.method public <init>()V
+.var 0 is this LMT22Class; from Label0 to Label1
+Label0:
+	aload_0
+	invokespecial java/lang/Object/<init>()V
+Label1:
+	return
+.limit stack 1
+.limit locals 1
+.end method
+
+.method public static <clinit>()V
+Label0:
+	iconst_2
+	newarray int
+	dup
+	iconst_0
+	iconst_0
+	iastore
+	dup
+	iconst_1
+	iconst_1
+	iastore
+	putstatic MT22Class.arr [I
 	ldc 100.3243
 	bipush 123
 	i2f
@@ -124,6 +134,6 @@ Label0:
 	putstatic MT22Class.y F
 Label1:
 	return
-.limit stack 14
+.limit stack 4
 .limit locals 0
 .end method

@@ -343,16 +343,29 @@ class CheckCodeGenSuite(unittest.TestCase):
     def test_29(self):
         input = r"""
     arr : array [2] of integer = {0, 1};
-    arr3 : array [2, 3, 2] of integer = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
+    arr3 : array [2, 3, 2] of float = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
     y: float = 100.3243 + 123;
     main: function void(){
-        // printInteger(arr[0]);
-        // printInteger(arr[1]);
-        //y = arr[1] + 10 - arr3[1, 2, 0]; // 1 + 10 -32
-        arr[0] = 999;
-        //writeFloat(y);
-        printInteger(arr[0]);
+        x: integer = 100;
+        y = arr[1] + 10 - arr3[1, 2, 0]; // 1 + 10 -32
+        writeFloat(y);
     }
 """
-        expect = "999"
+        expect = "-912.0"
         self.assertTrue(TestCodeGen.test(input, expect, 529))
+
+    def test_30(self):
+        input = r"""
+    arr : array [2] of integer = {0, 1};
+    y: float = 100.3243 + 123;
+    main: function void(){
+        arr3 : array [2, 3, 2] of float = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
+        x: integer = 100;
+        arr[1] = x;
+        arr3[0, 1, 1] = arr[1];
+        arr3[0, 0, 1] = y;
+        writeFloat(arr3[0, 0, 1] + arr3[0, 1, 1]);
+    }
+"""
+        expect = "323.3243"
+        self.assertTrue(TestCodeGen.test(input, expect, 530))
