@@ -20,8 +20,3 @@ class LexerSuite(unittest.TestCase):
         """test string literal"""
         self.assertTrue(TestLexer.test(""" "He asked me: \\"Where is John?\\"" """,
                         """He asked me: \\"Where is John?\\",<EOF>""", 104))
-
-    def test_stringlit(self):
-        """test string literal"""
-        self.assertTrue(TestLexer.test(""" "He asked me: \\"Where is John?\\"" """,
-                        """He asked me: \\"Where is John?\\",<EOF>""", 104))

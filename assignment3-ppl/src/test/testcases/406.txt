@@ -1,4 +1,5 @@
 
-    x: boolean = false;
-    y: auto = x == true;
-    main: function void(){}
+        x: boolean = false;
+        y: auto = x == true;
+        main: function void(){}
+    

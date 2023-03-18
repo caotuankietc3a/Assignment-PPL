@@ -9,7 +9,6 @@ isPalindrome: function boolean(strs: array[100] of string, strSize: integer) {
 }
 main: function void() {
     strs   : array [5] of string = {"hello", "world", "!!!", "", "test\n"};
-
     if(isPalindrome(strs, 5)) printString("Correct!!!");
     else printString("Wrong!!!");
 }

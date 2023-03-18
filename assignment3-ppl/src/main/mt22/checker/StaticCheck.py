@@ -210,7 +210,7 @@ class StaticChecker(BaseVisitor, Utils):
         has_entry_point = False
         for decl in ast.decls:
             if type(decl) is FuncDecl:
-                name = decl.name.name
+                name = decl.name
                 return_type = decl.return_type
                 params = decl.params
                 if type(decl) is FuncDecl and name == "main" and TypeUtils.isVoidType(return_type) and len(params) == 0:
@@ -224,7 +224,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitVarDecl(self, ast: VarDecl, c):
         (o, _) = c
-        name = ast.name.name
+        name = ast.name
         Search.check(name, o[0], lambda: self.raise_(
             Redeclared(Variable(), name)))
         typ = ast.typ
@@ -262,7 +262,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitParamDecl(self, ast: ParamDecl, c):
         (o, _) = c
-        name = ast.name.name
+        name = ast.name
         Search.check(name, o[0], lambda: self.raise_(
             Redeclared(Parameter(), name)))
         typ = ast.typ
@@ -281,7 +281,7 @@ class StaticChecker(BaseVisitor, Utils):
     def visitFuncDecl(self, ast: FuncDecl, c):
         (o, _) = c
 
-        name = ast.name.name
+        name = ast.name
         Search.check(name, o[0], lambda: self.raise_(
             Redeclared(Function(), name)))
         symbol = self.lookup(
@@ -296,15 +296,15 @@ class StaticChecker(BaseVisitor, Utils):
         self.setFunc_decl(True, {"type": return_type}, name)
 
         if not TypeUtils.isNone(inherit):
-            inherit_func = Search.search(inherit.name, o1, lambda: self.raise_(
-                Undeclared(Function(), inherit.name)), Function)
+            inherit_func = Search.search(inherit, o1, lambda: self.raise_(
+                Undeclared(Function(), inherit)), Function)
             if len(inherit_func["params"]) != 0:
                 if len(body.body) == 0:
                     self.raise_(InvalidStatementInFunction(name))
                 first_stmt = body.body[0]
                 if not isinstance(first_stmt, CallStmt):
                     self.raise_(InvalidStatementInFunction(name))
-                first_stmt_name = first_stmt.name.name
+                first_stmt_name = first_stmt.name
                 if first_stmt_name != "super" and first_stmt_name != "preventDefault":
                     self.raise_(InvalidStatementInFunction(name))
                 self.func_decl["inherit"]["super_or_preventDefault"] = "preventDefault" if first_stmt_name == "preventDefault" else "super" if first_stmt_name == "super" else None
@@ -312,13 +312,13 @@ class StaticChecker(BaseVisitor, Utils):
                 if len(body.body) != 0:
                     first_stmt = body.body[0]
                     if isinstance(first_stmt, CallStmt):
-                        first_stmt_name = first_stmt.name.name
+                        first_stmt_name = first_stmt.name
                         self.func_decl["inherit"]["super_or_preventDefault"] = "preventDefault" if first_stmt_name == "preventDefault" else "super" if first_stmt_name == "super" else None
                     else:
                         self.func_decl["inherit"]["super_or_preventDefault"] = "super"
 
             self.func_decl["inherit"]["func"] = {
-                **inherit_func, **{"name": inherit.name}}
+                **inherit_func, **{"name": inherit}}
 
         params = []
         params_inherit = [*self.func_decl["inherit"]["func"]["params_inherit"]
@@ -441,7 +441,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitCallStmt(self, ast: CallStmt, c):
         (o, _) = c
-        name = ast.name.name
+        name = ast.name
         symbol = self.lookup(
             name, StaticChecker.global_envi, lambda sym: sym.name)
         params = None
@@ -486,13 +486,13 @@ class StaticChecker(BaseVisitor, Utils):
         op = ast.op
 
         if isinstance(ast.right, FuncCall) and isinstance(ast.left, FuncCall):
-            name_right = ast.right.name.name
+            name_right = ast.right.name
             symbol_right = self.lookup(
                 name_right, StaticChecker.global_envi, lambda sym: sym.name)
             func_right_type = Search.search(name_right, o, lambda: self.raise_(
                 Undeclared(Function(), name_right)), Function)["type"] if TypeUtils.isNone(symbol_right) else symbol_right.mtype.rettype
 
-            name_left = ast.left.name.name
+            name_left = ast.left.name
             func_left_type = None
             symbol_left = self.lookup(
                 name_left, StaticChecker.global_envi, lambda sym: sym.name)
@@ -510,7 +510,7 @@ class StaticChecker(BaseVisitor, Utils):
                 right_type = self.visit(ast.right, (o, func_left_type))["type"]
                 left_type = func_left_type
         elif isinstance(ast.right, FuncCall):
-            name_right = ast.right.name.name
+            name_right = ast.right.name
             symbol_right = self.lookup(
                 name_right, StaticChecker.global_envi, lambda sym: sym.name)
             func_right_type = Search.search(name_right, o, lambda: self.raise_(
@@ -519,7 +519,7 @@ class StaticChecker(BaseVisitor, Utils):
             right_type = self.visit(
                 ast.right, (o, left_type if TypeUtils.isAutoType(func_right_type) else t))["type"]
         elif isinstance(ast.left, FuncCall):
-            name_left = ast.left.name.name
+            name_left = ast.left.name
             func_left_type = None
             symbol_left = self.lookup(
                 name_left, StaticChecker.global_envi, lambda sym: sym.name)
@@ -593,7 +593,7 @@ class StaticChecker(BaseVisitor, Utils):
             Undeclared(Identifier(), ast.name)), Variable)
 
     def visitArrayCell(self, ast: ArrayCell, c):
-        id = self.visit(ast.name, c)
+        id = self.visit(Id(ast.name), c)
         if not TypeUtils.isArrayType(id["type"]):
             self.raise_(TypeMismatchInExpression(ast))
 
@@ -638,7 +638,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitFuncCall(self, ast: FuncCall, c):
         (o, t) = c
-        name = ast.name.name
+        name = ast.name
         symbol = self.lookup(
             name, StaticChecker.global_envi, lambda sym: sym.name)
         params = None

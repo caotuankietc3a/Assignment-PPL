@@ -6,7 +6,7 @@ from antlr4 import *
 
 for path in ['./test/', './main/mt22/parser/', './main/mt22/utils/', './main/mt22/astgen/']:
     sys.path.append(path)
-ANTLR_JAR = "./lib/antlr-4.11.1-complete.jar"
+ANTLR_JAR = "./lib/antlr-4.9.2-complete.jar"
 TARGET_DIR = '../target'
 GENERATE_DIR = 'main/mt22/parser'
 

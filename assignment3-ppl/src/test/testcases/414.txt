@@ -1,3 +1,4 @@
 
-    a : array [2] of integer;
-    main: function void(){}
+        a : array [2] of integer;
+        main: function void(){}
+    

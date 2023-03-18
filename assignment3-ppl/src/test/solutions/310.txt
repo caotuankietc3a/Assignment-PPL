@@ -1,5 +1,0 @@
-Program([
-	VarDecl(Id(a), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(True), BooleanLit(True), BooleanLit(True)]), ArrayLit([BooleanLit(True), BooleanLit(True), BooleanLit(True)])]))
-	VarDecl(Id(b), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([]), ArrayLit([])]))
-	VarDecl(Id(c), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(True), BooleanLit(True)]), ArrayLit([])]))
-])

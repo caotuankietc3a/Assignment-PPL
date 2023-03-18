@@ -1,1 +1,1 @@
-Type Mismatch In Statement: CallStmt(Id(readInteger), [Id(n)])
+Type Mismatch In Statement: CallStmt(readInteger, Id(n))

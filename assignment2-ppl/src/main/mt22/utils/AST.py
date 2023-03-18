@@ -60,7 +60,7 @@ class ArrayType(Type):
         self.typ = typ
 
     def __str__(self):
-        return "ArrayType([{}], {})".format(", ".join([dimen for dimen in self.dimensions]), str(self.typ))
+        return "ArrayType([{}], {})".format(", ".join([str(dimen) for dimen in self.dimensions]), str(self.typ))
 
 
 class AutoType(Type):
@@ -274,7 +274,7 @@ class ParamDecl(Decl):
 
 
 class FuncDecl(Decl):
-    def __init__(self, name: str, return_type: Type, params: List[ParamDecl], inherit: None or str, body: BlockStmt):
+    def __init__(self, name: str, return_type: Type, params: List[ParamDecl], inherit: str or None, body: BlockStmt):
         self.name = name
         self.return_type = return_type
         self.params = params

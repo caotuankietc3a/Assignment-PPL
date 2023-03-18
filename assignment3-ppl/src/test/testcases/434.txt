@@ -1,4 +1,5 @@
 
-    fact : function integer (n : integer) {}
-    fact : function float () {}
-    main: function void(){}
+        fact : function integer (n : integer) {}
+        fact : function float () {}
+        main: function void(){}
+    

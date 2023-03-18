@@ -1,5 +1,5 @@
 Program([
-	VarDecl(Id(a), AutoType, IntegerLit(1))
-	VarDecl(Id(b), AutoType, BooleanLit(True))
-	VarDecl(Id(c), AutoType, StringLit(Hello World!))
+	VarDecl(a, AutoType, IntegerLit(1))
+	VarDecl(b, AutoType, BooleanLit(True))
+	VarDecl(c, AutoType, StringLit(Hello World!))
 ])

@@ -1,5 +1,0 @@
-Program([
-	VarDecl(Id(a), ArrayType([2], IntegerType), ArrayLit([UnExpr(-, IntegerLit(1)), IntegerLit(3)]))
-	VarDecl(Id(b), ArrayType([2], IntegerType), ArrayLit([IntegerLit(9)]))
-	VarDecl(Id(c), ArrayType([2], IntegerType), ArrayLit([]))
-])

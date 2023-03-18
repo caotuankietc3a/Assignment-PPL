@@ -1,8 +1,0 @@
-Program([
-	VarDecl(Id(a1), ArrayType([2], StringType))
-	VarDecl(Id(b2), ArrayType([2], StringType))
-	VarDecl(Id(c3), ArrayType([2], StringType))
-	VarDecl(Id(a), ArrayType([6, 3, 10], FloatType))
-	VarDecl(Id(b), ArrayType([6, 3, 10], FloatType))
-	VarDecl(Id(c), ArrayType([6, 3, 10], FloatType))
-])

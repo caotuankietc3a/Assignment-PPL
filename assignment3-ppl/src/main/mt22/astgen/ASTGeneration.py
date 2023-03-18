@@ -32,11 +32,11 @@ class ASTGeneration(MT22Visitor):
 
     # identifiers_list: ID (COMMA ID)*;
     def visitIdentifiers_list(self, ctx: MT22Parser.Identifiers_listContext):
-        return [Id(x.getText()) for x in ctx.ID()]
+        return [x.getText() for x in ctx.ID()]
 
     # function_decl: ID COLON FUNCTION (atomic_type | void_type | auto_type) LEFT_PAREN params_list? RIGHT_PAREN (INHERIT ID)? body;
     def visitFunction_decl(self, ctx: MT22Parser.Function_declContext):
-        return [FuncDecl(Id(ctx.ID(0).getText()), ctx.getChild(3).accept(self), ctx.params_list().accept(self) if ctx.params_list() else [], Id(ctx.ID(1).getText()) if ctx.INHERIT() else ctx.INHERIT(), ctx.body().accept(self))]
+        return [FuncDecl(ctx.ID(0).getText(), ctx.getChild(3).accept(self), ctx.params_list().accept(self) if ctx.params_list() else [], ctx.ID(1).getText() if ctx.INHERIT() else ctx.INHERIT(), ctx.body().accept(self))]
 
     # params_list : parameter_decl COMMA params_list | parameter_decl ;
     def visitParams_list(self, ctx: MT22Parser.Params_listContext):
@@ -44,7 +44,7 @@ class ASTGeneration(MT22Visitor):
 
     # parameter_decl : INHERIT? OUT? ID COLON (atomic_type | array_type | auto_type) ;
     def visitParameter_decl(self, ctx: MT22Parser.Parameter_declContext):
-        return [ParamDecl(Id(ctx.ID().getText()), ctx.getChild(ctx.getChildCount() - 1).accept(self), True if ctx.OUT() else False, True if ctx.INHERIT() else False)]
+        return [ParamDecl(ctx.ID().getText(), ctx.getChild(ctx.getChildCount() - 1).accept(self), True if ctx.OUT() else False, True if ctx.INHERIT() else False)]
 
     # body: block_stmt;
     def visitBody(self, ctx: MT22Parser.BodyContext):
@@ -84,7 +84,7 @@ class ASTGeneration(MT22Visitor):
 
     # index_expr : index_expr index_operator | operand_expr ;
     def visitIndex_expr(self, ctx: MT22Parser.Index_exprContext):
-        return ArrayCell(Id(ctx.ID().getText()), ctx.index_operator().accept(self)) if ctx.getChildCount() == 2 else ctx.operand_expr().accept(self)
+        return ArrayCell(ctx.ID().getText(), ctx.index_operator().accept(self)) if ctx.getChildCount() == 2 else ctx.operand_expr().accept(self)
 
     # index_operator : LEFT_BRACK exprs_list RIGHT_BRACK ;
     def visitIndex_operator(self, ctx: MT22Parser.Index_operatorContext):
@@ -106,20 +106,21 @@ class ASTGeneration(MT22Visitor):
 
     # func_call: ID LEFT_PAREN exprs_list? RIGHT_PAREN;
     def visitFunc_call(self, ctx: MT22Parser.Func_callContext):
-        id = Id(ctx.ID().getText())
+        id = ctx.ID().getText()
         exprs_list = ctx.exprs_list().accept(self) if ctx.exprs_list() else []
         return [FuncCall(id, exprs_list), id, exprs_list]
 
     # literal : INTEGER_LIT | FLOAT_LIT | BOOLEAN_LIT | STRING_LIT | array_lit ;
     def visitLiteral(self, ctx: MT22Parser.LiteralContext):
         if ctx.INTEGER_LIT():
-            return IntegerLit(ctx.getChild(0).getText())
+            return IntegerLit(int(ctx.getChild(0).getText()))
 
         if ctx.FLOAT_LIT():
-            return FloatLit(ctx.getChild(0).getText())
+            string = ctx.getChild(0).getText()
+            return FloatLit(float("0" + string) if string[0] == "." else float(string))
 
         if ctx.STRING_LIT():
-            return StringLit(ctx.getChild(0).getText())
+            return StringLit(str(ctx.getChild(0).getText()))
 
         if ctx.BOOLEAN_LIT():
             return BooleanLit(self.toBool(ctx.getChild(0).getText()))
@@ -152,7 +153,7 @@ class ASTGeneration(MT22Visitor):
 
     # assign_stmt_lhs : scalar_var | ID index_operator ;
     def visitAssign_stmt_lhs(self, ctx: MT22Parser.Assign_stmt_lhsContext):
-        return ArrayCell(Id(ctx.ID().getText()), ctx.index_operator().accept(self)) if ctx.getChildCount() == 2 else ctx.scalar_var().accept(self)
+        return ArrayCell(ctx.ID().getText(), ctx.index_operator().accept(self)) if ctx.getChildCount() == 2 else ctx.scalar_var().accept(self)
 
     # assign_stmt_rhs: expr;
     def visitAssign_stmt_rhs(self, ctx: MT22Parser.Assign_stmt_rhsContext):
@@ -241,7 +242,7 @@ class ASTGeneration(MT22Visitor):
 
     # dimensions: INTEGER_LIT (COMMA INTEGER_LIT)* ;
     def visitDimensions(self, ctx: MT22Parser.DimensionsContext):
-        return [str(x.getText()) for x in ctx.INTEGER_LIT()]
+        return [int(x.getText()) for x in ctx.INTEGER_LIT()]
 
     # atomic_type : boolean_type | int_type | float_type | string_type ;
     def visitAtomic_type(self, ctx: MT22Parser.Atomic_typeContext):

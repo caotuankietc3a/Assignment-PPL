@@ -1,5 +1,5 @@
 Program([
-	VarDecl(Id(a), BooleanType, BooleanLit(False))
-	VarDecl(Id(b), BooleanType, BooleanLit(True))
-	VarDecl(Id(c), BooleanType, BooleanLit(False))
+	VarDecl(a, BooleanType, BooleanLit(False))
+	VarDecl(b, BooleanType, BooleanLit(True))
+	VarDecl(c, BooleanType, BooleanLit(False))
 ])

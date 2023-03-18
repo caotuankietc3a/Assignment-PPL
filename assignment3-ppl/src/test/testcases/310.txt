@@ -1,2 +1,0 @@
-
-a,   b,   c   : array [2, 3] of boolean = {{false, true, false}, {true, false, true}}, {{}, {}}, {{true, false}, {}};

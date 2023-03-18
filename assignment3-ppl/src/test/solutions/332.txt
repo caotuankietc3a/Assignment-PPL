@@ -1,3 +1,0 @@
-Program([
-	FuncDecl(Id(check_str_code), BooleanType, [Param(Id(code), StringType), Param(Id(size), IntegerType)], None, BlockStmt([IfStmt(BinExpr(==, Id(code), StringLit()), ReturnStmt(BooleanLit(True))), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(size)), BinExpr(-, BinExpr(+, Id(i), IntegerLit(6)), IntegerLit(3)), BlockStmt([IfStmt(UnExpr(!, Id(i)), BlockStmt([BreakStmt()]))])), ReturnStmt(BooleanLit(True))]))
-])

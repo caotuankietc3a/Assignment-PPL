@@ -1,1 +1,1 @@
-Type Mismatch In Expression: VarDecl(Id(y), IntegerType, Id(x))
+Type Mismatch In Expression: VarDecl(y, IntegerType, Id(x))

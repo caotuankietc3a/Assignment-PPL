@@ -1,5 +1,5 @@
 Program([
-	VarDecl(Id(n), IntegerType, IntegerLit(10))
-	FuncDecl(Id(reverseFactorial), IntegerType, [OutParam(Id(n), IntegerType), Param(Id(i), IntegerType)], None, BlockStmt([IfStmt(BinExpr(==, Id(n), IntegerLit(1)), BlockStmt([ReturnStmt(BinExpr(-, Id(i), IntegerLit(1)))])), IfStmt(BinExpr(%, Id(n), Id(i)), BlockStmt([ReturnStmt(UnExpr(-, IntegerLit(1)))])), ReturnStmt(FuncCall(Id(reverseFactorial), [BinExpr(/, Id(n), Id(i)), BinExpr(+, Id(i), IntegerLit(1))]))]))
-	FuncDecl(Id(main), VoidType, [], None, BlockStmt([CallStmt(Id(reverseFactorial), Id(n), IntegerLit(2))]))
+	VarDecl(n, IntegerType, IntegerLit(10))
+	FuncDecl(reverseFactorial, IntegerType, [OutParam(n, IntegerType), Param(i, IntegerType)], None, BlockStmt([IfStmt(BinExpr(==, Id(n), IntegerLit(1)), BlockStmt([ReturnStmt(BinExpr(-, Id(i), IntegerLit(1)))])), IfStmt(BinExpr(%, Id(n), Id(i)), BlockStmt([ReturnStmt(UnExpr(-, IntegerLit(1)))])), ReturnStmt(FuncCall(reverseFactorial, [BinExpr(/, Id(n), Id(i)), BinExpr(+, Id(i), IntegerLit(1))]))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([CallStmt(reverseFactorial, Id(n), IntegerLit(2))]))
 ])

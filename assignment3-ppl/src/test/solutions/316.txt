@@ -1,3 +1,0 @@
-Program([
-	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(found), BooleanType, BooleanLit(True)), VarDecl(Id(is_Num), StringType, StringLit()), VarDecl(Id(is_String), StringType, StringLit()), AssignStmt(Id(is_String), StringLit(TEST))]))
-])

@@ -1,3 +1,0 @@
-Program([
-	FuncDecl(Id(findGCD), IntegerType, [Param(Id(a), IntegerType), Param(Id(b), IntegerType)], None, BlockStmt([IfStmt(Id(b), BlockStmt([ReturnStmt(FuncCall(Id(findGCD), [Id(b), BinExpr(%, Id(a), Id(b))]))])), ReturnStmt(Id(a))]))
-])

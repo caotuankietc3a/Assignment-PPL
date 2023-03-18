@@ -1,1 +1,1 @@
-Type Mismatch In Expression: BinExpr(+, Id(s), FuncCall(Id(readString), []))
+Type Mismatch In Expression: BinExpr(+, Id(s), FuncCall(readString, []))
