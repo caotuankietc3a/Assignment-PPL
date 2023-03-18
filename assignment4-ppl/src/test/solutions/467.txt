@@ -1,0 +1,1 @@
+Type Mismatch In Statement: CallStmt(Id(binarySearch), [Id(arr), IntegerLit(0), IntegerLit(4), IntegerLit(0)])

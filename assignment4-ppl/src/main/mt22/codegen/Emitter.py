@@ -629,12 +629,15 @@ class Emitter():
     def emitRETURN(self, in_, frame):
         # in_: Type
         # frame: Frame
-
-        if type(in_) is cgen.IntegerType:
-            frame.pop()
-            return self.jvm.emitIRETURN()
-        elif type(in_) is VoidType:
+        if type(in_) is VoidType:
             return self.jvm.emitRETURN()
+
+        frame.pop()
+        if type(in_) in [cgen.IntegerType, BooleanType]:
+            return self.jvm.emitIRETURN()
+        if type(in_) is FloatType:
+            return self.jvm.emitFRETURN()
+        return self.jvm.emitARETURN()
 
     ''' generate code that represents a label	
     *   @param label the label
@@ -686,6 +689,8 @@ class Emitter():
 
     def emitEPILOG(self):
         file = open(self.filename, "w")
+        print("===========", self.buff)
+        print("*******====", type(self.buff))
         file.write(''.join(self.buff))
         file.close()
 
@@ -708,7 +713,6 @@ class Emitter():
             result.append(self.jvm.emitANEWARRAY(self.getFullType(eleType)))
         else:
             result.append(self.jvm.emitNEWARRAY(self.getFullType(eleType)))
-        # print(func_call(frame))
         result.append(arr_code)
         if ob["isStatic"]:
             result.append(self.jvm.emitPUTSTATIC(
@@ -716,6 +720,5 @@ class Emitter():
         else:  # local
             result.append(self.jvm.emitASTORE(ob["idx"]))
         frame.pop()
-        # print(''.join(result))
 
         return ''.join(result)

@@ -1,0 +1,19 @@
+
+        inc: function float(n: integer, delta: integer) {
+            n = n + delta;
+            for (i = 1, i < n, i+1) {
+                j: integer = 1;
+                do{
+                    return i + j;
+                    /*if (i + j >= 5) {
+                        return i + j;
+                    } 
+                    j = j + 1;*/
+                }while(j < n);
+            }
+            return 10;
+        }
+        main: function void() {
+            writeFloat(inc(2, 2));
+        }
+        
