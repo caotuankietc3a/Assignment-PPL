@@ -15,7 +15,7 @@
                 inc(x, delta); // x = 65 + 3! -> pass by ref
                 printInteger(x);*/
 
-                delta: integer = fact(3); // = 3! 
+                delta: integer = fact(3); // = 3!
                 inc(x, delta); // x = 65 -> pass by value
                 printInteger(x);
             }

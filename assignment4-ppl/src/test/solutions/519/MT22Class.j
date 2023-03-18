@@ -68,6 +68,7 @@ Label13:
 	invokestatic io/printBoolean(Z)V
 	bipush 12
 	bipush 12
+	if_icmpne Label14
 	iconst_1
 	goto Label15
 Label14:
@@ -75,6 +76,7 @@ Label14:
 Label15:
 	bipush 50
 	bipush 100
+	if_icmpeq Label16
 	iconst_1
 	goto Label17
 Label16:

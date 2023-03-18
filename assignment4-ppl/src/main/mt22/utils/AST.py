@@ -107,7 +107,7 @@ class Id(LHS):
 
 
 class ArrayCell(LHS):
-    def __init__(self, name: Id, cell: List[Expr]):
+    def __init__(self, name: str, cell: List[Expr]):
         self.name = name
         self.cell = cell
 
@@ -156,12 +156,12 @@ class ArrayLit(Expr):
 
 
 class FuncCall(Expr):
-    def __init__(self, name: Id, args: List[Expr]):
+    def __init__(self, name: str, args: List[Expr]):
         self.name = name
         self.args = args
 
     def __str__(self):
-        return "FuncCall({}, [{}])".format(str(self.name), ", ".join([str(expr) for expr in self.args]))
+        return "FuncCall({}, [{}])".format(self.name, ", ".join([str(expr) for expr in self.args]))
 
 
 # Statements
@@ -241,29 +241,29 @@ class ReturnStmt(Stmt):
 
 
 class CallStmt(Stmt):
-    def __init__(self, name: Id, args: List[Expr]):
+    def __init__(self, name: str, args: List[Expr]):
         self.name = name
         self.args = args
 
     def __str__(self):
-        return "CallStmt({}, [{}])".format(self.name, ", ".join([str(expr) for expr in self.args]))
+        return "CallStmt({}, {})".format(self.name, ", ".join([str(expr) for expr in self.args]))
 
 
 # Declarations
 
 
 class VarDecl(Decl):
-    def __init__(self, name: Id, typ: Type, init: Expr or None = None):
+    def __init__(self, name: str, typ: Type, init: Expr or None = None):
         self.name = name
         self.typ = typ
         self.init = init
 
     def __str__(self):
-        return "VarDecl({}, {}{})".format(str(self.name), str(self.typ), ", " + str(self.init) if self.init else "")
+        return "VarDecl({}, {}{})".format(self.name, str(self.typ), ", " + str(self.init) if self.init else "")
 
 
 class ParamDecl(Decl):
-    def __init__(self, name: Id, typ: Type, out: bool = False, inherit: bool = False):
+    def __init__(self, name: str, typ: Type, out: bool = False, inherit: bool = False):
         self.name = name
         self.typ = typ
         self.out = out
@@ -274,7 +274,7 @@ class ParamDecl(Decl):
 
 
 class FuncDecl(Decl):
-    def __init__(self, name: Id, return_type: Type, params: List[ParamDecl], inherit: None or str, body: BlockStmt):
+    def __init__(self, name: str, return_type: Type, params: List[ParamDecl], inherit: str or None, body: BlockStmt):
         self.name = name
         self.return_type = return_type
         self.params = params

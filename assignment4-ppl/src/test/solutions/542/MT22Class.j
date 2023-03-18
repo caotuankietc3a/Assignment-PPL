@@ -24,8 +24,8 @@ Label3:
 	iconst_1
 	iadd
 	istore_1
-	goto Label4
 Label5:
+	goto Label4
 Label6:
 	iload_1
 	invokestatic io/printInteger(I)V

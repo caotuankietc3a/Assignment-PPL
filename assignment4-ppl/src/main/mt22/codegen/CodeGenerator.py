@@ -219,7 +219,8 @@ class CodeGenVisitor(BaseVisitor, Utils):
         # decl: FuncDecl
         # o: Any
         # frame: Frame
-        func_name = decl.name.name
+        # func_name = decl.name.name
+        func_name = decl.name
         func_type = decl.return_type
 
         isInit = TypeUtils.isNone(func_type) and func_name == "<init>"
@@ -291,7 +292,8 @@ class CodeGenVisitor(BaseVisitor, Utils):
         return subbody
 
     def handleCall(self, ast: FuncCall or CallStmt, frame, symbols, isStmt=False):
-        func_name = ast.name.name
+        # func_name = ast.name.name
+        func_name = ast.name
         symbol = self.lookup(func_name, symbols, lambda sym: sym.name)
         cname = symbol.value.value
         ctype = symbol.mtype
@@ -327,11 +329,11 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 e = self.visit(x, e)
 
         # generate default constructor
-        self.genMETHOD(FuncDecl(Id("<init>"), None, list(), None,
+        self.genMETHOD(FuncDecl("<init>", None, list(), None,
                        BlockStmt(list())), e.sym, Frame("<init>", VoidType), None)
 
         # class init - static field
-        self.genMETHOD(FuncDecl(Id("<clinit>"), None, list(), None,
+        self.genMETHOD(FuncDecl("<clinit>", None, list(), None,
                        BlockStmt(list())), e.sym, frame_clinit, var_decl_codes)
 
         self.emit.emitEPILOG()
@@ -342,7 +344,8 @@ class CodeGenVisitor(BaseVisitor, Utils):
         frame = c.frame
         sym = c.sym
         isGlobal = c.isGlobal
-        var_name = ast.name.name
+        # var_name = ast.name.name
+        var_name = ast.name
         var_type = ast.typ
 
         init_code, init_type = "", None
@@ -392,7 +395,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         new_sym = [Symbol(var_name, var_type if isArrayType else TypeUtils.retrieveType(
             var_type, val=val, lst=dimens), Index(idx))] + sym
         if not TypeUtils.isNone(ast.init):
-            id = self.visit(ast.name, Access(frame, new_sym, True, False))
+            id = self.visit(Id(ast.name), Access(frame, new_sym, True, False))
             self.emit.printout(
                 init_code + (id[0] if not TypeUtils.isArrayType(var_type) else ""))
         else:
@@ -411,7 +414,8 @@ class CodeGenVisitor(BaseVisitor, Utils):
     def visitFuncDecl(self, ast: FuncDecl, c: SubBody):
         print(ast)
         sym = c.sym
-        name = ast.name.name
+        # name = ast.name.name
+        name = ast.name
         frame = Frame(name, TypeUtils.retrieveType(ast.return_type))
 
         return self.genMETHOD(ast, sym, frame, None)
@@ -492,7 +496,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         upd = ast.upd
         symbol = self.lookup(id.name, c.sym, lambda sym: sym.name)
         if TypeUtils.isNone(symbol):
-            c = self.visit(VarDecl(id, IntegerType(), None), c)
+            c = self.visit(VarDecl(id.name, IntegerType(), None), c)
 
         self.visit(init, c)
         labelS = frame.getNewLabel()
@@ -550,13 +554,11 @@ class CodeGenVisitor(BaseVisitor, Utils):
         labelS = frame.getNewLabel()
         frame.enterLoop()
         self.emit.printout(self.emit.emitLABEL(labelS, frame))
-        # print("========", c.isBlockStmt)
         self.visit(ast.stmt, SubBody(frame, nenv, isBlockStmt=True))
         # self.visit(ast.stmt, SubBody(frame, nenv))
 
         cond_code, _ = self.visit(
             ast.cond, Access(frame, nenv, False, False))
-        # print("cond_code:", cond_code)
 
         self.emit.printout(cond_code + self.emit.emitIFTRUE(labelS, frame))
 
@@ -663,7 +665,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         isLeft = c.isLeft
 
         arr_code, arr_type = self.visit(
-            ast.name, Access(frame, sym, True, True))
+            Id(ast.name), Access(frame, sym, True, True))
 
         cell_dimens = reduce(lambda acc, el: acc + [self.visit(
             el, c)[1].val], ast.cell[1:], [self.visit(ast.cell[0], c)[1].val])

@@ -689,8 +689,6 @@ class Emitter():
 
     def emitEPILOG(self):
         file = open(self.filename, "w")
-        print("===========", self.buff)
-        print("*******====", type(self.buff))
         file.write(''.join(self.buff))
         file.close()
 

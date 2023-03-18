@@ -12,45 +12,47 @@ Label0:
 	bipush 10
 	istore_2
 Label2:
+Label5:
 	iconst_0
 	istore_1
-Label6:
+Label8:
 	iload_1
 	iload_2
-	if_icmpge Label9
-	iconst_1
-	goto Label10
-Label9:
-	iconst_0
-Label10:
-	ifle Label8
-	iload_2
-	bipush 10
-	iconst_5
-	iadd
-	if_icmpne Label11
+	if_icmpge Label11
 	iconst_1
 	goto Label12
 Label11:
 	iconst_0
 Label12:
-	ifle Label13
-	goto Label7
+	ifle Label10
+	iload_2
+	bipush 10
+	iconst_5
+	iadd
+	if_icmpne Label13
+	iconst_1
 	goto Label14
 Label13:
+	iconst_0
+Label14:
+	ifle Label15
+	goto Label9
+	goto Label16
+Label15:
 	iload_2
 	iconst_1
 	iadd
 	istore_2
-Label14:
+Label16:
+Label9:
 	iload_1
 	iconst_1
 	iadd
 	istore_1
-	goto Label6
-Label7:
-Label8:
+	goto Label8
+Label10:
 	goto Label4
+Label6:
 	iconst_1
 	ifgt Label2
 Label3:

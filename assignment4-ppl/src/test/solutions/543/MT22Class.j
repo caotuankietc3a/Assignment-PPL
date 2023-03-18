@@ -9,20 +9,22 @@ Label0:
 	iconst_0
 	istore_1
 Label2:
+Label5:
 	iload_1
 	invokestatic io/printInteger(I)V
 	iload_1
 	iconst_1
 	iadd
 	istore_1
+Label6:
 	iload_1
 	bipush 10
-	if_icmpge Label5
+	if_icmpge Label7
 	iconst_1
-	goto Label6
-Label5:
+	goto Label8
+Label7:
 	iconst_0
-Label6:
+Label8:
 	ifgt Label2
 Label3:
 Label4:

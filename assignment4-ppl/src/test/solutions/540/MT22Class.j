@@ -54,19 +54,19 @@ Label16:
 	isub
 	invokestatic io/printInteger(I)V
 Label17:
+Label10:
 	iload_2
 	iconst_1
 	iadd
 	istore_2
 	goto Label9
-Label10:
 Label11:
+Label4:
 	iload_1
 	iconst_1
 	iadd
 	istore_1
 	goto Label3
-Label4:
 Label5:
 Label1:
 	return

@@ -133,6 +133,7 @@ Label5:
 	iconst_0
 	i2f
 	fcmpl
+	ifne Label6
 	iconst_1
 	goto Label7
 Label6:
@@ -267,6 +268,7 @@ Label11:
 	iconst_0
 	i2f
 	fcmpl
+	ifeq Label12
 	iconst_1
 	goto Label13
 Label12:
