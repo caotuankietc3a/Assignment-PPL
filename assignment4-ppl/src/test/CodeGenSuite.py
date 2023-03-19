@@ -871,27 +871,98 @@ class CheckCodeGenSuite(unittest.TestCase):
     #     expect = "105"
     #     self.assertTrue(TestCodeGen.test(input, expect, 555))
 
-    def test_56(self):
-        input = r"""
-    checkElements: function boolean (arr: array[100] of integer, n: integer) {
-        if ((n > 1000) || (n < 0))
-            return false;
-        for (i = 0, i < n - 1, i+1) {
-            for (j = i + 1, j < n, j+1) {
-                /*printInteger(arr[i]);
-                printString("&&");
-                printInteger(arr[j]);
-                printString("\n");*/
-              if (arr[i] == arr[j])
-                  return false;
-            }
+    # def test_56(self):
+    #     input = r"""
+    # checkElements: function boolean (arr: array[100] of integer, n: integer) {
+    #     if ((n > 1000) || (n < 0))
+    #         return false;
+    #     for (i = 0, i < n - 1, i+1) {
+    #         for (j = i + 1, j < n, j+1) {
+    #             /*printInteger(arr[i]);
+    #             printString("&&");
+    #             printInteger(arr[j]);
+    #             printString("\n");*/
+    #           if (arr[i] == arr[j])
+    #               return false;
+    #         }
+    #     }
+    #     return true;
+    # }
+    # main: function void() {
+    #     arr   : array [6] of integer = {1, 91, 0, -100, 100, 200};
+    #     printBoolean(checkElements(arr, 6));
+    # }
+    #         """
+    #     expect = "true"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 556))
+
+    # def test_57(self):
+    #     input = r"""
+    # main: function void() {
+    #     s: string = "Hello World";
+    #     arr   : array [3] of string = {"Cao", "Tuan", "Kiet "};
+    #     /*printString(arr[0]);
+    #     printString(arr[1]);
+    #     printString(arr[2]);*/
+    #     arr[0] = (arr[0]::arr[1])::arr[2];
+    #     printString(arr[0]);
+    #     printString("\n");
+    #     arr[1] = arr[0]::s;
+    #     printString(arr[1]);
+    # }
+    #         """
+    #     expect = "CaoTuanKiet \nCaoTuanKiet Hello World"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 557))
+
+    # def test_58(self):
+    #     input = """
+    #     b: boolean = false;
+    #     main : function void () {
+    #         f : array [5] of boolean = {true, false, true};
+    #         printBoolean(f[0] && f[1] && f[2]);
+    #         f[0] = f[0] || f[1];
+    #         printBoolean(f[0]);
+    #         f[1] = 100 > 10;
+    #         printBoolean(f[1]);
+    #     }
+    #         """
+    #     expect = "falsetruetrue"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 558))
+
+    # def test_59(self):
+    #     input = """
+    #     b: boolean = false;
+    #     main : function void () {
+    #         f : array [5] of boolean = {true, false, true};
+    #         printBoolean(f[0] && f[1] && f[2]);
+    #         f[0] = f[0] || f[1];
+    #         printBoolean(f[0]);
+    #         f[1] = 100 > 10;
+    #         printBoolean(f[1]);
+    #     }
+    #         """
+    #     expect = "falsetruetrue"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 559))
+
+    def test_60(self):
+        input = """
+        foo: function string (a: string, b: float) {
+            c : integer = 2;
+            d: float = c + 1;
+            f : array [5] of string;
+            return f[1];
         }
-        return true;
-    }
-    main: function void() {
-        arr   : array [6] of integer = {1, 91, 0, -100, 100, 200};
-        printBoolean(checkElements(arr, 6));
-    }
-            """
-        expect = "true"
-        self.assertTrue(TestCodeGen.test(input, expect, 556))
+        bar: function void (inherit out a: integer, inherit out b: string) inherit foo {
+            /*super("Hello", 123);
+            for (i = 1, i < 10, i + 1)
+            {
+                writeFloat(a);
+            }
+            if (a==2)
+                return;*/
+            printString(foo("Hello", 1.2312));
+        }
+        main: function void() {}
+    """
+        expect = "[]"
+        self.assertTrue(TestCodeGen.test(input, expect, 560))

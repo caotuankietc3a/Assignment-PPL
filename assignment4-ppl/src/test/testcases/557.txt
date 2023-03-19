@@ -1,0 +1,14 @@
+
+    main: function void() {
+        s: string = "Hello World";
+        arr   : array [3] of string = {"Cao", "Tuan", "Kiet "};
+        /*printString(arr[0]);
+        printString(arr[1]);
+        printString(arr[2]);*/
+        arr[0] = (arr[0]::arr[1])::arr[2];
+        printString(arr[0]);
+        printString("\n");
+        arr[1] = arr[0]::s;
+        printString(arr[1]);
+    }
+            

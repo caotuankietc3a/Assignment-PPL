@@ -38,7 +38,7 @@ class Emitter():
             return "float"
         elif typeIn is BooleanType:
             return "boolean"
-        elif typeIn is cgen.StringType:
+        elif typeIn is StringType:
             return "java/lang/String"
         elif typeIn is VoidType:
             return "void"
@@ -87,7 +87,8 @@ class Emitter():
         # in_: String
         # typ: Type
         # frame: Frame
-        if type(typ) is IntegerType:
+        # if type(typ) is IntegerType:
+        if type(typ) in [IntegerType, BooleanType]:
             return self.emitPUSHICONST(in_, frame)
         elif type(typ) is FloatType:
             return self.emitPUSHFCONST(in_, frame)
@@ -107,6 +108,8 @@ class Emitter():
         frame.pop()
         if type(in_) is IntegerType:
             return self.jvm.emitIALOAD()
+        elif type(in_) is BooleanType:
+            return self.jvm.emitBALOAD()
         elif type(in_) is FloatType:
             return self.jvm.emitFALOAD()
         elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
@@ -124,6 +127,8 @@ class Emitter():
         frame.pop()
         if type(in_) is IntegerType:
             return self.jvm.emitIASTORE()
+        elif type(in_) is BooleanType:
+            return self.jvm.emitBASTORE()
         elif type(in_) is FloatType:
             return self.jvm.emitFASTORE()
         elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:

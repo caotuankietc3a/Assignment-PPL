@@ -69,10 +69,6 @@ class OUtils:
     def isBooleanOp(op):
         return str(op).lower() in ["&&", "||"]
 
-    @staticmethod
-    def convertStringCode(s):
-        return s.replace("\tldc ", "").replace("\"", "").replace("\n", "")
-
 
 class CodeGenerator(Utils):
     def __init__(self):
@@ -93,10 +89,10 @@ class CodeGenerator(Utils):
             Symbol("readString", MType([], StringType()), CName(self.libName)),
             Symbol("printString", MType(
                 [StringType()], VoidType()), CName(self.libName)),
-            # Symbol("super", MType([[Expr()]], VoidType()),
-            #        CName(self.libName)),
-            # Symbol("preventDefault", MType(
-            #     [], VoidType()), CName(self.libName)),
+            Symbol("super", MType([[Expr()]], VoidType()),
+                   CName(self.libName)),
+            Symbol("preventDefault", MType(
+                [], VoidType()), CName(self.libName)),
         ]
 
     def gen(self, ast, dir_):
@@ -183,7 +179,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         self.emit = Emitter(self.path + "/" + self.className + ".j")
         self.arr_idx_global = 0
 
-    def genMETHOD(self, decl: FuncDecl, o, frame: Frame, global_vardecl_codes: list or None):
+    def genMETHOD(self, decl: FuncDecl, sym, frame: Frame, global_vardecl_codes: list or None):
         # decl: FuncDecl
         # o: Any
         # frame: Frame
@@ -207,7 +203,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
 
         frame.enterScope(False if isClassInit else isProc)
 
-        glenv = o
+        glenv = sym
 
         # Generate code for parameter declarations
         if isInit:
@@ -240,14 +236,13 @@ class CodeGenVisitor(BaseVisitor, Utils):
                         self.emit.printout(
                             var_code[0] + self.emit.emitPUTSTATIC(var_code[1], var_code[2], frame))
 
+        glenv = [Symbol(func_name, mtype, CName(
+            self.className))] + glenv
+
         subbody.sym = [Symbol(func_name, mtype, CName(
             self.className))] + subbody.sym
 
         self.visit(block, subbody)
-
-        # newSym = [Symbol(func_name, mtype, CName(
-        #     self.className))] + subbody.sym
-        # self.visit(block, SubBody(frame, newSym, isInit))
 
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
 
@@ -257,7 +252,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         self.emit.printout(self.emit.emitENDMETHOD(frame))
         frame.exitScope()
 
-        return subbody
+        return SubBody(frame, glenv)
 
     def handleCall(self, ast: FuncCall or CallStmt, frame, symbols, isStmt=False):
         # func_name = ast.name.name
@@ -294,6 +289,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
 
         for x in ast.decls:
             if TypeUtils.isTheSameType(x, FuncDecl):
+                print("============", len(e.sym))
                 e = self.visit(x, e)
 
         # generate default constructor
@@ -576,6 +572,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
     def visitBinExpr(self, ast: BinExpr, c: Access):
         print(ast)
         frame = c.frame
+        sym = c.sym
         op = ast.op
         l_code, l_type = self.visit(ast.left, c)
         r_code, r_type = self.visit(ast.right, c)
@@ -601,9 +598,9 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 return l_code + r_code + self.emit.emitOROP(frame), mtype
         else:
             if op == "::":
-                l_val = OUtils.convertStringCode(l_code)
-                r_val = OUtils.convertStringCode(r_code)
-                return self.visit(StringLit(l_val + r_val), c)
+                symbol = Symbol("concat", MType(
+                    [StringType()], StringType()), CName("java/lang/String"))
+                return l_code + r_code + self.emit.emitINVOKEVIRTUAL(f"{symbol.value.value}/{symbol.name}", symbol.mtype, frame), symbol.mtype.rettype
 
     def visitUnExpr(self, ast: UnExpr, c: Access):
         frame = c.frame
