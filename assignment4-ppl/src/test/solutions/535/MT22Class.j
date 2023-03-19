@@ -77,31 +77,83 @@ Label0:
 	getstatic MT22Class.x I
 	iastore
 	aload_1
+	iconst_2
 	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_1
+	imul
+	iadd
+	iconst_1
+	iadd
 	getstatic MT22Class.arr [I
 	iconst_1
 	iaload
 	i2f
 	fastore
 	aload_1
-	iconst_1
-	faload
-	invokestatic io/writeFloat(F)V
-	aload_1
-	iconst_1
-	faload
-	invokestatic io/writeFloat(F)V
-	aload_1
-	iconst_1
-	faload
-	invokestatic io/writeFloat(F)V
-	aload_1
+	iconst_2
 	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_0
+	imul
+	iadd
+	iconst_1
+	iadd
+	faload
+	invokestatic io/writeFloat(F)V
+	aload_1
+	iconst_2
+	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_0
+	imul
+	iadd
+	getstatic MT22Class.arr [I
+	iconst_1
+	iaload
+	iadd
+	faload
+	invokestatic io/writeFloat(F)V
+	aload_1
+	iconst_2
+	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_0
+	imul
+	iadd
+	getstatic MT22Class.x I
+	iadd
+	faload
+	invokestatic io/writeFloat(F)V
+	aload_1
+	iconst_2
+	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_1
+	imul
+	iadd
+	getstatic MT22Class.x I
+	iadd
 	faload
 	invokestatic io/writeFloat(F)V
 Label1:
 	return
-.limit stack 22
+.limit stack 15
 .limit locals 2
 .end method
 

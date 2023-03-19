@@ -7,24 +7,40 @@
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
 	getstatic MT22Class.arr1 [I
+	iconst_2
 	iconst_0
-	iaload
-	invokestatic io/printInteger(I)V
-	getstatic MT22Class.arr1 [I
-	iconst_1
+	imul
+	iconst_0
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr1 [I
 	iconst_2
+	iconst_0
+	imul
+	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr1 [I
-	iconst_3
+	iconst_2
+	iconst_1
+	imul
+	iconst_0
+	iadd
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr1 [I
+	iconst_2
+	iconst_1
+	imul
+	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 10
+.limit stack 8
 .limit locals 1
 .end method
 

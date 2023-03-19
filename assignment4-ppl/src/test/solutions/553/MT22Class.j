@@ -5,9 +5,6 @@
 
 .method public static checkDuplicate([II)Z
 .var 0 is ar [I from Label0 to Label1
-	bipush 100
-	newarray int
-	astore_0
 .var 1 is size I from Label0 to Label1
 Label0:
 	iload_1
@@ -51,7 +48,7 @@ Label10:
 Label11:
 	ifle Label9
 	aload_0
-	iconst_0
+	iload 6
 	iaload
 	aload_0
 	iconst_0
@@ -68,7 +65,7 @@ Label13:
 Label14:
 Label15:
 	aload_0
-	iconst_0
+	iload 6
 	iaload
 	aload_0
 	iconst_0
@@ -81,9 +78,9 @@ Label16:
 Label17:
 	ifle Label18
 	aload_2
-	iconst_0
+	iload 5
 	aload_0
-	iconst_0
+	iload 6
 	iaload
 	iastore
 	iload 5
@@ -93,9 +90,9 @@ Label17:
 	goto Label19
 Label18:
 	aload_3
-	iconst_0
+	iload 4
 	aload_0
-	iconst_0
+	iload 6
 	iaload
 	iastore
 	iload 4
@@ -119,7 +116,7 @@ Label9:
 	iand
 	ireturn
 Label1:
-.limit stack 19
+.limit stack 25
 .limit locals 7
 .end method
 
@@ -149,8 +146,48 @@ Label1:
 
 .method public static <clinit>()V
 Label0:
+	bipush 100
+	newarray int
+	dup
+	iconst_0
+	iconst_1
+	iastore
+	dup
+	iconst_1
+	iconst_2
+	iastore
+	dup
+	iconst_2
+	iconst_3
+	iastore
+	dup
+	iconst_3
+	iconst_4
+	iastore
+	dup
+	iconst_4
+	iconst_5
+	iastore
+	dup
+	iconst_5
+	bipush 10
+	iastore
+	dup
+	bipush 6
+	bipush 12
+	ineg
+	iastore
+	dup
+	bipush 7
+	bipush 23
+	iastore
+	dup
+	bipush 8
+	iconst_1
+	iastore
+	putstatic MT22Class.arr [I
 Label1:
 	return
-.limit stack 1
+.limit stack 11
 .limit locals 0
 .end method

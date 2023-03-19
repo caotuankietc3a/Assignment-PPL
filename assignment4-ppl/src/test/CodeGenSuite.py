@@ -415,8 +415,6 @@ class CheckCodeGenSuite(unittest.TestCase):
     #         main: function void() {
     #             i: integer = 1;
     #             x: array[10, 10] of integer;
-    #             //x[i, 0] = i;
-    #             //printInteger(x[i, 0]);
     #             if (i % 2 == 0) {
     #                 x[i, 0] = i;
     #                 printInteger(x[i, 0]);
@@ -777,9 +775,10 @@ class CheckCodeGenSuite(unittest.TestCase):
     #         expect = "5.0"
     #         self.assertTrue(TestCodeGen.test(input, expect, 552))
 
+    # # Cut
     # def test_53(self):
     #     input = """
-    #     arr: array[100] of integer;
+    #     arr: array[100] of integer = {1, 2, 3, 4,  5,  10, -12, 23, 1};
     #     checkDuplicate: function boolean(ar: array[100] of integer, size: integer) {
     #       if (size <= 1)
     #         return true;
@@ -873,24 +872,26 @@ class CheckCodeGenSuite(unittest.TestCase):
     #     self.assertTrue(TestCodeGen.test(input, expect, 555))
 
     def test_56(self):
-        input = """
+        input = r"""
     checkElements: function boolean (arr: array[100] of integer, n: integer) {
-        printInteger(arr[0]);
-        return false;
-      /*if ((n > 1000) || (n < 0))
-        return false;
-      for (i = 0, i < n - 1, i+1) {
-        for (j = i + 1, j < n, j+1) {
-          if (arr[i] == arr[j])
+        if ((n > 1000) || (n < 0))
             return false;
+        for (i = 0, i < n - 1, i+1) {
+            for (j = i + 1, j < n, j+1) {
+                /*printInteger(arr[i]);
+                printString("&&");
+                printInteger(arr[j]);
+                printString("\n");*/
+              if (arr[i] == arr[j])
+                  return false;
+            }
         }
-      }
-      return true;*/
+        return true;
     }
     main: function void() {
-        arr   : array [5] of integer = {1, 91, 0, -100, 100};
-        printBoolean(checkElements(arr, 0));
+        arr   : array [6] of integer = {1, 91, 0, -100, 100, 200};
+        printBoolean(checkElements(arr, 6));
     }
             """
-        expect = "1"
+        expect = "true"
         self.assertTrue(TestCodeGen.test(input, expect, 556))

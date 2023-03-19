@@ -7,56 +7,176 @@
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
 	getstatic MT22Class.arr3 [I
+	iconst_2
+	iconst_3
 	iconst_0
-	iaload
-	invokestatic io/printInteger(I)V
-	getstatic MT22Class.arr3 [I
-	iconst_1
+	imul
+	imul
+	iconst_2
+	iconst_0
+	imul
+	iadd
+	iconst_0
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr3 [I
 	iconst_2
-	iaload
-	invokestatic io/printInteger(I)V
-	getstatic MT22Class.arr3 [I
 	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_0
+	imul
+	iadd
+	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr3 [I
-	iconst_4
+	iconst_2
+	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_1
+	imul
+	iadd
+	iconst_0
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr3 [I
-	iconst_5
+	iconst_2
+	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_1
+	imul
+	iadd
+	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr3 [I
-	bipush 6
+	iconst_2
+	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_2
+	imul
+	iadd
+	iconst_0
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr3 [I
-	bipush 7
+	iconst_2
+	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_2
+	imul
+	iadd
+	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr3 [I
-	bipush 8
+	iconst_2
+	iconst_3
+	iconst_1
+	imul
+	imul
+	iconst_2
+	iconst_0
+	imul
+	iadd
+	iconst_0
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr3 [I
-	bipush 9
+	iconst_2
+	iconst_3
+	iconst_1
+	imul
+	imul
+	iconst_2
+	iconst_0
+	imul
+	iadd
+	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr3 [I
-	bipush 10
+	iconst_2
+	iconst_3
+	iconst_1
+	imul
+	imul
+	iconst_2
+	iconst_1
+	imul
+	iadd
+	iconst_0
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr3 [I
-	bipush 11
+	iconst_2
+	iconst_3
+	iconst_1
+	imul
+	imul
+	iconst_2
+	iconst_1
+	imul
+	iadd
+	iconst_1
+	iadd
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	iconst_2
+	iconst_3
+	iconst_1
+	imul
+	imul
+	iconst_2
+	iconst_2
+	imul
+	iadd
+	iconst_0
+	iadd
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr3 [I
+	iconst_2
+	iconst_3
+	iconst_1
+	imul
+	imul
+	iconst_2
+	iconst_2
+	imul
+	iadd
+	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 38
+.limit stack 7
 .limit locals 1
 .end method
 

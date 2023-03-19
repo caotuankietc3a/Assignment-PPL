@@ -26,24 +26,40 @@ Label0:
 	iastore
 	astore_1
 	aload_1
+	iconst_2
 	iconst_0
-	iaload
-	invokestatic io/printInteger(I)V
-	aload_1
-	iconst_1
+	imul
+	iconst_0
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	aload_1
 	iconst_2
+	iconst_0
+	imul
+	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	aload_1
-	iconst_3
+	iconst_2
+	iconst_1
+	imul
+	iconst_0
+	iadd
+	iaload
+	invokestatic io/printInteger(I)V
+	aload_1
+	iconst_2
+	iconst_1
+	imul
+	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 12
+.limit stack 10
 .limit locals 2
 .end method
 

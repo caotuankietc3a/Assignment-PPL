@@ -18,7 +18,17 @@ Label0:
 	iadd
 	i2f
 	getstatic MT22Class.arr3 [F
-	bipush 10
+	iconst_2
+	iconst_3
+	iconst_1
+	imul
+	imul
+	iconst_2
+	iconst_2
+	imul
+	iadd
+	iconst_0
+	iadd
 	faload
 	fsub
 	putstatic MT22Class.y F
@@ -26,7 +36,7 @@ Label0:
 	invokestatic io/writeFloat(F)V
 Label1:
 	return
-.limit stack 8
+.limit stack 10
 .limit locals 2
 .end method
 

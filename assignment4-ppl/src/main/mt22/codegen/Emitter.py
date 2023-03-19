@@ -13,7 +13,7 @@ class Emitter():
 
     def getJVMType(self, inType):
         typeIn = type(inType)
-        if typeIn is cgen.IntegerType:
+        if typeIn is IntegerType:
             return "I"
         elif typeIn is FloatType:
             return "F"
@@ -32,7 +32,7 @@ class Emitter():
 
     def getFullType(self, inType):
         typeIn = type(inType)
-        if typeIn is cgen.IntegerType:
+        if typeIn is IntegerType:
             return "int"
         elif typeIn is FloatType:
             return "float"
@@ -87,7 +87,7 @@ class Emitter():
         # in_: String
         # typ: Type
         # frame: Frame
-        if type(typ) is cgen.IntegerType:
+        if type(typ) is IntegerType:
             return self.emitPUSHICONST(in_, frame)
         elif type(typ) is FloatType:
             return self.emitPUSHFCONST(in_, frame)
@@ -105,7 +105,7 @@ class Emitter():
         # ..., arrayref, index, value -> ...
 
         frame.pop()
-        if type(in_) is cgen.IntegerType:
+        if type(in_) is IntegerType:
             return self.jvm.emitIALOAD()
         elif type(in_) is FloatType:
             return self.jvm.emitFALOAD()
@@ -122,7 +122,7 @@ class Emitter():
         frame.pop()
         frame.pop()
         frame.pop()
-        if type(in_) is cgen.IntegerType:
+        if type(in_) is IntegerType:
             return self.jvm.emitIASTORE()
         elif type(in_) is FloatType:
             return self.jvm.emitFASTORE()
@@ -157,7 +157,7 @@ class Emitter():
         # ... -> ..., value
 
         frame.push()
-        if type(inType) in [cgen.IntegerType, BooleanType]:
+        if type(inType) in [IntegerType, BooleanType]:
             return self.jvm.emitILOAD(index)
         elif type(inType) is FloatType:
             return self.jvm.emitFLOAD(index)
@@ -193,7 +193,7 @@ class Emitter():
 
         frame.pop()
 
-        if type(inType) in [cgen.IntegerType, BooleanType]:
+        if type(inType) in [IntegerType, BooleanType]:
             return self.jvm.emitISTORE(index)
         elif type(inType) is FloatType:
             return self.jvm.emitFSTORE(index)
@@ -325,7 +325,7 @@ class Emitter():
         # frame: Frame
         # ..., value -> ..., result
 
-        if type(in_) is cgen.IntegerType:
+        if type(in_) is IntegerType:
             return self.jvm.emitINEG()
         else:
             return self.jvm.emitFNEG()
@@ -361,12 +361,12 @@ class Emitter():
 
         frame.pop()
         if lexeme == "+":
-            if type(in_) is cgen.IntegerType:
+            if type(in_) is IntegerType:
                 return self.jvm.emitIADD()
             else:
                 return self.jvm.emitFADD()
         else:
-            if type(in_) is cgen.IntegerType:
+            if type(in_) is IntegerType:
                 return self.jvm.emitISUB()
             else:
                 return self.jvm.emitFSUB()
@@ -385,12 +385,12 @@ class Emitter():
 
         frame.pop()
         if lexeme == "*":
-            if type(in_) is cgen.IntegerType:
+            if type(in_) is IntegerType:
                 return self.jvm.emitIMUL()
             else:
                 return self.jvm.emitFMUL()
         else:
-            if type(in_) is cgen.IntegerType:
+            if type(in_) is IntegerType:
                 return self.jvm.emitIDIV()
             else:
                 return self.jvm.emitFDIV()
@@ -476,12 +476,12 @@ class Emitter():
             else:
                 result.append(self.jvm.emitIFICMPNE(labelF))
 
-        result.append(self.emitPUSHCONST("1", cgen.IntegerType(), frame))
+        result.append(self.emitPUSHCONST("1", IntegerType(), frame))
 
         frame.pop()
         result.append(self.emitGOTO(labelO, frame))
         result.append(self.emitLABEL(labelF, frame))
-        result.append(self.emitPUSHCONST("0", cgen.IntegerType(), frame))
+        result.append(self.emitPUSHCONST("0", IntegerType(), frame))
         result.append(self.emitLABEL(labelO, frame))
         return ''.join(result)
 
@@ -541,7 +541,7 @@ class Emitter():
     def getConst(self, ast):
         # ast: Literal
         if type(ast) is IntLiteral:
-            return (str(ast.value), cgen.IntegerType())
+            return (str(ast.value), IntegerType())
 
     '''   generate code to initialize a local array variable.<p>
     *   @param index the index of the local variable.
@@ -619,7 +619,7 @@ class Emitter():
 
     ''' generate code to return.
     *   <ul>
-    *   <li>ireturn if the type is cgen.IntegerType or BooleanType
+    *   <li>ireturn if the type is IntegerType or BooleanType
     *   <li>freturn if the type is RealType
     *   <li>return if the type is null
     *   </ul>
@@ -633,7 +633,7 @@ class Emitter():
             return self.jvm.emitRETURN()
 
         frame.pop()
-        if type(in_) in [cgen.IntegerType, BooleanType]:
+        if type(in_) in [IntegerType, BooleanType]:
             return self.jvm.emitIRETURN()
         if type(in_) is FloatType:
             return self.jvm.emitFRETURN()

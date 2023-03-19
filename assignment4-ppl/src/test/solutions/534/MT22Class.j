@@ -26,27 +26,43 @@ Label3:
 	aload_2
 	bipush 10
 	iload_1
+	imul
+	iconst_0
+	iadd
+	iload_1
 	iastore
 	aload_2
 	bipush 10
+	iload_1
+	imul
+	iconst_0
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	goto Label5
 Label4:
 	aload_2
-	iconst_1
+	bipush 10
+	iconst_0
+	imul
+	iload_1
+	iadd
 	iload_1
 	iconst_1
 	iadd
 	iastore
 	aload_2
-	iconst_1
+	bipush 10
+	iconst_0
+	imul
+	iload_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 Label5:
 Label1:
 	return
-.limit stack 9
+.limit stack 13
 .limit locals 3
 .end method
 

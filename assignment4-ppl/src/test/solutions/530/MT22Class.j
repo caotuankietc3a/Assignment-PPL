@@ -73,28 +73,80 @@ Label0:
 	fastore
 	astore_1
 	aload_1
+	iconst_2
+	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_0
+	imul
+	iadd
 	iconst_1
+	iadd
 	getstatic MT22Class.y F
 	fastore
 	aload_1
+	iconst_2
+	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_0
+	imul
+	iadd
 	iconst_1
+	iadd
 	faload
 	aload_1
+	iconst_2
 	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_1
+	imul
+	iadd
+	iconst_1
+	iadd
 	faload
 	fadd
 	invokestatic io/writeFloat(F)V
 	aload_1
-	iconst_1
+	iconst_2
+	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_0
+	imul
+	iadd
+	getstatic MT22Class.x I
+	iadd
 	faload
 	aload_1
+	iconst_2
 	iconst_3
+	iconst_0
+	imul
+	imul
+	iconst_2
+	iconst_1
+	imul
+	iadd
+	getstatic MT22Class.arr [I
+	iconst_1
+	iaload
+	iadd
 	faload
 	fadd
 	invokestatic io/writeFloat(F)V
 Label1:
 	return
-.limit stack 21
+.limit stack 14
 .limit locals 2
 .end method
 
