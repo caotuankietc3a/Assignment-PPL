@@ -1,0 +1,15 @@
+
+        foo1: function string (inherit c: string, d: float) {
+            return "foo1";
+        }
+        foo: function string () inherit foo1 {
+            super("World!", 123.0);
+            return "foo";
+        }
+        bar: function void (inherit x: integer, inherit y: string) inherit foo {
+            printString(c);
+        }
+        main : function void () {
+            bar(1, "Hello");
+        }
+            

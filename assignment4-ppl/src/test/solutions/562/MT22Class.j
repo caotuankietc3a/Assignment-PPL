@@ -18,6 +18,10 @@ Label1:
 .var 1 is t Ljava/lang/String; from Label0 to Label1
 .var 2 is a Ljava/lang/String; from Label0 to Label1
 	ldc "Hello"
+	aload_0
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	aload_1
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	astore_2
 .var 3 is b F from Label0 to Label1
 	ldc 123.123
@@ -31,10 +35,36 @@ Label1:
 .limit locals 4
 .end method
 
+.method public static bar(ILjava/lang/String;)V
+.var 0 is x I from Label0 to Label1
+.var 1 is y Ljava/lang/String; from Label0 to Label1
+.var 2 is z Ljava/lang/String; from Label0 to Label1
+	ldc "Hello"
+	astore_2
+.var 3 is t Ljava/lang/String; from Label0 to Label1
+	aload_1
+	astore_3
+.var 4 is a Ljava/lang/String; from Label0 to Label1
+	ldc "Hello"
+	aload_2
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	aload_3
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	astore 4
+.var 5 is b F from Label0 to Label1
+	ldc 123.123
+	fstore 5
+Label0:
+Label1:
+	return
+.limit stack 5
+.limit locals 6
+.end method
+
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-	ldc "CaoTuanKiet"
+	ldc " CaoTuanKiet"
 	ldc "!!!!"
 	invokestatic MT22Class/foo1(Ljava/lang/String;Ljava/lang/String;)V
 Label1:

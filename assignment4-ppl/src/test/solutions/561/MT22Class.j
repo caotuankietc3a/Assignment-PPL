@@ -18,6 +18,10 @@ Label1:
 .var 1 is t Ljava/lang/String; from Label0 to Label1
 .var 2 is a Ljava/lang/String; from Label0 to Label1
 	ldc "Hello"
+	aload_0
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	aload_1
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	astore_2
 .var 3 is b F from Label0 to Label1
 	ldc 123.123
@@ -34,7 +38,7 @@ Label1:
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-	ldc "CaoTuanKiet"
+	ldc " CaoTuanKiet"
 	ldc "!!!!"
 	invokestatic MT22Class/foo1(Ljava/lang/String;Ljava/lang/String;)V
 Label1:

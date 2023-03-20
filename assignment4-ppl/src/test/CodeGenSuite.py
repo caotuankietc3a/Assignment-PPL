@@ -944,16 +944,118 @@ class CheckCodeGenSuite(unittest.TestCase):
         expect = "falsetruetrue"
         self.assertTrue(TestCodeGen.test(input, expect, 559))
 
-    # def test_60(self):
-    #     input = """
-    #     foo: function string (inherit a: string, b: float) {
-    #         return "Hello foo";
-    #     }
-    #     bar: function void (inherit out x: integer, inherit out y: string) inherit foo {
-    #         super("Hello", 123);
-    #         printString(a);
-    #     }
-    #     main: function void() {}
-    # """
-    #     expect = "[]"
-    #     self.assertTrue(TestCodeGen.test(input, expect, 560))
+    def test_60(self):
+        input = """
+        foo: function string (inherit a: string, b: float) {
+            return "Hello foo";
+        }
+        foo1: function void (inherit z: string, t: string) inherit foo{
+            //super("Hello"::t, 123.123);
+            super("Hello", 123.123);
+            printString(a);
+        }
+        /*bar: function void (inherit out x: integer, inherit out y: string) inherit foo1 {
+            super("Hello", "!!!!");
+            printString(a::z);
+        }*/
+        main: function void() {
+            foo1("CaoTuanKiet", "!!!!");
+        }
+    """
+        expect = "Hello"
+        self.assertTrue(TestCodeGen.test(input, expect, 560))
+
+    def test_61(self):
+        input = """
+        foo: function string (inherit a: string, b: float) {
+            return "Hello foo";
+        }
+        foo1: function void (inherit z: string, t: string) inherit foo{
+            super(("Hello"::z)::t, 123.123);
+            printString(a);
+        }
+        main: function void() {
+            foo1(" CaoTuanKiet", "!!!!");
+        }
+    """
+        expect = "Hello CaoTuanKiet!!!!"
+        self.assertTrue(TestCodeGen.test(input, expect, 561))
+
+    def test_62(self):
+        input = """
+        foo: function string (inherit a: string, b: float) {
+            return "Hello foo";
+        }
+        foo1: function void (inherit z: string, t: string) inherit foo{
+            super(("Hello"::z)::t, 123.123);
+            printString(a);
+        }
+        bar: function void (inherit out x: integer, inherit out y: string) inherit foo1 {
+            super("Hello", y);
+        }
+        main: function void() {
+            foo1(" CaoTuanKiet", "!!!!");
+        }
+    """
+        expect = "Hello CaoTuanKiet!!!!"
+        self.assertTrue(TestCodeGen.test(input, expect, 562))
+
+    def test_63(self):
+        input = """
+        foo1: function string (inherit c: string, d: float) {
+            return "foo1";
+        }
+        foo: function string (inherit a: string, b: string) inherit foo1 {
+            super("World!"::b, 123.0);
+            return "foo";
+        }
+        bar: function void (inherit x: integer, inherit y: string) inherit foo {
+            super("Hello", "Kiet");
+            printString(c);
+        }
+        main : function void () {
+            bar(1, "Hello");
+        }
+            """
+        expect = "World!Kiet"
+        self.assertTrue(TestCodeGen.test(input, expect, 563))
+
+    def test_64(self):
+        input = """
+        foo1: function string (inherit c: string, d: float) {
+            return "foo1";
+        }
+        foo: function string (inherit a: string, b: string) inherit foo1 {
+            super("World!"::b, 123.0);
+            return "foo";
+        }
+        bar: function void (inherit x: integer, inherit y: string) inherit foo {
+            preventDefault();
+            c: string = y::" Kiet";
+            printString(c);
+        }
+        main : function void () {
+            bar(1, "Hello");
+        }
+            """
+        expect = "Hello Kiet"
+        self.assertTrue(TestCodeGen.test(input, expect, 564))
+
+    def test_65(self):
+        input = """
+        foo1: function string (inherit c: string, d: float) {
+            return "foo1";
+        }
+        foo: function string () inherit foo1 {
+            super("World!", 123.0);
+            return "foo";
+        }
+        bar: function void (inherit x: integer, inherit y: string) inherit foo {
+            printString(c);
+        }
+        main : function void () {
+            bar(1, "Hello");
+        }
+            """
+        expect = "World!"
+        self.assertTrue(TestCodeGen.test(input, expect, 565))

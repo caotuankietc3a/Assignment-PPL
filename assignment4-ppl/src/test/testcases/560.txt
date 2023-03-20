@@ -2,9 +2,16 @@
         foo: function string (inherit a: string, b: float) {
             return "Hello foo";
         }
-        bar: function void (inherit out x: integer, inherit out y: string) inherit foo {
-            super("Hello", 123);
+        foo1: function void (inherit z: string, t: string) inherit foo{
+            //super("Hello"::t, 123.123);
+            super("Hello", 123.123);
             printString(a);
         }
-        main: function void() {}
+        /*bar: function void (inherit out x: integer, inherit out y: string) inherit foo1 {
+            super("Hello", "!!!!");
+            printString(a::z);
+        }*/
+        main: function void() {
+            foo1("CaoTuanKiet", "!!!!");
+        }
     
