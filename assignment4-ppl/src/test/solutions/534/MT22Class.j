@@ -22,25 +22,7 @@ Label0:
 Label2:
 	iconst_0
 Label3:
-	ifle Label4
-	aload_2
-	bipush 10
-	iload_1
-	imul
-	iconst_0
-	iadd
-	iload_1
-	iastore
-	aload_2
-	bipush 10
-	iload_1
-	imul
-	iconst_0
-	iadd
-	iaload
-	invokestatic io/printInteger(I)V
-	goto Label5
-Label4:
+	ifgt Label4
 	aload_2
 	bipush 10
 	iconst_0
@@ -56,6 +38,24 @@ Label4:
 	iconst_0
 	imul
 	iload_1
+	iadd
+	iaload
+	invokestatic io/printInteger(I)V
+	goto Label5
+Label4:
+	aload_2
+	bipush 10
+	iload_1
+	imul
+	iconst_0
+	iadd
+	iload_1
+	iastore
+	aload_2
+	bipush 10
+	iload_1
+	imul
+	iconst_0
 	iadd
 	iaload
 	invokestatic io/printInteger(I)V

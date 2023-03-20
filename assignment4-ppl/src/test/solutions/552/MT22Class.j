@@ -38,13 +38,14 @@ Label11:
 Label13:
 	iconst_0
 Label14:
-	ifle Label15
+	ifgt Label15
+	goto Label16
+Label15:
 	iload_2
 	iload_3
 	iadd
 	i2f
 	freturn
-Label15:
 Label16:
 	iload_3
 	iconst_1

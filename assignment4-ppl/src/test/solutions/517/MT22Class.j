@@ -5,17 +5,33 @@
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-	ldc "Hello World!"
+	ldc "Hello"
+	ldc " World!"
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	invokestatic io/printString(Ljava/lang/String;)V
-	ldc "Hello World!KietCaoC3a"
+	ldc "Hello"
+	ldc " World!"
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	ldc "KietCaoC3a"
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	invokestatic io/printString(Ljava/lang/String;)V
-	ldc "KietCaoC3aHello World!"
+	ldc "KietCaoC3a"
+	ldc "Hello"
+	ldc " World!"
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	invokestatic io/printString(Ljava/lang/String;)V
-	ldc "KietCaoC3aHello World!"
+	ldc "Kiet"
+	ldc "CaoC3a"
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	ldc "Hello"
+	ldc " World!"
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	invokestatic io/printString(Ljava/lang/String;)V
 Label1:
 	return
-.limit stack 17
+.limit stack 3
 .limit locals 1
 .end method
 

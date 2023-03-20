@@ -25,7 +25,7 @@ class Emitter():
             return "V"
         elif typeIn is cgen.ArrayPointerType:
             return "[" + self.getJVMType(inType.eleType)
-        elif typeIn is MType:
+        elif typeIn is cgen.MType:
             return "(" + "".join(list(map(lambda x: self.getJVMType(x), inType.partype))) + ")" + self.getJVMType(inType.rettype)
         elif typeIn is cgen.ClassType:
             return "L" + inType.cname + ";"
@@ -162,7 +162,8 @@ class Emitter():
         # ... -> ..., value
 
         frame.push()
-        if type(inType) in [IntegerType, BooleanType]:
+        # if type(inType) in [IntegerType, BooleanType]:
+        if type(inType) is IntegerType:
             return self.jvm.emitILOAD(index)
         elif type(inType) is FloatType:
             return self.jvm.emitFLOAD(index)

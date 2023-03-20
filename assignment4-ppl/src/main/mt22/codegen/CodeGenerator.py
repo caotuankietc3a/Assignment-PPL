@@ -89,10 +89,10 @@ class CodeGenerator(Utils):
             Symbol("readString", MType([], StringType()), CName(self.libName)),
             Symbol("printString", MType(
                 [StringType()], VoidType()), CName(self.libName)),
-            Symbol("super", MType([[Expr()]], VoidType()),
-                   CName(self.libName)),
-            Symbol("preventDefault", MType(
-                [], VoidType()), CName(self.libName)),
+            # Symbol("super", MType([[Expr()]], VoidType()),
+            #        CName(self.libName)),
+            # Symbol("preventDefault", MType(
+            #     [], VoidType()), CName(self.libName)),
         ]
 
     def gen(self, ast, dir_):
@@ -102,6 +102,22 @@ class CodeGenerator(Utils):
         gl = self.init()
         gc = CodeGenVisitor(ast, gl, dir_)
         gc.visit(ast, None)
+
+
+class MType:
+    def __init__(self, partype, rettype, params=[]):
+        self.partype = partype
+        self.rettype = rettype
+
+        # [{"<name>": {"isInherit": True || False, "type": Type}}]
+        self.params = params
+
+
+class Symbol:
+    def __init__(self, name, mtype, value=None):
+        self.name = name
+        self.mtype = mtype
+        self.value = value
 
 
 class ArrayPointerType(Type):
@@ -186,6 +202,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         # func_name = decl.name.name
         func_name = decl.name
         func_type = decl.return_type
+        inherit = decl.inherit
 
         isInit = TypeUtils.isNone(func_type) and func_name == "<init>"
         isClassInit = TypeUtils.isNone(func_type) and func_name == "<clinit>"
@@ -255,21 +272,23 @@ class CodeGenVisitor(BaseVisitor, Utils):
         return SubBody(frame, glenv)
 
     def handleCall(self, ast: FuncCall or CallStmt, frame, symbols, isStmt=False):
-        # func_name = ast.name.name
         func_name = ast.name
-        symbol = self.lookup(func_name, symbols, lambda sym: sym.name)
-        cname = symbol.value.value
-        ctype = symbol.mtype
-        params_code = ""
-        for p in ast.args:
-            params_code += self.visit(p, Access(frame,
-                                      symbols, False, False))[0]
+        if func_name == "super" or func_name == "preventDefault":
+            pass
+        else:
+            symbol = self.lookup(func_name, symbols, lambda sym: sym.name)
+            cname = symbol.value.value
+            ctype = symbol.mtype
+            params_code = ""
+            for p in ast.args:
+                params_code += self.visit(p, Access(frame,
+                                          symbols, False, False))[0]
 
-        params_code += self.emit.emitINVOKESTATIC(
-            cname + "/" + func_name, ctype, frame)
-        if isStmt:
-            self.emit.printout(params_code)
-        return params_code, ctype.rettype
+            params_code += self.emit.emitINVOKESTATIC(
+                cname + "/" + func_name, ctype, frame)
+            if isStmt:
+                self.emit.printout(params_code)
+            return params_code, ctype.rettype
 
     def visitProgram(self, ast: Program, c):
         print(ast)
@@ -289,7 +308,6 @@ class CodeGenVisitor(BaseVisitor, Utils):
 
         for x in ast.decls:
             if TypeUtils.isTheSameType(x, FuncDecl):
-                print("============", len(e.sym))
                 e = self.visit(x, e)
 
         # generate default constructor
@@ -446,19 +464,51 @@ class CodeGenVisitor(BaseVisitor, Utils):
         self.emit.printout(self.emit.emitIFTRUE(labelT, frame))  # false
         # False
         hasReturnStmt = self.visit(
-            ast.fstmt, c) if not TypeUtils.isNone(ast.fstmt) else False
+            ast.fstmt, c) is True if not TypeUtils.isNone(ast.fstmt) else False
+
         if not hasReturnStmt:
             self.emit.printout(self.emit.emitGOTO(labelE, frame))  # go to end
+
         # True
         self.emit.printout(self.emit.emitLABEL(labelT, frame))
-        hasReturnStmt = self.visit(ast.tstmt, c)
+        hasReturnStmt = self.visit(ast.tstmt, c) and hasReturnStmt
+
         # End
         self.emit.printout(self.emit.emitLABEL(labelE, frame))
         return hasReturnStmt
 
+    # def visitIfStmt(self, ast: IfStmt, c: SubBody):
+    #     print(ast)
+    #     ctxt = c
+    #     frame = ctxt.frame
+    #     nenv = ctxt.sym
+    #     expCode, expType = self.visit(
+    #         ast.cond, Access(frame, nenv, False, False))
+    #     self.emit.printout(expCode)
+
+    #     labelF = frame.getNewLabel()
+    #     labelE = frame.getNewLabel()
+
+    #     self.emit.printout(self.emit.emitIFFALSE(labelF, frame))
+
+    #     hasReturnStmt = self.visit(ast.tstmt, c)
+
+    #     if not hasReturnStmt:
+    #         self.emit.printout(self.emit.emitGOTO(labelE, frame))
+
+    #     self.emit.printout(self.emit.emitLABEL(labelF, frame))
+
+    #     if ast.fstmt:  # Need to Check
+    #         hasReturnStmt = self.visit(ast.fstmt, c)
+
+    #     self.emit.printout(self.emit.emitLABEL(labelE, frame))
+
+    #     return hasReturnStmt
+
     def visitForStmt(self, ast: ForStmt, c: SubBody):
         print(ast)
         frame = c.frame
+        sym = c.sym
         labelS = frame.getNewLabel()
         id = ast.init.lhs
         init = ast.init
@@ -466,7 +516,8 @@ class CodeGenVisitor(BaseVisitor, Utils):
         upd = ast.upd
         symbol = self.lookup(id.name, c.sym, lambda sym: sym.name)
         if TypeUtils.isNone(symbol):
-            c = self.visit(VarDecl(id.name, IntegerType(), None), c)
+            c = self.visit(VarDecl(id.name, IntegerType(), None),
+                           SubBody(frame, sym, False))
 
         self.visit(init, c)
         labelS = frame.getNewLabel()

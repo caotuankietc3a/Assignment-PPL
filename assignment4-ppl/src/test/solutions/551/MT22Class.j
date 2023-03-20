@@ -46,17 +46,18 @@ Label9:
 Label13:
 	iconst_0
 Label14:
-	ifle Label15
+	ifgt Label15
+	iload_2
+	iload_3
+	isub
+	invokestatic io/printInteger(I)V
+	goto Label16
+Label15:
 	iload_2
 	iload_3
 	iadd
 	i2f
 	freturn
-Label15:
-	iload_2
-	iload_3
-	isub
-	invokestatic io/printInteger(I)V
 Label16:
 	iload_3
 	iconst_1
@@ -76,7 +77,7 @@ Label5:
 	i2f
 	freturn
 Label1:
-.limit stack 8
+.limit stack 9
 .limit locals 4
 .end method
 

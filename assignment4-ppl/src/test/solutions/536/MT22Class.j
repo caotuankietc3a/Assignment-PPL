@@ -42,7 +42,9 @@ Label0:
 Label2:
 	iconst_0
 Label3:
-	ifle Label4
+	ifgt Label4
+	goto Label5
+Label4:
 	aload_2
 	bipush 10
 	iload_1
@@ -51,8 +53,6 @@ Label3:
 	iadd
 	iload_1
 	iastore
-	goto Label5
-Label4:
 Label5:
 	aload_2
 	bipush 10

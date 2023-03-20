@@ -1,0 +1,11 @@
+
+        b: boolean = false;
+        main : function void () {
+            f : array [5] of boolean = {true, false, true};
+            printBoolean(f[0] && f[1] && f[2]);
+            f[0] = f[0] || f[1];
+            printBoolean(f[0]);
+            f[1] = 100 > 10;
+            printBoolean(f[1]);
+        }
+            

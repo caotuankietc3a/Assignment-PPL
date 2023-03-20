@@ -33,14 +33,14 @@ Label8:
 Label12:
 	iconst_0
 Label13:
-	ifle Label14
-	goto Label11
-	goto Label15
-Label14:
+	ifgt Label14
 	iload_2
 	iconst_1
 	iadd
 	istore_2
+	goto Label15
+Label14:
+	goto Label11
 Label15:
 Label10:
 	goto Label9

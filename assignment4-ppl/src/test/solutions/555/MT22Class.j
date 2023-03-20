@@ -15,14 +15,26 @@ Label0:
 Label2:
 	iconst_0
 Label3:
-	ifle Label4
-	iconst_1
-	putstatic MT22Class.less_zero Z
+	ifgt Label4
 	goto Label5
 Label4:
+	iconst_1
+	putstatic MT22Class.less_zero Z
 Label5:
 	getstatic MT22Class.less_zero Z
-	ifle Label6
+	ifgt Label6
+	getstatic MT22Class.c I
+	iconst_1
+	iadd
+	putstatic MT22Class.c I
+	getstatic MT22Class.c I
+	invokestatic io/printInteger(I)V
+	iload_0
+	iconst_5
+	isub
+	invokestatic MT22Class/printPattern(I)V
+	goto Label7
+Label6:
 	getstatic MT22Class.c I
 	iconst_1
 	isub
@@ -36,29 +48,18 @@ Label5:
 Label8:
 	iconst_0
 Label9:
-	ifle Label10
+	ifgt Label10
+	goto Label11
+Label10:
 	iload_0
 	invokestatic io/printInteger(I)V
 	return
-Label10:
 Label11:
 	getstatic MT22Class.c I
 	invokestatic io/printInteger(I)V
 	iload_0
 	iconst_5
 	iadd
-	invokestatic MT22Class/printPattern(I)V
-	goto Label7
-Label6:
-	getstatic MT22Class.c I
-	iconst_1
-	iadd
-	putstatic MT22Class.c I
-	getstatic MT22Class.c I
-	invokestatic io/printInteger(I)V
-	iload_0
-	iconst_5
-	isub
 	invokestatic MT22Class/printPattern(I)V
 Label7:
 Label1:

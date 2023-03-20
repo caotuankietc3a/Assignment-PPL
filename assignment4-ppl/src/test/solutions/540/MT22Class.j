@@ -41,18 +41,18 @@ Label13:
 Label14:
 	iconst_0
 Label15:
-	ifle Label16
+	ifgt Label16
+	iload_1
+	iload_2
+	isub
+	invokestatic io/printInteger(I)V
+	goto Label17
+Label16:
 	iload_1
 	iload_2
 	iadd
 	invokestatic io/printInteger(I)V
 	goto Label11
-	goto Label17
-Label16:
-	iload_1
-	iload_2
-	isub
-	invokestatic io/printInteger(I)V
 Label17:
 Label10:
 	iload_2
