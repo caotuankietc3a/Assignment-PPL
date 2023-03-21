@@ -1,0 +1,13 @@
+
+        foo: function integer(inherit x: integer){
+            return 1;
+        }
+
+        foo1: function float() inherit foo{
+            super(100);
+            return 1;
+        }
+        main: function void() inherit foo1 {
+            printInteger(x);
+        }
+            

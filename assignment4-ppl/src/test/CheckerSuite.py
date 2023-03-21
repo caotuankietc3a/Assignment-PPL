@@ -1152,10 +1152,8 @@ class CheckerSuite(unittest.TestCase):
     def test_78(self):
         input = r"""
         foo: function string (a: string, b: float) {
-            c : integer = 2;
-            d: float = c + 1;
-            f : array [5] of string;
-            return f[1];
+            f : array [5] of string = {a};
+            return f[0];
         }
         bar: function void (inherit out a: integer, inherit out b: string) inherit foo {
             super("Hello", 123);

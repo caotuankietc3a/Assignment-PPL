@@ -117,10 +117,11 @@ class MType:
 
 
 class Symbol:
-    def __init__(self, name, mtype, value=None):
+    def __init__(self, name, mtype, value=None, inherit=False):
         self.name = name
         self.mtype = mtype
         self.value = value
+        self.inherit = inherit
 
 
 class ArrayPointerType(Type):
@@ -219,8 +220,8 @@ class CodeGenVisitor(BaseVisitor, Utils):
             TypeUtils.retrieveType(par.typ) for par in decl.params]
 
         mtype = MType(intype, returnType, list(
-            map(lambda p: [p.name, p.typ, p.inherit], decl.params)), list(
-            map(lambda p: [p.name, p.typ, p.inherit, None], decl.params)))
+            map(lambda p: [p.name, p.typ, p.inherit], decl.params)), [list(
+                map(lambda p: [p.name, p.typ, p.inherit, None], decl.params))])
 
         self.emit.printout(self.emit.emitMETHOD(
             func_name, mtype, not isInit, frame))
@@ -244,7 +245,6 @@ class CodeGenVisitor(BaseVisitor, Utils):
         if not TypeUtils.isNone(inherit):
             super_preventdefault_callstmt = block.body[0]
             if not TypeUtils.isNone(super_preventdefault_callstmt):
-                params_inherit = []
                 inherit_func = self.lookup(
                     inherit, glenv, lambda sym: sym.name)
                 params = inherit_func.mtype.params
@@ -252,16 +252,29 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 if TypeUtils.isTheSameType(super_preventdefault_callstmt, CallStmt):
                     if super_preventdefault_callstmt.name == "super":
                         for p, a in zip(params, super_preventdefault_callstmt.args):
+                            # params_inherit[0][-1] = a
                             pi = self.lookup(
-                                p[0], params_inherit, lambda pi: pi[0])
+                                p[0], params_inherit[0], lambda pi: pi[0])
+
                             if not TypeUtils.isNone(pi):
                                 pi[-1] = a
 
                 if len(params) == 0 or (TypeUtils.isTheSameType(super_preventdefault_callstmt, CallStmt) and super_preventdefault_callstmt.name == "super"):
+                    subbody_clone = SubBody(frame, subbody.sym, False, False)
+                    subbody_helper = SubBody(frame, subbody.sym, False, False)
+                    subbody_helper_sym = []
 
                     for pi in params_inherit:
-                        subbody = self.visit(
-                            VarDecl(pi[0], pi[1], pi[-1]), subbody)
+                        for p in pi:
+                            subbody_helper = self.visit(
+                                VarDecl(p[0], p[1], p[-1]), subbody_clone)
+                            subbody_helper_sym += [
+                                subbody_helper.sym[0]]
+
+                        subbody_helper.sym = subbody_helper.sym[1:]
+
+                        for s in subbody_helper_sym:
+                            subbody_clone.sym = [s] + subbody_clone.sym
 
                     mtype.params_inherit += params_inherit
 
@@ -307,9 +320,12 @@ class CodeGenVisitor(BaseVisitor, Utils):
         cname = symbol.value.value
         ctype = symbol.mtype
         params_code = ""
-        for p in ast.args:
-            params_code += self.visit(p, Access(frame,
-                                      symbols, False, False))[0]
+        for p_type, a in zip(symbol.mtype.partype, ast.args):
+            a_code, a_type = self.visit(a, Access(frame,
+                                                  symbols, False, False))
+            if TypeUtils.isFloatType(p_type) and TypeUtils.isTheSameType(a_type, IntegerType):
+                a_code = a_code + self.emit.emitI2F(frame)
+            params_code += a_code
 
         params_code += self.emit.emitINVOKESTATIC(
             cname + "/" + func_name, ctype, frame)
@@ -424,7 +440,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         self.emit.printout(self.emit.emitVAR(
             idx, name, TypeUtils.retrieveType(typ), frame.getStartLabel(), frame.getEndLabel(), frame))
         new_sym = [Symbol(name, typ if isArrayType else TypeUtils.retrieveType(
-            typ), Index(idx))] + sym
+            typ, inherit), Index(idx))] + sym
 
         return SubBody(frame,  new_sym)
 
@@ -664,6 +680,11 @@ class CodeGenVisitor(BaseVisitor, Utils):
         isFirst = c.isFirst
         isLeft = c.isLeft
         symbol = self.lookup(ast.name, c.sym, lambda sym: sym.name)
+        lst_syms = []
+        for sym in c.sym:
+            if sym.name == ast.name:
+                lst_syms.append(sym)
+
         if not TypeUtils.isNone(symbol):
             isArrayType = TypeUtils.isArrayType(symbol.mtype)
 
