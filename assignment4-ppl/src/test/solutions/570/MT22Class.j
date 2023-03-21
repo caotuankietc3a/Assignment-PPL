@@ -23,31 +23,32 @@ Label1:
 .limit locals 3
 .end method
 
-.method public static foo1(Ljava/lang/String;I)Ljava/lang/String;
+.method public static foo1(Ljava/lang/String;ILjava/lang/String;)Ljava/lang/String;
 .var 0 is a Ljava/lang/String; from Label0 to Label1
 .var 1 is b I from Label0 to Label1
-.var 2 is a I from Label0 to Label1
+.var 2 is c Ljava/lang/String; from Label0 to Label1
+.var 3 is a I from Label0 to Label1
 	iload_1
-	istore_2
-.var 3 is b Ljava/lang/String; from Label0 to Label1
+	istore_3
+.var 4 is b Ljava/lang/String; from Label0 to Label1
 	aload_0
-	astore_3
+	astore 4
 Label0:
-.var 4 is f [Ljava/lang/String; from Label0 to Label1
+.var 5 is f [Ljava/lang/String; from Label0 to Label1
 	iconst_5
 	anewarray java/lang/String
 	dup
 	iconst_0
 	aload_0
 	aastore
-	astore 4
-	aload 4
+	astore 5
+	aload 5
 	iconst_0
 	aaload
 	areturn
 Label1:
 .limit stack 7
-.limit locals 5
+.limit locals 6
 .end method
 
 .method public static bar(ILjava/lang/String;)V
@@ -61,18 +62,23 @@ Label1:
 .var 3 is b I from Label0 to Label1
 	iload_0
 	istore_3
-.var 4 is a I from Label0 to Label1
+.var 4 is c Ljava/lang/String; from Label0 to Label1
+	ldc "Hello"
+	aload_1
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	astore 4
+.var 5 is a I from Label0 to Label1
 	iload_3
-	istore 4
-.var 5 is b Ljava/lang/String; from Label0 to Label1
+	istore 5
+.var 6 is b Ljava/lang/String; from Label0 to Label1
 	aload_2
-	astore 5
+	astore 6
 Label0:
-.var 6 is i I from Label0 to Label1
+.var 7 is i I from Label0 to Label1
 	iconst_1
-	istore 6
+	istore 7
 Label3:
-	iload 6
+	iload 7
 	bipush 10
 	if_icmpge Label6
 	iconst_1
@@ -85,10 +91,10 @@ Label7:
 	i2f
 	invokestatic io/writeFloat(F)V
 Label4:
-	iload 6
+	iload 7
 	iconst_1
 	iadd
-	istore 6
+	istore 7
 	goto Label3
 Label5:
 	iload_0
@@ -110,10 +116,12 @@ Label11:
 	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	invokestatic MT22Class/foo(ILjava/lang/String;)Ljava/lang/String;
 	invokestatic io/printString(Ljava/lang/String;)V
+	aload 4
+	invokestatic io/printString(Ljava/lang/String;)V
 Label1:
 	return
-.limit stack 11
-.limit locals 7
+.limit stack 12
+.limit locals 8
 .end method
 
 .method public static main([Ljava/lang/String;)V

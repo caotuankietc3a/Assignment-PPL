@@ -3,13 +3,13 @@
             f : array [5] of string = {b};
             return f[0];
         }
-        foo1: function string (a: string, b: integer) inherit foo{
+        foo1: function string (a: string, b: integer, inherit c: string) inherit foo{
             super(b, a);
             f : array [5] of string = {a};
             return f[0];
         }
         bar: function void (inherit out a: integer, inherit out b: string) inherit foo1 {
-            super("Hello"::b, a);
+            super("Hello"::b, a, "Hello"::b);
             for (i = 1, i < 10, i + 1)
             {
                 writeFloat(a);
@@ -17,6 +17,7 @@
             if (a==2)
                 return;
             printString(foo(111, "Hello"::b));
+            printString(c);
         }
         main: function void() {
             bar(10, "World!");

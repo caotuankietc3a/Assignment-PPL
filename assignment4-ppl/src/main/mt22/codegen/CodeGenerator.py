@@ -143,7 +143,7 @@ class ClassType(Type):
 
 
 class SubBody():
-    def __init__(self, frame, sym, isGlobal=False, isBlockStmt=False):
+    def __init__(self, frame, sym, isGlobal=False, isBlockStmt=False, inherit=False):
         # frame: Frame
         # sym: List[Symbol]
 
@@ -151,6 +151,7 @@ class SubBody():
         self.sym = sym
         self.isGlobal = isGlobal
         self.isBlockStmt = isBlockStmt
+        self.inherit = inherit
 
 
 class Access():
@@ -267,7 +268,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
                     for pi in params_inherit:
                         for p in pi:
                             subbody_helper = self.visit(
-                                VarDecl(p[0], p[1], p[-1]), subbody_clone)
+                                VarDecl(p[0], p[1], p[-1]), SubBody(frame, subbody_clone.sym, False, False, p[2]))
                             subbody_helper_sym += [
                                 subbody_helper.sym[0]]
 
@@ -275,6 +276,8 @@ class CodeGenVisitor(BaseVisitor, Utils):
 
                         for s in subbody_helper_sym:
                             subbody_clone.sym = [s] + subbody_clone.sym
+                            if s.inherit:
+                                subbody.sym = [s] + subbody.sym
 
                     mtype.params_inherit += params_inherit
 
@@ -371,6 +374,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         isGlobal = c.isGlobal
         var_name = ast.name
         var_type = ast.typ
+        inherit = c.inherit
 
         init_code, init_type = "", None
 
@@ -416,7 +420,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
             idx, var_name, TypeUtils.retrieveType(var_type), frame.getStartLabel(), frame.getEndLabel(), frame))
 
         new_sym = [Symbol(var_name, var_type if isArrayType else TypeUtils.retrieveType(
-            var_type, lst=dimens), Index(idx))] + sym
+            var_type, lst=dimens), Index(idx), inherit)] + sym
         if hasInit:
             id = self.visit(Id(ast.name), Access(frame, new_sym, True, False))
             self.emit.printout(
