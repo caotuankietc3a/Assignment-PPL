@@ -1,0 +1,21 @@
+
+        gcdIteration: function integer(p: integer, q: integer) {
+          while (p * q != 0) {
+            if (p > q) {
+              p = p % q;
+            } else {
+              q = q % p;
+            }
+          }
+          return p + q;
+        }
+        gcdRecursion: function integer(p: integer, q: integer) {
+          if (q == 0)
+            return p;
+          return gcdRecursion(q, p % q);
+        }
+        main: function void() {
+            printInteger(gcdRecursion(10, 15));
+            printInteger(gcdIteration(10, 15));
+        }
+    

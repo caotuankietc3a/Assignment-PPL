@@ -1,0 +1,8 @@
+
+        main: function void() {
+            b: integer = 10;
+            f : array [5] of integer = {b};
+            writeFloat(b);
+            writeFloat(f[0]);
+    }
+    

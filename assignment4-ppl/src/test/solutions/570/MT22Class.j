@@ -2,125 +2,94 @@
 .class public MT22Class
 .super java.lang.Object
 
-.method public static foo(ILjava/lang/String;)Ljava/lang/String;
-.var 0 is a I from Label0 to Label1
-.var 1 is b Ljava/lang/String; from Label0 to Label1
-Label0:
-.var 2 is f [Ljava/lang/String; from Label0 to Label1
-	iconst_5
-	anewarray java/lang/String
-	dup
-	iconst_0
-	aload_1
-	aastore
-	astore_2
-	aload_2
-	iconst_0
-	aaload
-	areturn
-Label1:
-.limit stack 5
-.limit locals 3
-.end method
-
-.method public static foo1(Ljava/lang/String;ILjava/lang/String;)Ljava/lang/String;
+.method public static foo1(Ljava/lang/String;IFZ)I
 .var 0 is a Ljava/lang/String; from Label0 to Label1
 .var 1 is b I from Label0 to Label1
-.var 2 is c Ljava/lang/String; from Label0 to Label1
-.var 3 is a I from Label0 to Label1
-	iload_1
-	istore_3
-.var 4 is b Ljava/lang/String; from Label0 to Label1
-	aload_0
-	astore 4
+.var 2 is c F from Label0 to Label1
+.var 3 is d Z from Label0 to Label1
 Label0:
-.var 5 is f [Ljava/lang/String; from Label0 to Label1
+	aload_0
+	invokestatic io/printString(Ljava/lang/String;)V
+	iload_1
+	iconst_1
+	iadd
+	ireturn
+Label1:
+.limit stack 2
+.limit locals 4
+.end method
+
+.method public static foo(Ljava/lang/String;I)Ljava/lang/String;
+.var 0 is a Ljava/lang/String; from Label0 to Label1
+.var 1 is b I from Label0 to Label1
+.var 2 is a Ljava/lang/String; from Label0 to Label1
+	ldc "Hello"
+	aload_0
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	astore_2
+.var 3 is b I from Label0 to Label1
+	sipush 134
+	istore_3
+.var 4 is c F from Label0 to Label1
+	ldc 12.0
+	fstore 4
+.var 5 is d Z from Label0 to Label1
+	iconst_0
+	istore 5
+Label0:
+.var 6 is f [Ljava/lang/String; from Label0 to Label1
 	iconst_5
 	anewarray java/lang/String
 	dup
 	iconst_0
-	aload_0
+	ldc "a"
 	aastore
-	astore 5
-	aload 5
+	astore 6
+	aload 6
 	iconst_0
 	aaload
 	areturn
 Label1:
-.limit stack 7
-.limit locals 6
+.limit stack 10
+.limit locals 7
 .end method
 
 .method public static bar(ILjava/lang/String;)V
 .var 0 is a I from Label0 to Label1
-.var 1 is b Ljava/lang/String; from Label0 to Label1
+.var 1 is x Ljava/lang/String; from Label0 to Label1
 .var 2 is a Ljava/lang/String; from Label0 to Label1
 	ldc "Hello"
 	aload_1
 	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	astore_2
 .var 3 is b I from Label0 to Label1
-	iload_0
+	bipush 123
 	istore_3
-.var 4 is c Ljava/lang/String; from Label0 to Label1
+.var 4 is a Ljava/lang/String; from Label0 to Label1
 	ldc "Hello"
-	aload_1
+	aload_2
 	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	astore 4
-.var 5 is a I from Label0 to Label1
-	iload_3
+.var 5 is b I from Label0 to Label1
+	sipush 134
 	istore 5
-.var 6 is b Ljava/lang/String; from Label0 to Label1
-	aload_2
-	astore 6
+.var 6 is c F from Label0 to Label1
+	ldc 12.0
+	fstore 6
+.var 7 is d Z from Label0 to Label1
+	iconst_0
+	istore 7
 Label0:
-.var 7 is i I from Label0 to Label1
-	iconst_1
-	istore 7
-Label3:
-	iload 7
-	bipush 10
-	if_icmpge Label6
-	iconst_1
-	goto Label7
-Label6:
-	iconst_0
-Label7:
-	ifle Label5
 	iload_0
-	i2f
-	invokestatic io/writeFloat(F)V
-Label4:
-	iload 7
-	iconst_1
+	iload_3
 	iadd
-	istore 7
-	goto Label3
-Label5:
-	iload_0
-	iconst_2
-	if_icmpne Label8
-	iconst_1
-	goto Label9
-Label8:
-	iconst_0
-Label9:
-	ifgt Label10
-	goto Label11
-Label10:
-	return
-Label11:
-	bipush 111
-	ldc "Hello"
-	aload_1
-	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
-	invokestatic MT22Class/foo(ILjava/lang/String;)Ljava/lang/String;
-	invokestatic io/printString(Ljava/lang/String;)V
-	aload 4
-	invokestatic io/printString(Ljava/lang/String;)V
+	i2f
+	fload 6
+	fadd
+	invokestatic io/writeFloat(F)V
 Label1:
 	return
-.limit stack 12
+.limit stack 9
 .limit locals 8
 .end method
 
@@ -130,9 +99,15 @@ Label0:
 	bipush 10
 	ldc "World!"
 	invokestatic MT22Class/bar(ILjava/lang/String;)V
+	ldc ""
+	iconst_1
+	ldc 1.0
+	iconst_0
+	invokestatic MT22Class/foo1(Ljava/lang/String;IFZ)I
+	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 2
+.limit stack 5
 .limit locals 1
 .end method
 

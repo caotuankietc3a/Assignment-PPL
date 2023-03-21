@@ -53,9 +53,10 @@ Label9:
 Label10:
 	goto Label4
 Label6:
-	iconst_1
-	ifgt Label2
 Label3:
+	iconst_1
+	ifle Label4
+	goto Label2
 Label4:
 	iload_2
 	invokestatic io/printInteger(I)V

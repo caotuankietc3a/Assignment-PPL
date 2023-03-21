@@ -52,6 +52,7 @@ Label11:
 	iadd
 	istore_1
 Label6:
+Label3:
 	iload_1
 	bipush 10
 	if_icmpge Label16
@@ -60,8 +61,8 @@ Label6:
 Label16:
 	iconst_0
 Label17:
-	ifgt Label2
-Label3:
+	ifle Label4
+	goto Label2
 Label4:
 Label1:
 	return

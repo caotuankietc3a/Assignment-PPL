@@ -1,0 +1,16 @@
+
+        Checkzero: function boolean(nums: array[100] of integer, size: integer) {
+          found: boolean = false;
+          for (i = 0, (i < size) && !found, i + 1) {
+            if (nums[i] == 0)
+              found = true;
+          }
+          return found;
+        }
+        main: function void() {
+            arr: array [10] of integer = {1, 91, 90, -90, 100, 10, 1, 1000, -100, 100};
+            printBoolean(Checkzero(arr, 10));
+            arr[0] = 0;
+            printBoolean(Checkzero(arr, 10));
+        }
+    

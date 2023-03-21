@@ -162,8 +162,8 @@ class Emitter():
         # ... -> ..., value
 
         frame.push()
-        # if type(inType) in [IntegerType, BooleanType]:
-        if type(inType) is IntegerType:
+        if type(inType) in [IntegerType, BooleanType]:
+            # if type(inType) is IntegerType:
             return self.jvm.emitILOAD(index)
         elif type(inType) is FloatType:
             return self.jvm.emitFLOAD(index)

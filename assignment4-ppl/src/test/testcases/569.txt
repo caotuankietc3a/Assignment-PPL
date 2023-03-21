@@ -1,8 +1,17 @@
 
+        foo1: function integer (a: string, b: integer, inherit c: float, inherit d: boolean) {
+            return b + 1;
+        }
+        foo: function string (a: string, inherit b: integer) inherit foo1{
+            super("Hello"::a, 134, 12.0, false);
+            f : array [5] of string = {"a"};
+            return f[0];
+        }
+        bar: function void (inherit a: integer, x: string) inherit foo {
+            super("Hello"::x, 123);
+            writeFloat((a + b) + c);
+        }
         main: function void() {
-            b: integer = 10;
-            f : array [5] of integer = {b};
-            writeFloat(b);
-            writeFloat(f[0]);
-    }
+            bar(10, "World!");
+        }
     

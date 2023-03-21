@@ -327,6 +327,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
             a_code, a_type = self.visit(a, Access(frame,
                                                   symbols, False, False))
             if TypeUtils.isFloatType(p_type) and TypeUtils.isTheSameType(a_type, IntegerType):
+                print("=======================")
                 a_code = a_code + self.emit.emitI2F(frame)
             params_code += a_code
 
@@ -594,16 +595,21 @@ class CodeGenVisitor(BaseVisitor, Utils):
         labelS = frame.getNewLabel()
         frame.enterLoop()
         self.emit.printout(self.emit.emitLABEL(labelS, frame))
-        self.visit(ast.stmt, SubBody(frame, nenv, isBlockStmt=True))
-        # self.visit(ast.stmt, SubBody(frame, nenv))
+        hasReturnStmt = self.visit(
+            ast.stmt, SubBody(frame, nenv, isBlockStmt=True))
+
+        self.emit.printout(self.emit.emitLABEL(
+            frame.getContinueLabel(), frame))
 
         cond_code, _ = self.visit(
             ast.cond, Access(frame, nenv, False, False))
 
-        self.emit.printout(cond_code + self.emit.emitIFTRUE(labelS, frame))
+        self.emit.printout(
+            cond_code + self.emit.emitIFFALSE(frame.getBreakLabel(), frame))
 
-        self.emit.printout(self.emit.emitLABEL(
-            frame.getContinueLabel(), frame))
+        if not hasReturnStmt:
+            self.emit.printout(self.emit.emitGOTO(
+                labelS, frame))
 
         self.emit.printout(self.emit.emitLABEL(frame.getBreakLabel(), frame))
 
@@ -624,7 +630,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         returnType = frame.returnType
         if not TypeUtils.isVoidType(returnType):
             exp_code, exp_type = self.visit(
-                ast.expr, Access(frame, sym, False, True))
+                ast.expr, Access(frame, sym, False, False))
 
             if TypeUtils.isFloatType(returnType) and TypeUtils.isTheSameType(exp_type, IntegerType):
                 exp_code += self.emit.emitI2F(frame)
@@ -648,9 +654,9 @@ class CodeGenVisitor(BaseVisitor, Utils):
         r_code, r_type = self.visit(ast.right, c)
         if OUtils.isArithmeticOp(op) or OUtils.isRelationalOp(op):
             mtype = FloatType() if op == "/" else TypeUtils.mergeType(l_type, r_type)
-            if not TypeUtils.isTheSameType(mtype, type(l_type)):
+            if not TypeUtils.isTheSameType(mtype, type(l_type)) and TypeUtils.isIntType(l_type):
                 l_code += self.emit.emitI2F(frame)
-            if not TypeUtils.isTheSameType(mtype, type(r_type)):
+            if not TypeUtils.isTheSameType(mtype, type(r_type)) and TypeUtils.isIntType(r_type):
                 r_code += self.emit.emitI2F(frame)
             if op in ["+", "-"]:
                 return l_code + r_code + self.emit.emitADDOP(op, mtype, frame), mtype
@@ -684,17 +690,11 @@ class CodeGenVisitor(BaseVisitor, Utils):
         isFirst = c.isFirst
         isLeft = c.isLeft
         symbol = self.lookup(ast.name, c.sym, lambda sym: sym.name)
-        lst_syms = []
-        for sym in c.sym:
-            if sym.name == ast.name:
-                lst_syms.append(sym)
 
         if not TypeUtils.isNone(symbol):
             isArrayType = TypeUtils.isArrayType(symbol.mtype)
 
             arr_dimens = [] if not isArrayType else symbol.mtype.dimensions
-            # sym_type = TypeUtils.retrieveType(symbol.mtype, val=symbol.mtype.val if TypeUtils.isTheSameType(
-            #     symbol.mtype, IntegerType) else 0, lst=arr_dimens)
             sym_type = TypeUtils.retrieveType(symbol.mtype,  lst=arr_dimens)
             if not isFirst and isLeft:
                 frame.push()

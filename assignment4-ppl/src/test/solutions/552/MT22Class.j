@@ -52,6 +52,7 @@ Label16:
 	iadd
 	istore_3
 Label12:
+Label9:
 	iload_3
 	iload_0
 	if_icmpge Label17
@@ -60,8 +61,8 @@ Label12:
 Label17:
 	iconst_0
 Label18:
-	ifgt Label8
-Label9:
+	ifle Label10
+	goto Label8
 Label10:
 Label4:
 	iload_2
@@ -74,7 +75,7 @@ Label5:
 	i2f
 	freturn
 Label1:
-.limit stack 7
+.limit stack 9
 .limit locals 4
 .end method
 
