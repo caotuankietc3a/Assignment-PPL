@@ -338,11 +338,12 @@ class CodeGenVisitor(BaseVisitor, Utils):
             return Symbol(id, typ, Index(idx))
 
     def visitAssign(self, ast, o):
-        lhs, _ = self.visit(
-            ast.lhs, Access(o.frame, o.sym, True, False))
         rhs, _ = self.visit(
             ast.rhs, Access(o.frame, o.sym, False, False))
-        self.emit.printout(lhs + rhs)
+        lhs, _ = self.visit(
+            ast.lhs, Access(o.frame, o.sym, True, False))
+
+        self.emit.printout(rhs + lhs)
 
     def visitBlock(self, ast, o):
         frame = o.frame
