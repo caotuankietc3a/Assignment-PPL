@@ -1,1 +1,1 @@
-Type Mismatch In Expression: UnExpr(-, FuncCall(foo, [IntegerLit(1)]))
+Type mismatch in expression: UnExpr(-, FuncCall(foo, [IntegerLit(1)]))

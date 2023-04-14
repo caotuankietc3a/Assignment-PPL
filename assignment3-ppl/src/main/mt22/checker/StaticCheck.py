@@ -40,9 +40,11 @@ class Array(Type):
 
     @staticmethod
     def isDimensionsMatched(dimen1, dimen2, func):
-        for d1, d2 in zip(dimen1, dimen2):
-            if int(d1) < d2:
-                func()
+        if (len(dimen1) != len(dimen2)):
+            func()
+        # for d1, d2 in zip(dimen1, dimen2):
+        #     if int(d1) < d2:
+        #         func()
         return True
 
 
@@ -78,6 +80,10 @@ class TypeUtils:
     @ staticmethod
     def isArrayLit(x):
         return type(x) is ArrayLit
+
+    @ staticmethod
+    def isArrayCell(x):
+        return type(x) is ArrayCell
 
     @ staticmethod
     def isStringType(x):
@@ -201,19 +207,36 @@ class StaticChecker(BaseVisitor, Utils):
             param = self.lookup(
                 name, func["params_inherit"], lambda par: par["name"])
             if not TypeUtils.isNone(param) and param["inherit"]:
-                self.raise_(Redeclared(typ, name))
+                self.raise_(Invalid(Parameter(), name))
 
     def raise_(self, ex):
         raise ex
 
     def visitProgram(self, ast: Program, c):
+        for decl in ast.decls:
+            if type(decl) is FuncDecl:
+                return_type = decl.return_type
+                params = []
+                Search.check(decl.name, self.envs[0], lambda: self.raise_(
+                    Redeclared(Function(), decl.name)))
+                for el in decl.params:
+                    for p in params:
+                        if p["name"] == el.name:
+                            self.raise_(Redeclared(Parameter(), el.name))
+
+                    par = {"type": el.typ, "kind": Variable(),
+                           "inherit": el.inherit, "out": el.out, "name": el.name}
+                    params.append(par)
+
+                self.envs[0][decl.name] = {"type": return_type, "kind": Function(
+                ), "params": params, "params_inherit": []}
+
         has_entry_point = False
         for decl in ast.decls:
             if type(decl) is FuncDecl:
-                name = decl.name
                 return_type = decl.return_type
                 params = decl.params
-                if type(decl) is FuncDecl and name == "main" and TypeUtils.isVoidType(return_type) and len(params) == 0:
+                if type(decl) is FuncDecl and decl.name == "main" and TypeUtils.isVoidType(return_type) and len(params) == 0:
                     has_entry_point = True
             self.visit(decl, (self.envs, None))
 
@@ -223,6 +246,7 @@ class StaticChecker(BaseVisitor, Utils):
         return ""
 
     def visitVarDecl(self, ast: VarDecl, c):
+        print(ast)
         (o, _) = c
         name = ast.name
         Search.check(name, o[0], lambda: self.raise_(
@@ -236,11 +260,17 @@ class StaticChecker(BaseVisitor, Utils):
                 arr_type = typ.typ
                 self.illegal_array_literal = {
                     "type": arr_type, "dimensions": arr_dimensions, "ast": ast}
+
+                if not TypeUtils.isArrayLit(ast.init) and not TypeUtils.isArrayCell(ast.init):
+                    self.raise_(TypeMismatchInVarDecl(ast))
+
                 init = self.visit(ast.init, (o, typ))
+                print("********====", init["type"])
                 dimension_lst = Array.getDimensions(init)
-                # if Array.isDimensionsMatched(arr_dimensions, dimension_lst, lambda: self.raise_(TypeMismatchInStatement(ast))):
-                o[0][name] = {
-                    "type": typ, "kind": Variable(), "dimensions": dimension_lst}
+                print(dimension_lst)
+                if Array.isDimensionsMatched(arr_dimensions, dimension_lst, lambda: self.raise_(TypeMismatchInVarDecl(ast))):
+                    o[0][name] = {
+                        "type": typ, "kind": Variable(), "dimensions": dimension_lst}
                 self.illegal_array_literal = None
             else:
                 init = self.visit(ast.init, (o, typ))
@@ -263,13 +293,14 @@ class StaticChecker(BaseVisitor, Utils):
     def visitParamDecl(self, ast: ParamDecl, c):
         (o, _) = c
         name = ast.name
-        Search.check(name, o[0], lambda: self.raise_(
-            Redeclared(Parameter(), name)))
+        # Search.check(name, o[0], lambda: self.raise_(
+        #     Redeclared(Parameter(), name)))
         typ = ast.typ
         inherit = ast.inherit
         out = ast.out
-        if not self.func_decl["flag"]:
-            self.raise_(Invalid(Parameter(), name))
+
+        # if not self.func_decl["flag"]:
+        #     self.raise_(Invalid(Parameter(), name))
         self.checkValidInherit(name, o, Parameter())
 
         res = {"type": typ, "kind": Variable(),
@@ -282,8 +313,8 @@ class StaticChecker(BaseVisitor, Utils):
         (o, _) = c
 
         name = ast.name
-        Search.check(name, o[0], lambda: self.raise_(
-            Redeclared(Function(), name)))
+        # Search.check(name, o[0], lambda: self.raise_(
+        #     Redeclared(Function(), name)))
         symbol = self.lookup(
             name, StaticChecker.global_envi, lambda sym: sym.name)
         if not TypeUtils.isNone(symbol):
@@ -335,8 +366,11 @@ class StaticChecker(BaseVisitor, Utils):
                 params_inherit.append(par)
             params.append(par)
 
-        o[0][name] = {"type": return_type, "kind": Function(
-        ), "params": params, "params_inherit": params_inherit}
+        # o[0][name] = {"type": return_type, "kind": Function(
+        # ), "params": params, "params_inherit": params_inherit}
+
+        o[0][name]["params_inherit"] = params_inherit
+        o[0][name]["params"] = params
 
         self.visit(body, (o1, None))
         self.resetFunc_decl()
@@ -593,12 +627,21 @@ class StaticChecker(BaseVisitor, Utils):
             Undeclared(Identifier(), ast.name)), Variable)
 
     def visitArrayCell(self, ast: ArrayCell, c):
+        print(ast)
         id = self.visit(Id(ast.name), c)
+        print(id["type"])
         if not TypeUtils.isArrayType(id["type"]):
             self.raise_(TypeMismatchInExpression(ast))
 
         reduce(lambda _, el: self.raise_(TypeMismatchInExpression(ast))
                if not TypeUtils.isIntType(self.visit(el, c)["type"]) else None, ast.cell, [])
+
+        # [2, 2, 3] -> [2, 3] -> [3, 2] -> Array(2, [{'type': Array(3, [])}, {'type': Array(3, [])}])
+        dimensions = id["type"].dimensions[len(ast.cell):][::-1]
+        if (len(dimensions) != 0):
+            res = reduce(lambda acc, el: {"type": Array(el, list(map(lambda x: {"type": Array(
+                acc["type"].val, [])}, range(0, el))))}, dimensions[1:], {"type": Array(dimensions[0], [])})
+            return res
 
         return {"type": id["type"].typ}
 

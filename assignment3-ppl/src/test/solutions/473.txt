@@ -1,1 +1,1 @@
-Type Mismatch In Statement: ReturnStmt(BooleanLit(False))
+Type mismatch in statement: ReturnStmt(BooleanLit(False))

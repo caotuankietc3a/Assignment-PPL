@@ -1,1 +1,1 @@
-Type Mismatch In Statement: VarDecl(a, ArrayType([2, 2], FloatType), ArrayLit([BooleanLit(False)]))
+Type mismatch in statement: VarDecl(a, ArrayType([2, 2], FloatType), ArrayLit([BooleanLit(False)]))

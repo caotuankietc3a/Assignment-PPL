@@ -1,6 +1,8 @@
 
-            x: integer;
-            inherit out  y: integer
-            main: function void() {
+            x: integer = foo(1); // Correct
+            y: integer = 1;
+            foo: function integer(x: integer){
+                return x;
             }
-            
+            main: function void(){}
+        

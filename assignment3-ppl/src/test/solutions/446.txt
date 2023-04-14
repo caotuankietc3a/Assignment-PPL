@@ -1,1 +1,1 @@
-Invalid Statement In Function: foo3
+Invalid statement in function: foo3

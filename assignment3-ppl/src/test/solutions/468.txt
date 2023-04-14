@@ -1,1 +1,1 @@
-Type Mismatch In Statement: AssignStmt(Id(j), BooleanLit(True))
+Type mismatch in statement: AssignStmt(Id(j), BooleanLit(True))
