@@ -1,1 +1,1 @@
-Must in loop: BreakStmt()
+Type mismatch in Variable Declaration: VarDecl(x, ArrayType([4, 10, 10], IntegerType), ArrayLit([IntegerLit(1), IntegerLit(2), IntegerLit(3), IntegerLit(4)]))

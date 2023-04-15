@@ -19,26 +19,22 @@ class Symbol:
 
 
 class Array(Type):
-    def __init__(self, val: int, lst: List[Type]) -> None:
+    def __init__(self, val: int, el: Type) -> None:
         self.val = val
-        self.lst = lst
+        self.el = el
 
     def __str__(self):
-        return "Array({}, [{}])".format(str(self.val), ", ".join([str(exp) for exp in self.lst]))
+        return "Array({}, {})".format(str(self.val), str(self.el))
 
-    # Array(2, [Array(2, [IntType(), IntType()]), Array(2, [IntType(), IntType()])])
-    @staticmethod
+    # Array(2, Array(3, IntegerType)) -> [2, 3]
+    @ staticmethod
     def getDimensions(arr):
-        if not TypeUtils.isArray(arr["type"]):
+        if not TypeUtils.isArray(arr):
             return []
 
-        arr_type = arr["type"]
-        res = [arr_type.val]
-        res1 = reduce(lambda acc, el: acc +
-                      Array.getDimensions(el), arr_type.lst, [])
-        return (res + [max(res1)]) if len(res1) != 0 else res
+        return [arr.val, *Array.getDimensions(arr.el)]
 
-    @staticmethod
+    @ staticmethod
     def isDimensionsMatched(dimen1, dimen2, func):
         if (len(dimen1) != len(dimen2)):
             func()
@@ -111,14 +107,14 @@ class TypeUtils:
 
 
 class Search:
-    @staticmethod
+    @ staticmethod
     def search(name, lst, func, kind=Variable):
         for x in lst:
             if name in x and isinstance(x[name]["kind"], kind):
                 return x[name]
         return func()
 
-    @staticmethod
+    @ staticmethod
     def check(name, dic, func) -> None:
         if name in dic:
             func()
@@ -264,9 +260,9 @@ class StaticChecker(BaseVisitor, Utils):
                 if not TypeUtils.isArrayLit(ast.init) and not TypeUtils.isArrayCell(ast.init):
                     self.raise_(TypeMismatchInVarDecl(ast))
 
-                init = self.visit(ast.init, (o, typ))
+                init = self.visit(ast.init, (o, arr_type))
                 print("********====", init["type"])
-                dimension_lst = Array.getDimensions(init)
+                dimension_lst = Array.getDimensions(init["type"])
                 print(dimension_lst)
                 if Array.isDimensionsMatched(arr_dimensions, dimension_lst, lambda: self.raise_(TypeMismatchInVarDecl(ast))):
                     o[0][name] = {
@@ -636,12 +632,12 @@ class StaticChecker(BaseVisitor, Utils):
         reduce(lambda _, el: self.raise_(TypeMismatchInExpression(ast))
                if not TypeUtils.isIntType(self.visit(el, c)["type"]) else None, ast.cell, [])
 
-        # [2, 2, 3] -> [2, 3] -> [3, 2] -> Array(2, [{'type': Array(3, [])}, {'type': Array(3, [])}])
+        # [2, 2, 3] -> [2, 3] -> [3, 2] -> Array(2, Array(3, IntegerType))
         dimensions = id["type"].dimensions[len(ast.cell):][::-1]
         if (len(dimensions) != 0):
-            res = reduce(lambda acc, el: {"type": Array(el, list(map(lambda x: {"type": Array(
-                acc["type"].val, [])}, range(0, el))))}, dimensions[1:], {"type": Array(dimensions[0], [])})
-            return res
+            res = reduce(lambda acc, el: Array(el, acc),
+                         dimensions[1:], Array(dimensions[0], id["type"]))
+            return {"type": res}
 
         return {"type": id["type"].typ}
 
@@ -658,11 +654,23 @@ class StaticChecker(BaseVisitor, Utils):
         return {"type": BooleanType()}
 
     def visitArrayLit(self, ast: ArrayLit, c):
+        (o, typ) = c
         expr_list = ast.explist
 
         result = list(map(lambda exp: self.visit(exp, c), expr_list))
+        # result [{'type': <StaticCheck.Array object at 0x7f5b774b2a40>}, {'type': <StaticCheck.Array object at 0x7f5b774b0640>}, {'type': <StaticCheck.Array object at 0x7f5b774b0100>}]
+        print("result", result)
         if len(result) != 0:
             first_el_type = result[0]["type"]
+            if TypeUtils.isArray(first_el_type):
+                max_val = first_el_type
+                for i in result:
+                    if i["type"].val >= max_val.val:
+                        max_val = i["type"]
+                    print(i["type"])
+                    print("max_val", max_val)
+                return {"type": Array(len(expr_list), max_val)}
+
             list(map(lambda res: self.raise_(IllegalArrayLiteral(
                 ast)) if not TypeUtils.isTheSameType(res["type"] if not TypeUtils.isArrayType(res["type"]) else res["type"].typ, first_el_type) else None, result))
 
@@ -676,8 +684,10 @@ class StaticChecker(BaseVisitor, Utils):
             # list(map(lambda res: self.raise_(TypeMismatchInStatement(
             #     self.illegal_array_literal["ast"])) if (not TypeUtils.isTheSameType(self.illegal_array_literal["type"], res["type"])) and (not (TypeUtils.isFloatType(
             #         self.illegal_array_literal["type"]) and TypeUtils.isIntType(res["type"]))) and not TypeUtils.isArray(res["type"]) else None, result))
-            return {"type": Array(len(expr_list), result)}
-        return {"type": Array(0, [])}
+            print("))))))))))))))))))))", len(expr_list))
+            print("))))))))))))))))))))", typ)
+            return {"type": Array(len(expr_list), typ)}
+        return {"type": Array(0, typ)}
 
     def visitFuncCall(self, ast: FuncCall, c):
         (o, t) = c

@@ -1672,11 +1672,11 @@ class CheckerSuite(unittest.TestCase):
         a: array[2, 2, 3] of integer;
         //a: array[2, 2] of integer = {{1, 2}, {3, 4}};
         //b: array[2] of integer = 0; // incorrect
-        b: array[2] of integer = a[0]; // incorrect
+        // b: array[2] of integer = a[0]; // incorrect
         //b: array[2] of integer = a[0, 1]; // correct
-        //c: array[2, 2] of integer = a[0]; // correct
+        c: array[2, 2] of integer = a[0]; // correct
         main: function void() {
-            c: integer = b[0];
+            //c: integer = b[0];
         }
     """
         expect = "[]"
