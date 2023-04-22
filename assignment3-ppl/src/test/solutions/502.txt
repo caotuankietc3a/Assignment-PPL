@@ -1,1 +1,1 @@
-Type mismatch in expression: FuncCall(foo1, [IntegerLit(10), IntegerLit(1)])
+Undeclared Identifier: y
