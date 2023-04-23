@@ -1,1 +1,1 @@
-Invalid statement in function: foo2
+Type mismatch in statement: CallStmt(preventDefault, IntegerLit(1), IntegerLit(2), IntegerLit(3))
